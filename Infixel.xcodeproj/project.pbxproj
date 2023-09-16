@@ -11,6 +11,13 @@
 		912B68892AB088BF00505677 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B68882AB088BF00505677 /* ContentView.swift */; };
 		912B688B2AB088C100505677 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 912B688A2AB088C100505677 /* Assets.xcassets */; };
 		912B688E2AB088C100505677 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 912B688D2AB088C100505677 /* Preview Assets.xcassets */; };
+		912B68962AB089EF00505677 /* LoginPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B68952AB089EF00505677 /* LoginPage.swift */; };
+		912B689A2AB0A13100505677 /* AsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B68992AB0A13100505677 /* AsyncImageView.swift */; };
+		912B689C2AB4759300505677 /* TwoRowImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B689B2AB4759300505677 /* TwoRowImageView.swift */; };
+		912B689F2AB47B2100505677 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B689E2AB47B2100505677 /* UIColor.swift */; };
+		912B68A22AB4892E00505677 /* Bungee-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 912B68A12AB4892E00505677 /* Bungee-Regular.ttf */; };
+		912B68A72AB5E38300505677 /* LoginInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B68A62AB5E38300505677 /* LoginInputView.swift */; };
+		912B68AB2AB5EB4D00505677 /* Instagram_Glyph_Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 912B68AA2AB5EB4D00505677 /* Instagram_Glyph_Icon.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +26,14 @@
 		912B68882AB088BF00505677 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		912B688A2AB088C100505677 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		912B688D2AB088C100505677 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		912B68952AB089EF00505677 /* LoginPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPage.swift; sourceTree = "<group>"; };
+		912B68992AB0A13100505677 /* AsyncImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageView.swift; sourceTree = "<group>"; };
+		912B689B2AB4759300505677 /* TwoRowImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoRowImageView.swift; sourceTree = "<group>"; };
+		912B689E2AB47B2100505677 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		912B68A12AB4892E00505677 /* Bungee-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Bungee-Regular.ttf"; sourceTree = "<group>"; };
+		912B68A32AB48C9A00505677 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		912B68A62AB5E38300505677 /* LoginInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginInputView.swift; sourceTree = "<group>"; };
+		912B68AA2AB5EB4D00505677 /* Instagram_Glyph_Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Instagram_Glyph_Icon.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +66,10 @@
 		912B68852AB088BF00505677 /* Infixel */ = {
 			isa = PBXGroup;
 			children = (
+				912B68A82AB5EA8100505677 /* Source */,
+				912B68A32AB48C9A00505677 /* Info.plist */,
+				912B68A02AB488EC00505677 /* Font */,
+				912B68942AB089C000505677 /* LoginPageGroup */,
 				912B68862AB088BF00505677 /* InfixelApp.swift */,
 				912B68882AB088BF00505677 /* ContentView.swift */,
 				912B688A2AB088C100505677 /* Assets.xcassets */,
@@ -65,6 +84,50 @@
 				912B688D2AB088C100505677 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		912B68942AB089C000505677 /* LoginPageGroup */ = {
+			isa = PBXGroup;
+			children = (
+				912B689D2AB47B0300505677 /* modules */,
+				912B68952AB089EF00505677 /* LoginPage.swift */,
+				912B68992AB0A13100505677 /* AsyncImageView.swift */,
+				912B689B2AB4759300505677 /* TwoRowImageView.swift */,
+				912B68A62AB5E38300505677 /* LoginInputView.swift */,
+			);
+			path = LoginPageGroup;
+			sourceTree = "<group>";
+		};
+		912B689D2AB47B0300505677 /* modules */ = {
+			isa = PBXGroup;
+			children = (
+				912B689E2AB47B2100505677 /* UIColor.swift */,
+			);
+			path = modules;
+			sourceTree = "<group>";
+		};
+		912B68A02AB488EC00505677 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				912B68A12AB4892E00505677 /* Bungee-Regular.ttf */,
+			);
+			path = Font;
+			sourceTree = "<group>";
+		};
+		912B68A82AB5EA8100505677 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				912B68A92AB5EA9900505677 /* Sns api icons */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		912B68A92AB5EA9900505677 /* Sns api icons */ = {
+			isa = PBXGroup;
+			children = (
+				912B68AA2AB5EB4D00505677 /* Instagram_Glyph_Icon.png */,
+			);
+			path = "Sns api icons";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -125,6 +188,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				912B68AB2AB5EB4D00505677 /* Instagram_Glyph_Icon.png in Resources */,
+				912B68A22AB4892E00505677 /* Bungee-Regular.ttf in Resources */,
 				912B688E2AB088C100505677 /* Preview Assets.xcassets in Resources */,
 				912B688B2AB088C100505677 /* Assets.xcassets in Resources */,
 			);
@@ -138,7 +203,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				912B68892AB088BF00505677 /* ContentView.swift in Sources */,
+				912B689F2AB47B2100505677 /* UIColor.swift in Sources */,
+				912B68962AB089EF00505677 /* LoginPage.swift in Sources */,
 				912B68872AB088BF00505677 /* InfixelApp.swift in Sources */,
+				912B689C2AB4759300505677 /* TwoRowImageView.swift in Sources */,
+				912B68A72AB5E38300505677 /* LoginInputView.swift in Sources */,
+				912B689A2AB0A13100505677 /* AsyncImageView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,6 +340,7 @@
 				DEVELOPMENT_TEAM = M3KH86595Z;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Infixel/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -299,6 +370,7 @@
 				DEVELOPMENT_TEAM = M3KH86595Z;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Infixel/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
