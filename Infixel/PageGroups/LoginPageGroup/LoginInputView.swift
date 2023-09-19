@@ -9,9 +9,9 @@ import SwiftUI
 
 struct LoginInputView: View {
     
-    @State private var userID: String = ""
-    @State private var userPW: String = ""
-    
+   
+    @Binding var userID:String
+    @Binding var userPW:String
     
     
     var body: some View {
@@ -65,7 +65,7 @@ struct LoginInputView: View {
                             .underline(true, color: .white.opacity(0.6))
                             .font(.system(size: 20))
                         }
-                        TextField("", text: $userPW)
+                        SecureField("", text: $userPW)
                             .foregroundColor(
                                 Color.white.opacity(0.6))
                                      .padding()
@@ -85,9 +85,9 @@ struct LoginInputView: View {
     }
 }
 
-struct LoginInputView_Previews: PreviewProvider {
-    static var previews: some View {
-        LoginInputView()
-            
-    }
-}
+//struct LoginInputView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        LoginInputView()
+//
+//    }
+//}

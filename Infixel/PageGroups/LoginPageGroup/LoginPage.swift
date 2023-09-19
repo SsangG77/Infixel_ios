@@ -9,6 +9,11 @@ import SwiftUI
 
 struct LoginPage: View {
     
+    @Binding var isLoggedIn: Bool
+    
+    @State private var userID: String = ""
+    @State private var userPW: String = ""
+    
 
     
     var body: some View {
@@ -16,7 +21,7 @@ struct LoginPage: View {
             
             TwoRowImageView().blur(radius: 15)
             
-            //회색 반투명 배경
+            //회색 blur 배경
             GeometryReader { geometry in
                 Rectangle().fill(Color(UIColor(hexCode: "898989")).opacity(0.7))
                     .frame(height: geometry.size.height * 2)
@@ -31,19 +36,25 @@ struct LoginPage: View {
                     .font(Font.custom("Bungee-Regular", size: 50))
                     .fontWeight(.heavy)
                     .foregroundColor(Color.white)
+                    .padding(.bottom, 60)
                 
-                Spacer()
                 
-                LoginInputView()
-                
-                Spacer()
+                LoginInputView(userID: $userID, userPW: $userPW)
+                    .padding(.top, 15)
                 
                 //SNS Login
-                HStack {
-                    Image("Instagram_Glyph_Icon")
-                        .resizable()
-                    
-                }
+                SNSLoginView()
+                    .padding(.top, 30)
+                
+                
+                
+                LoginButtonView(isLoggedIn : $isLoggedIn, userID: $userID, userPW: $userPW)
+                    .padding(.top, 20)
+                
+                
+                Spacer()
+                
+                
                 
             }
             
@@ -53,10 +64,10 @@ struct LoginPage: View {
     }
 }
 
-struct LoginPage_Previews: PreviewProvider {
-    static var previews: some View {
-        LoginPage()
-    }
-}
+//struct LoginPage_Previews: PreviewProvider {
+//    static var previews: some View {
+//        LoginPage()
+//    }
+//}
 
 
