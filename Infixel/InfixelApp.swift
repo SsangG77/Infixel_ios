@@ -9,9 +9,13 @@ import SwiftUI
 
 @main
 struct InfixelApp: App {
+    
+    @AppStorage("isLoggedIn") var isLoggedIn = false
+    
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(isLoggedIn: $isLoggedIn)
         }
     }
 }

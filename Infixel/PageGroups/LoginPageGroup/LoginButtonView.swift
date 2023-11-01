@@ -11,7 +11,7 @@ struct LoginButtonView: View {
     
     @Binding var isLoggedIn: Bool
 
-    @Binding var userID:String
+    @Binding var userEmail:String
     @Binding var userPW:String
     @State var showAlert = false
     
@@ -19,17 +19,18 @@ struct LoginButtonView: View {
     var body: some View {
         Button(action: {
                         print("로그인 버튼 뷰")
-                        print("ID : ", userID)
+                        print("ID : ", userEmail)
                         print("PW : ", userPW)
-                        if userID == "test" && userPW == "test" { //로그인 성공했을때
+                        if userEmail == "test" && userPW == "test" { //로그인 성공했을때
                             isLoggedIn = true
-                        } else {                                  //로그인 실패했을때
+                        } else {                                     //로그인 실패했을때
                             showAlert = true
                             
                         }
                     }) {
                         Text("Login")
-                            .font(.system(size: 18, weight: .bold))
+                            //.font(.system(size: 18, weight: .bold))
+                            .font(Font.custom("Bungee-Regular", size: 18))
                             .foregroundColor(Color(UIColor(hexCode: "202FB4")))
                             .padding(.leading, 60)
                             .padding(.trailing, 60)

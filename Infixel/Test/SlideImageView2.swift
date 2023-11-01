@@ -143,7 +143,7 @@ struct SlideImageView2: View {
                         if gestureHeight < -threshold {
                             if #available(iOS 17.0, *) {
                                 
-                                withAnimation(.bouncy(duration: 0.5), {
+                                withAnimation(.linear(duration: 0.5), {
                                     dragOffset = -height
                                 }) {
                                     print("애니메이션 종료")

@@ -8,11 +8,21 @@
 import SwiftUI
 
 struct IconView: View {
+    var imageName: String
+    var size: CGFloat
+    var padding: EdgeInsets
+    var action: () -> Void
+    
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Image(imageName)
+            .resizable()
+            .frame(width: size, height: size)
+            .padding(padding)
+            .onTapGesture(perform: action)
     }
 }
 
-#Preview {
-    IconView()
-}
+//#Preview {
+//    IconView()
+//}

@@ -7,24 +7,24 @@
 
 import SwiftUI
 
-struct RegisterView: View {
+struct SignUpView: View {
     
     
-    @State var userEmail:String = ""
-    @State var userPW:String = ""
-    @State var confirmPW:String = ""
+    @State var userEmail             :String = ""
+    @State var userPW                :String = ""
+    @State var confirmPW             :String = ""
     
     //placeHolder
-    @State var placeHolder_email:String = "E-Mail"
-    @State var placeHolder_pw:String = "Password"
+    @State var placeHolder_email     :String = "E-Mail"
+    @State var placeHolder_pw        :String = "Password"
     @State var placeHolder_confirm_pw:String = "Confirm Password"
     
     //secure
-    @State var secure:Bool = true
-    @State var notSecure:Bool = false
+    @State var secure                :Bool   = true
+    @State var notSecure             :Bool   = false
     
-    // 애니메이션을 위한 상태 변수
-    @State private var isMatched = true
+    //알림 변수
+    @State var alert                 :Bool   = false
     
     
     var body: some View {
@@ -33,7 +33,9 @@ struct RegisterView: View {
             
             //회색 blur 배경
             GeometryReader { geometry in
-                Rectangle().fill(Color(UIColor(hexCode: "898989")).opacity(0.7))
+                Rectangle()
+                    .fill(Color(UIColor(hexCode: "898989"))
+                    .opacity(0.7))
                     .frame(height: geometry.size.height * 2)
                     .offset(y: -100)
             }//GeometryReader
@@ -49,7 +51,6 @@ struct RegisterView: View {
                     
                 //Spacer()
                 
-                VStack {
                     
                     InputView(inputValue: $userEmail, placeHolder: $placeHolder_email, secure: $notSecure)
                         .padding(.bottom, 10)
@@ -60,13 +61,17 @@ struct RegisterView: View {
                     
                     InputView(inputValue: $confirmPW, placeHolder: $placeHolder_confirm_pw, secure: $secure)
                     
-                    
-                }
-                
+
                 
                 
                 Button(action: {
-                                print("회원가입 버튼 뷰")
+                    print("회원가입 버튼")
+                    if !isValidEmail(userEmail) || userPW != confirmPW {
+                        alert = true
+                    } else {
+                        alert = false
+                    }
+                    
                                
                 }) {
                     Text("sign up")
@@ -79,8 +84,15 @@ struct RegisterView: View {
                         .cornerRadius(30)
                 }
                 .padding(.top, 50)
-
+                .alert(isPresented: $alert) {
+                    Alert(
+                        title: Text("알림"),
+                        message: Text("이메일, 비밀번호를 확인해주세요."),
+                        dismissButton: .default(Text("확인"))
+                    )
+                }
                 
+
                 
                 
             }//VStack
@@ -88,39 +100,19 @@ struct RegisterView: View {
         }//ZStack
         
     }//body
-    
-    /*
-    텍스트 애니메이션이 나타나야되는 경우
-     1. password 있고 confirm 없을때 -> confirm에 입력될 때
-     2. confirm 있고 password 없을때 -> password에 입력될 때
-     3. 둘 다 다를때                 -> 둘 다 맞을 때
-     4. 둘 다 맞을 때                -> 둘 다 다를 때
-     5, 둘 다 없을 때                -> 둘 중 하나라도 입력될 때
-    */
-
-    private func checkPasswordMatch() {
-            if !userPW.isEmpty && !confirmPW.isEmpty {
-                if userPW == confirmPW {
-                    withAnimation {
-                        isMatched = true
-                    }
-                } else {
-                    withAnimation {
-                        isMatched = false
-                    }
-                }
-            } else {
-                withAnimation {
-                    isMatched = false
-                }
-            }
-        }
 }
 
+//이메일 형식이면 true, 아니면 false
 func isValidEmail(_ email: String) -> Bool {
-    let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
-    let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
-    return emailPredicate.evaluate(with: email)
+    let emailPattern = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"
+    
+    if let regex = try? NSRegularExpression(pattern: emailPattern) {
+        let range = NSRange(location: 0, length: email.utf16.count)
+        let matches = regex.numberOfMatches(in: email, options: [], range: range)
+        return matches > 0
+    }
+    
+    return false
 }
 
 
@@ -128,5 +120,5 @@ func isValidEmail(_ email: String) -> Bool {
 
 
 #Preview {
-    RegisterView()
+    SignUpView()
 }

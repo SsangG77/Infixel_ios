@@ -8,9 +8,27 @@
 import SwiftUI
 
 struct horizentalScrollView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
+   
+        @State private var slideImageTags = ["Tag1", "Long Tag2", "Very Long Tag3", "Tag4", "Tag5"]
+
+        var body: some View {
+            ScrollView(.horizontal) {
+                
+                HStack {
+                    ForEach(slideImageTags, id: \.self) { tag in
+     
+                        ZStack {
+                            Rectangle()
+                                .frame(width: CGFloat(tag.count)*10 + 10, height: 30)
+                                
+                            Text(tag).foregroundColor(.white)
+                                
+                        }
+                    }
+                }
+            }
+
+        }
 }
 
 #Preview {
