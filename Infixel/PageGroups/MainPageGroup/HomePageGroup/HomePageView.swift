@@ -27,10 +27,9 @@ struct HomePageView: View {
             
             ZStack(alignment: .topTrailing) {
                 TabView(selection : $selectedTabIndex) {
-                ForEach(
+                    ForEach(
                     //$slideImages,
-                    0..<slideImages.count,
-                    id: \.self) { i in
+                    0..<slideImages.count, id: \.self) { i in
                         VStack {
                             AsyncImageView(imageURL: URL(string: slideImages[i].link))
                                 .frame(width: width, height: height)
@@ -38,51 +37,61 @@ struct HomePageView: View {
                         .rotationEffect(Angle(degrees: -90))
                         .frame(height: height)
                         .onAppear {
-                            print(slideImages[i].description + ", 사진 갯수 :" + String(slideImages.count))
                             withAnimation(.easeInOut(duration: 0.5)) {
                                 infoBoxReset = false
                             } //withAnimation
-                        }//onAppear - VStack
-                } //ForEach
-            } //TabView
-            .tabViewStyle(.page(indexDisplayMode: .never))
-            .rotationEffect(Angle(degrees: 90))
-            .frame(width: height)
-            .offset(x: -height/4)
-            .ignoresSafeArea()
-            .onChange(of: selectedTabIndex) { newTab in
-                        // 선택된 탭이 마지막 탭인지 확인
-                        if newTab == slideImages.count - 1 {
-                            // 마지막 탭에 도달했을 때 실행할 함수 호출
-                            print("진짜 마지막 탭")
+                            print("AsyncImageView - VStack .onAppear ===================== [\(slideImages[i].description)] 사진 갯수 : \(slideImages.count) ")
                             reqImage()
-                        }
+                        }//onAppear - VStack
+                    } //ForEach
+                } //TabView
+                .tabViewStyle(.page(indexDisplayMode: .never))
+                .rotationEffect(Angle(degrees: 90))
+                .frame(width: height)
+                .offset(x: -height/4)
+                .ignoresSafeArea()
+                .onChange(of: selectedTabIndex) { newTab in
+                    
+                    // 선택된 탭이 마지막 탭인지 확인
+                    if newTab == slideImages.count - 1 || newTab == slideImages.count - 2 {
+                        // 마지막 탭에 도달했을 때 실행할 함수 호출
+                        print("TabView - onChange ============================== 마지막 탭 도달")
+                        reqImage()
+                    } else {
+                        print("TabView - onChange ============================== 숫자가 달라, 현재 탭 번호 : \(newTab), 이미지 번호 : \(slideImages.count) ")
                     }
+                }//TabView - onChange
                 
                 VStack {
                     Spacer()
                     if slideImages.count > 0 {
-                        
-                        Info_SubButtonView(arrowBtnState: $infoBoxReset, slideImage: $slideImages[selectedTabIndex])
-                        
-                            .frame(width: width - 34, height: 300, alignment: .bottom)
-                            .padding([.leading, .trailing], 17)
+                    
+                    Info_SubButtonView(arrowBtnState: $infoBoxReset, slideImage: $slideImages[selectedTabIndex])
+                    
+                        .frame(width: width - 34, height: 300, alignment: .bottom)
+                        .padding([.leading, .trailing], 17)
                     }
                     Spacer().frame(height: 120)
-                    
                 }//VStack
                 .frame(width: height, height: height, alignment: .leading)
-               
             }//Zstack
-           
         } //GeometryReader
         .ignoresSafeArea()
         .background(.white.opacity(0.3)) // <- 여기에 로딩 이미지 넣어야함
         .onAppear {
-            reqImage()
-            reqImage()
+            print("")
+            print("===================================최초 로딩 뷰===================================")
+            Timer.scheduledTimer(withTimeInterval: 0.3, repeats: true) { timer in
+                // 배열에 값을 추가
+                print("GeometryReader .onAppear ============================== 초기 값 추가됨, slideImages.count : \(slideImages.count)")
+                reqImage()
+                // 배열에 값이 두 개가 되면 타이머 정지
+                if slideImages.count == 2 {
+                    timer.invalidate()
+                }
+            }//Timer.scheduledTimer
         }//onAppear - GeometryReader
-    }
+    }//body
     
     
     func reqImage() {
@@ -102,6 +111,7 @@ struct HomePageView: View {
                                 let userNick = uploaderData["user_nick"] {
                                let newSlideImage = SlideImage(link: link, pic: pic, description: description, user: User(user_nick: userNick))
                                slideImages.append(newSlideImage)
+                               print("reqImage() ============================================ slideImages 배열에  이미지 추가")
                            }//if let link, pic, description ...
                        }//if let json
                     } catch {
