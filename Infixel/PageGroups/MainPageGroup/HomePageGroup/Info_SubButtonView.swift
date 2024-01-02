@@ -11,14 +11,11 @@ struct Info_SubButtonView: View {
     
     var cornerRadius = 18.0
     
-    @Binding var arrowBtnState:Bool
-    //@State var arrowBtnState = true
+    @State var arrowBtnState = true
+    //@Binding var arrowBtnState:Bool
     
-    //@Binding var slideImage : SlideImage
-    
-    
-    //@State var slideImage: SlideImage = SlideImage(link: "", pic: 32, user: User(email: "email", password: "1234", user_nick: "sang_ji"))
-    @Binding var slideImage: SlideImage
+    @State var slideImage: SlideImage = SlideImage(link: "", pic: 32, description: "test", user: User(user_nick: "sang_ji"))
+    //@Binding var slideImage: SlideImage
     
     
     var body: some View {
@@ -35,7 +32,7 @@ struct Info_SubButtonView: View {
                             HStack {
                                 VStack { //프로필, 닉네임 키우기
                                     VStack {
-                                        AsyncImageView(imageURL: URL(string : "https://cdn.hankooki.com/news/photo/202302/51614_68799_1675349887.jpg"))
+                                        AsyncImageView(imageURL: URL(string : "https://picsum.photos/200/300"))
                                             .cornerRadius(200)
                                         
                                     }//VStack - 프로필 사진 확대
@@ -107,7 +104,7 @@ struct Info_SubButtonView: View {
                         else {
                             HStack {
                                 VStack {
-                                    AsyncImageView(imageURL: URL(string : "https://cdn.hankooki.com/news/photo/202302/51614_68799_1675349887.jpg"))
+                                    AsyncImageView(imageURL: URL(string : "https://picsum.photos/200/300"))
                                         .cornerRadius(200)
                                     
                                 }//VStack
@@ -124,7 +121,7 @@ struct Info_SubButtonView: View {
                         
                         Spacer()
                         withAnimation {
-                        Image(arrowBtnState ? "arrow<" : "arrow")
+                        Image(arrowBtnState ? "arrow_left" : "arrow_right")
                                 .frame(width: 10, height: 10)
                                 .onTapGesture {
                                     withAnimation {

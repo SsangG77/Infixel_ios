@@ -14,8 +14,6 @@ struct HomePageView: View {
     @State var slideImages: [SlideImage] = []
     @State var infoBoxReset = false
     
-    @State var currentSlideImage = SlideImage(link: "", pic : 0, description: "", user: User(user_nick: ""))
-    
     @State private var selectedTabIndex = 0
     
     var body: some View {
