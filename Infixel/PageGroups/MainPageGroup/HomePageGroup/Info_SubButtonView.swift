@@ -14,7 +14,7 @@ struct Info_SubButtonView: View {
     @State var arrowBtnState = true
     //@Binding var arrowBtnState:Bool
     
-    @State var slideImage: SlideImage = SlideImage(link: "", pic: 32, description: "test", user: User(user_nick: "sang_ji"))
+    @State var slideImage: SlideImage = SlideImage(link: "", pic: 32, description: "test", user: User(user_nick: "sang_ji", thumbnail_link: "http://localhost:3000/randomjpg"))
     //@Binding var slideImage: SlideImage
     
     
@@ -32,8 +32,9 @@ struct Info_SubButtonView: View {
                             HStack {
                                 VStack { //프로필, 닉네임 키우기
                                     VStack {
-                                        AsyncImageView(imageURL: URL(string : "https://picsum.photos/200/300"))
+                                        AsyncImageView(imageURL: URL(string: slideImage.uploader.thumbnail_link))
                                             .cornerRadius(200)
+                                            
                                         
                                     }//VStack - 프로필 사진 확대
                                     .frame(width: 60, height: 60)
@@ -104,7 +105,7 @@ struct Info_SubButtonView: View {
                         else {
                             HStack {
                                 VStack {
-                                    AsyncImageView(imageURL: URL(string : "https://picsum.photos/200/300"))
+                                    AsyncImageView(imageURL: URL(string : slideImage.uploader.thumbnail_link))
                                         .cornerRadius(200)
                                     
                                 }//VStack
@@ -222,8 +223,8 @@ struct Info_SubButtonView: View {
     
     
 }
-//
-//
-//#Preview {
-//    Info_SubButtonView()
-//}
+
+
+#Preview {
+    Info_SubButtonView()
+}

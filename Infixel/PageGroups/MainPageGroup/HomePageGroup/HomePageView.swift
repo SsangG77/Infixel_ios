@@ -63,8 +63,8 @@ struct HomePageView: View {
                 VStack {
                     Spacer()
                     if slideImages.count > 0 {
-                    
-                    Info_SubButtonView(arrowBtnState: $infoBoxReset, slideImage: $slideImages[selectedTabIndex])
+                        Info_SubButtonView()
+                    //Info_SubButtonView(arrowBtnState: $infoBoxReset, slideImage: $slideImages[selectedTabIndex])
                     
                         .frame(width: width - 34, height: 300, alignment: .bottom)
                         .padding([.leading, .trailing], 17)
@@ -106,8 +106,9 @@ struct HomePageView: View {
                                 let pic = json["pic"] as? Int,
                                 let description = json["description"] as? String,
                                 let uploaderData = json["uploader"] as? [String: String],
-                                let userNick = uploaderData["user_nick"] {
-                               let newSlideImage = SlideImage(link: link, pic: pic, description: description, user: User(user_nick: userNick))
+                                let userNick = uploaderData["user_nick"],
+                                let userThumbNail = uploaderData["thumbnail_link"] {
+                               let newSlideImage = SlideImage(link: link, pic: pic, description: description, user: User(user_nick: userNick, thumbnail_link: userThumbNail))
                                slideImages.append(newSlideImage)
                                print("reqImage() ============================================ slideImages 배열에  이미지 추가")
                            }//if let link, pic, description ...
