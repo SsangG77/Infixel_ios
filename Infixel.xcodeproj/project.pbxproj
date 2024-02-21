@@ -25,6 +25,8 @@
 		912B68BE2AB81F2F00505677 /* SavePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B68BD2AB81F2F00505677 /* SavePageView.swift */; };
 		912B68C02AB81F3D00505677 /* ProfilePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B68BF2AB81F3D00505677 /* ProfilePageView.swift */; };
 		912B68C22AB8291D00505677 /* NavView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B68C12AB8291D00505677 /* NavView.swift */; };
+		912F959D2B4E761C0045A250 /* AddAlbum_singleAlbum_View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912F959C2B4E761C0045A250 /* AddAlbum_singleAlbum_View.swift */; };
+		912F959F2B4FEF430045A250 /* Album_class.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912F959E2B4FEF430045A250 /* Album_class.swift */; };
 		91309F222AF0A8FB006E852F /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91309F212AF0A8FB006E852F /* ColorExtension.swift */; };
 		91309F242AF0DF7E006E852F /* IconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91309F232AF0DF7E006E852F /* IconView.swift */; };
 		91309F262AF0F3F3006E852F /* horizentalScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91309F252AF0F3F3006E852F /* horizentalScrollView.swift */; };
@@ -37,7 +39,9 @@
 		9192B10A2ABBE4D6007F7ED9 /* SignUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9192B1092ABBE4D6007F7ED9 /* SignUpView.swift */; };
 		9192B10E2ABC065B007F7ED9 /* InputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9192B10D2ABC065B007F7ED9 /* InputView.swift */; };
 		9192B1162AC14E05007F7ED9 /* SlideImageView2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9192B1152AC14E05007F7ED9 /* SlideImageView2.swift */; };
+		919C23832B46B6C9003182C5 /* AddAlbumView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 919C23822B46B6C9003182C5 /* AddAlbumView.swift */; };
 		91B7F2B42AE75F6100BDB2C6 /* Info_SubButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91B7F2B32AE75F6000BDB2C6 /* Info_SubButtonView.swift */; };
+		91FDAAD72B6265D800C8EE8F /* VarCollectionFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91FDAAD62B6265D700C8EE8F /* VarCollectionFile.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,6 +65,8 @@
 		912B68BD2AB81F2F00505677 /* SavePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavePageView.swift; sourceTree = "<group>"; };
 		912B68BF2AB81F3D00505677 /* ProfilePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePageView.swift; sourceTree = "<group>"; };
 		912B68C12AB8291D00505677 /* NavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavView.swift; sourceTree = "<group>"; };
+		912F959C2B4E761C0045A250 /* AddAlbum_singleAlbum_View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAlbum_singleAlbum_View.swift; sourceTree = "<group>"; };
+		912F959E2B4FEF430045A250 /* Album_class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album_class.swift; sourceTree = "<group>"; };
 		91309F212AF0A8FB006E852F /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		91309F232AF0DF7E006E852F /* IconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconView.swift; sourceTree = "<group>"; };
 		91309F252AF0F3F3006E852F /* horizentalScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = horizentalScrollView.swift; sourceTree = "<group>"; };
@@ -73,7 +79,9 @@
 		9192B1092ABBE4D6007F7ED9 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		9192B10D2ABC065B007F7ED9 /* InputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputView.swift; sourceTree = "<group>"; };
 		9192B1152AC14E05007F7ED9 /* SlideImageView2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideImageView2.swift; sourceTree = "<group>"; };
+		919C23822B46B6C9003182C5 /* AddAlbumView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAlbumView.swift; sourceTree = "<group>"; };
 		91B7F2B32AE75F6000BDB2C6 /* Info_SubButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Info_SubButtonView.swift; sourceTree = "<group>"; };
+		91FDAAD62B6265D700C8EE8F /* VarCollectionFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VarCollectionFile.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +193,8 @@
 			children = (
 				912B68B62AB81B8100505677 /* HomePageView.swift */,
 				91B7F2B32AE75F6000BDB2C6 /* Info_SubButtonView.swift */,
+				919C23822B46B6C9003182C5 /* AddAlbumView.swift */,
+				912F959C2B4E761C0045A250 /* AddAlbum_singleAlbum_View.swift */,
 			);
 			path = HomePageGroup;
 			sourceTree = "<group>";
@@ -220,6 +230,8 @@
 				917B43682AC5397A0029609B /* SlideImage_class.swift */,
 				917B436A2AC541180029609B /* User_class.swift */,
 				917B436C2AC541A80029609B /* Comment_class.swift */,
+				912F959E2B4FEF430045A250 /* Album_class.swift */,
+				91FDAAD62B6265D700C8EE8F /* VarCollectionFile.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -329,11 +341,15 @@
 				914B4F182AB99E6200643262 /* TabViewModel.swift in Sources */,
 				912B68892AB088BF00505677 /* ContentView.swift in Sources */,
 				912B68BC2AB81F0400505677 /* SearchPageView.swift in Sources */,
+				912F959F2B4FEF430045A250 /* Album_class.swift in Sources */,
+				912F959D2B4E761C0045A250 /* AddAlbum_singleAlbum_View.swift in Sources */,
 				912B689F2AB47B2100505677 /* UIColor.swift in Sources */,
+				91FDAAD72B6265D800C8EE8F /* VarCollectionFile.swift in Sources */,
 				912B68C22AB8291D00505677 /* NavView.swift in Sources */,
 				917B436D2AC541A80029609B /* Comment_class.swift in Sources */,
 				917B43642AC3EB010029609B /* TabViewForSlideImageView_test.swift in Sources */,
 				9192B1162AC14E05007F7ED9 /* SlideImageView2.swift in Sources */,
+				919C23832B46B6C9003182C5 /* AddAlbumView.swift in Sources */,
 				912B68BE2AB81F2F00505677 /* SavePageView.swift in Sources */,
 				9192B10A2ABBE4D6007F7ED9 /* SignUpView.swift in Sources */,
 				91309F262AF0F3F3006E852F /* horizentalScrollView.swift in Sources */,

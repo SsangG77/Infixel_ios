@@ -14,7 +14,7 @@ struct LoginPage: View {
     //프리뷰용 변수
     //@State var isLoggedIn = false
     
-    @State private var userEmail: String = ""
+    @State private var userId: String = ""
     @State private var userPW: String = ""
     
 
@@ -45,7 +45,7 @@ struct LoginPage: View {
                         .padding(.top, 140)
                
               
-                    LoginInputView(userEmail: $userEmail, userPW: $userPW)
+                    LoginInputView(userId: $userId, userPW: $userPW)
                         .padding(.top, 15)
            
                     //회원가입
@@ -64,7 +64,7 @@ struct LoginPage: View {
                     
                     
                     
-                    LoginButtonView(isLoggedIn : $isLoggedIn, userEmail: $userEmail, userPW: $userPW)
+                    LoginButtonView(isLoggedIn : $isLoggedIn, userId: $userId, userPW: $userPW)
                         .padding(.top, 70)
                     
                     

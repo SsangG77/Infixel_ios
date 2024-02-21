@@ -10,7 +10,7 @@ import SwiftUI
 struct LoginInputView: View {
     
    
-    @Binding var userEmail:String
+    @Binding var userId:String
     @Binding var userPW:String
     
     @State var placeHolder_email:String = "E-mail"
@@ -22,7 +22,7 @@ struct LoginInputView: View {
     
     var body: some View {
         //ID
-        InputView(inputValue: $userEmail, placeHolder: $placeHolder_email, secure: $notSecure)
+        InputView(inputValue: $userId, placeHolder: $placeHolder_email, secure: $notSecure)
         
         //PW
         InputView(inputValue: $userPW, placeHolder: $placeHolder_pw, secure: $secure)

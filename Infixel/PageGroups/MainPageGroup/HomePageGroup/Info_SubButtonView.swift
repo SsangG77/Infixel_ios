@@ -11,16 +11,25 @@ struct Info_SubButtonView: View {
     
     var cornerRadius = 18.0
     
-    @State var arrowBtnState = true
-    //@Binding var arrowBtnState:Bool
+    //@State var arrowBtnState = true
+    @Binding var arrowBtnState:Bool
     
-    @State var slideImage: SlideImage = SlideImage(link: "", pic: 32, description: "test", user: User(user_nick: "sang_ji", thumbnail_link: "http://localhost:3000/randomjpg"))
-    //@Binding var slideImage: SlideImage
+    //@State var slideImage: SlideImage = SlideImage(link: "", pic: 32, description: "test", user: User(user_nick: "sang_ji", thumbnail_link: "http://localhost:3000/randomjpg"))
+    @Binding var slideImage: SlideImage
+    
+    @Binding var albumsOpen:Bool
+    @Binding var addAlbumOffset : CGFloat
+    
+    @State var pic_count = 0
     
     
     var body: some View {
+        
+        
+        
         GeometryReader { geo in
             HStack {
+                
                 ZStack {
                     Rectangle()
                         .foregroundColor(.secondary.opacity(0.1))
@@ -156,8 +165,9 @@ struct Info_SubButtonView: View {
                                 
                                 IconView(imageName: "pic!", size: size, padding: EdgeInsets(top: 9, leading:0, bottom: 2, trailing: -2)) {
                                     print("+1")
+                                    pic_count = pic_count + 1
                                 }
-                                Text(String(slideImage.pic)).font(.system(size: 11)).foregroundColor(.white)
+                                Text(String(pic_count)).font(.system(size: 11)).foregroundColor(.white)
                             }
                             .padding(.bottom, 5)
                             VStack {
@@ -172,7 +182,11 @@ struct Info_SubButtonView: View {
                             
                             
                             IconView(imageName: "add albums", size: size, padding: padding) {
-                                print("+1")
+                                withAnimation {
+                                    albumsOpen = true
+                                    addAlbumOffset = 300
+                                }
+                                print("add album 버튼 클릭")
                             }
                             IconView(imageName: "three dots", size: size, padding: padding) {
                                 print("+1")
@@ -194,7 +208,11 @@ struct Info_SubButtonView: View {
                                 print("+1")
                             }
                             IconView(imageName: "add albums", size: size, padding: padding) {
-                                print("+1")
+                                withAnimation {
+                                    albumsOpen = true
+                                    addAlbumOffset = 300
+                                }
+                                print("add album 버튼 클릭")
                             }
                             IconView(imageName: "three dots", size: size, padding: padding) {
                                 print("+1")
@@ -208,6 +226,9 @@ struct Info_SubButtonView: View {
                 .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
             }
             .frame(width: geo.size.width, height: 300, alignment: .bottom)
+        }
+        .onAppear {
+            pic_count = slideImage.pic
         }
     }
     
@@ -225,6 +246,6 @@ struct Info_SubButtonView: View {
 }
 
 
-#Preview {
-    Info_SubButtonView()
-}
+//#Preview {
+//    Info_SubButtonView()
+//}

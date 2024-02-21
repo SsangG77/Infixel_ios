@@ -16,14 +16,18 @@ struct HomePageView: View {
     
     @State private var selectedTabIndex = 0
     
+    //@State private var albumsOpen = false
+    @Binding var albumsOpen:Bool
+    @Binding var addAlbumOffset : CGFloat
+    
     var body: some View {
         
-        GeometryReader { geo in
-            
-            let width = geo.size.width
-            let height = geo.size.height
             
             ZStack(alignment: .topTrailing) {
+                GeometryReader { geo in
+                    
+                    let width = geo.size.width
+                    let height = geo.size.height
                 TabView(selection : $selectedTabIndex) {
                     ForEach(
                     //$slideImages,
@@ -59,12 +63,17 @@ struct HomePageView: View {
                         print("TabView - onChange ============================== 숫자가 달라, 현재 탭 번호 : \(newTab), 이미지 번호 : \(slideImages.count) ")
                     }
                 }//TabView - onChange
-                
+                //===========================================TabView=============================================
                 VStack {
                     Spacer()
                     if slideImages.count > 0 {
-                        Info_SubButtonView()
-                    //Info_SubButtonView(arrowBtnState: $infoBoxReset, slideImage: $slideImages[selectedTabIndex])
+                        //Info_SubButtonView()
+                        Info_SubButtonView(
+                            arrowBtnState: $infoBoxReset,
+                            slideImage: $slideImages[selectedTabIndex],
+                            albumsOpen : $albumsOpen,
+                            addAlbumOffset : $addAlbumOffset
+                        )
                     
                         .frame(width: width - 34, height: 300, alignment: .bottom)
                         .padding([.leading, .trailing], 17)
@@ -72,12 +81,32 @@ struct HomePageView: View {
                     Spacer().frame(height: 120)
                 }//VStack
                 .frame(width: height, height: height, alignment: .leading)
+                //======================================info_SubButtonView===================================
+                
+                } //GeometryReader
+                
+                ZStack {
+                    if albumsOpen {
+                            Rectangle()
+                                .foregroundColor(.secondary.opacity(0.1))
+                                .background(.ultraThinMaterial)
+                                .transition(.opacity)
+                                .opacity(albumsOpen ? 1.0 : 0.0)
+                                .animation(.easeInOut)
+                                .onTapGesture {
+                                    withAnimation {
+                                        albumsOpen = false
+                                        addAlbumOffset = 1000
+                                    }
+                                }
+                    }
+                    
+                }//ZStack - add album
             }//Zstack
-        } //GeometryReader
         .ignoresSafeArea()
         .background(.white.opacity(0.3)) // <- 여기에 로딩 이미지 넣어야함
         .onAppear {
-            print("")
+            print("   ")
             print("===================================최초 로딩 뷰===================================")
             Timer.scheduledTimer(withTimeInterval: 0.3, repeats: true) { timer in
                 // 배열에 값을 추가
@@ -90,6 +119,13 @@ struct HomePageView: View {
             }//Timer.scheduledTimer
         }//onAppear - GeometryReader
     }//body
+    
+    
+    
+    
+    
+    
+    
     
     
     func reqImage() {
@@ -127,8 +163,8 @@ struct HomePageView: View {
     
 
 
-struct HomePageView_Previews: PreviewProvider {
-    static var previews: some View {
-        HomePageView()
-    }
-}
+//struct HomePageView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        HomePageView()
+//    }
+//}

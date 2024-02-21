@@ -21,8 +21,18 @@ struct MainView: View {
     
     @Binding var isLoggedIn: Bool
     
+    
     @ObservedObject var tabViewModel: TabViewModel = TabViewModel()
     @State var selectedTab: TabViewModel.Tab = .house
+    
+    @State var albumsOpen = false
+    @State private var addAlbumOffset: CGFloat = 1000
+    
+    @State var albumList:[Album] = [
+        Album(thumbnailLink: "https://talkimg.imbc.com/TVianUpload/tvian/TViews/image/2022/05/11/029fdc46-8afe-4ba2-ac5b-3f6375d5f57a.jpg", albumName: "김채원"),
+        Album(thumbnailLink: "https://mblogthumb-phinf.pstatic.net/MjAyMjAxMDFfMTgg/MDAxNjQxMDIyMDkxNzk1.-qCV6vAD3jZ-Oy8y-m1yb7kA11onbF6j4Ve5PlRHxvkg.MwNKmochjVpTvb_FxZdHDCkOTxuCxKvQd15wDo2m6M0g.JPEG.xaintwine/1.jpeg?type=w800", albumName: "카리나"),
+        Album(thumbnailLink: "https://cdn.newskrw.com/news/photo/202306/17390_24130_811.jpg", albumName: "윈터")
+    ]
     
     
     
@@ -31,7 +41,7 @@ struct MainView: View {
         ZStack {
             switch selectedTab {
             case .house:
-                HomePageView()
+                HomePageView(albumsOpen: $albumsOpen, addAlbumOffset : $addAlbumOffset)
             case .search:
                 SearchPageView()
             case .plus:
@@ -48,17 +58,24 @@ struct MainView: View {
                 NavView(selectedTab: $selectedTab)
                     .padding(.bottom, 10)
             }
+            
+            AddAlbumView(albumList: $albumList, albumsOpen: $albumsOpen, addAlbumOffset : $addAlbumOffset)
+                .offset(y : addAlbumOffset)
+                .animation(.easeInOut)
         }
         
-        
-        }
     }
+}
 
-
+//
 //struct MainView_Previews: PreviewProvider {
+//    
+//    @State var isLoggedIn = false
 //    
 //    
 //    static var previews: some View {
-//        MainView()
+//        MainView(isLoggedIn: .constant(false))
 //    }
 //}
+//
+
