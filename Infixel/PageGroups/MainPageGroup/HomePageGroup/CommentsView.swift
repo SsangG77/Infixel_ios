@@ -10,20 +10,18 @@ import SwiftUI
 struct CommentsView: View {
     
     @Binding var slideImage             :   SlideImage
+    @EnvironmentObject var appState: AppState
+    
     
     @State var commentList              :   [Comment] = []
-    
-    @Binding var commentsOpen           :   Bool            //댓글창 열림 플래그 변수
-    @State var response_comments        :   Bool = false    //서버에서 댓글 응답 성공 플래그 변수
-    
     @State var comment                  :   String = ""     //사용자가 작성하는 댓글
-    
-    //let _height = 800.0
+    @State var response_comments        :   Bool = false    //서버에서 댓글 응답 성공 플래그 변수
     @State var top_handle_height        :   CGFloat = 50
     @State var bottom_textfield_height  :   CGFloat = 70
-    
     @State private var dragOffset       :   CGFloat = 0.0
-    @Binding var commentsOffset         :   CGFloat
+    //@Binding var commentsOpen           :   Bool            //댓글창 열림 플래그 변수
+    //@Binding var commentsOffset         :   CGFloat
+    
     
     var body: some View {
         GeometryReader { geo in
@@ -36,17 +34,30 @@ struct CommentsView: View {
                             .padding([.top, .bottom], 20)
                             .gesture(DragGesture()
                                .onChanged { value in
-                                   commentsOffset = value.translation.height + 200
+                                   //commentsOffset = value.translation.height + 200
+                                   appState.commentsOffset = value.translation.height + 200
                                } // onChanged
                                 .onEnded { value in
-                                    if commentsOffset > 250 {
-                                        commentsOffset = 1000
-                                        commentsOpen = false
-                                    } else if commentsOffset < 270 {
-                                        commentsOffset = 200
-                                        commentsOpen = true
-                                        
-                                    } //if문
+                                    //---@EnviromentObject--- 적용 전
+//                                    if commentsOffset > 250 {
+//                                        commentsOffset = 1000
+//                                        commentsOpen = false
+//                                    } else if commentsOffset < 270 {
+//                                        commentsOffset = 200
+//                                        commentsOpen = true
+//                                        
+//                                    } //if문
+                                    
+                                    //---@EnviromentObject--- 적용 전
+                                    if appState.commentsOffset > 250 {
+                                        appState.commentsOffset = 1000
+                                        appState.commentsOpen = false
+                                    } else if appState.commentsOffset < 270 {
+                                        appState.commentsOffset = 200
+                                        appState.commentsOpen = true
+                                    }
+                                    
+                                    
                                 } //.onEnded
                            )// .gesture
                     }//VStack
@@ -74,7 +85,7 @@ struct CommentsView: View {
                         }
                     }//ScrollView
                     .frame(height: geo.size.height - top_handle_height - bottom_textfield_height - 200)
-                    .onChange(of: commentsOpen) { value in
+                    .onChange(of: appState.commentsOpen) { value in
                         if value {
                             getComments(imageId: slideImage.id)
                             

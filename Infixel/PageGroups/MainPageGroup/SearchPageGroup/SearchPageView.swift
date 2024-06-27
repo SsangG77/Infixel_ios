@@ -8,31 +8,21 @@
 import SwiftUI
 
 struct SearchPageView: View {
-    
-    //private let baseColor: Color = .init(red: 232/255, green: 232/255, blue: 232/255)
-    //private let shadowColor: Color = .init(red: 197/255, green: 197/255, blue: 197/255)
-      
     //검색창 변수
     @State var searchValue = ""
     @State var placeHolder = "Search"
     @State var secure = false
-    
-    
-    //
-    //@State private var items: [Int] = []
-    @State private var images: [String] = []
-    
-    
-//    let columns = [
-//            GridItem(.flexible()),  // 첫 번째 열
-//            GridItem(.flexible()),  // 두 번째 열
-//            GridItem(.flexible())   // 세 번째 열
-//        ]
-    
+    @State private var images: [SearchSingleImage] = []
     @State private var selectedImage: String?
+    @State private var selectedImageId: String?
+    @State private var cell_width = (UIScreen.main.bounds.width / 3) - 5
+    
+    //@StateObject private var viewModel = ImageViewModel()
     @State private var showImageViewer: Bool = false
     
-    @State private var cell_width = (UIScreen.main.bounds.width / 3) - 5
+    
+    @EnvironmentObject var appState: AppState
+    
     
     var body: some View {
         
@@ -51,7 +41,11 @@ struct SearchPageView: View {
                                 .underline(true, color: .white.opacity(0.6))
                                 .font(Font.custom("Bungee-Regular", size: 20))
                             } //if
-                            TextField("", text: $searchValue)
+                            TextField("", text: $searchValue, onCommit: {
+                                if searchValue != "" {
+                                    searchTag(searchWord: searchValue)
+                                }
+                            })
                                 .foregroundColor(Color.white.opacity(0.6))
                                 .padding(.leading, 17)
                                 .frame(height: 50)
@@ -67,13 +61,9 @@ struct SearchPageView: View {
                     .frame(width: geo.size.width*0.85)
                     
                     IconView(imageName: "search active", size: 38.0, padding: EdgeInsets(top: 2, leading:-5, bottom: 2, trailing: 10)) {
-                        
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                         if searchValue != "" {
                             searchTag(searchWord: searchValue)
-                        }
-                        
-                        images = (1...10).map { _ in
-                            "http://localhost:3000/image/randomjpg?\(index)=\(UUID().uuidString)"
                         }
                         
                     }//IconView
@@ -81,8 +71,8 @@ struct SearchPageView: View {
                 
                 ScrollView {
                     LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: 3) {
-                        ForEach(images, id: \.self) { imageLink in
-                            AsyncImage(url: URL(string: imageLink)) { phase in
+                        ForEach(images, id: \.self) { single_image in
+                            AsyncImage(url: URL(string: single_image.image_name)) { phase in
                                 switch phase {
                                 case .empty:
                                     ProgressView()
@@ -94,9 +84,14 @@ struct SearchPageView: View {
                                         .frame(width: cell_width, height: cell_width)
                                         .clipped()
                                         .onTapGesture {
-                                            selectedImage = imageLink
-                                            showImageViewer = true
-                                            print(imageLink)
+                                            //viewModel.selectImage(imageUrl: single_image.image_name, imageId: single_image.id)
+                                            appState.selectImage(imageUrl: single_image.image_name, imageId: single_image.id)
+                                            
+                                            selectedImage = single_image.image_name
+                                            selectedImageId = single_image.id
+                                            
+                                            
+                                            appState.showImageViewer = true
                                         }//onTapGesture
                                 case .failure:
                                     Image(systemName: "photo")
@@ -114,17 +109,22 @@ struct SearchPageView: View {
                 }//ScrollView
                      
             }//vstack
-            .frame(width: geo.size.width)
-            .sheet(isPresented: $showImageViewer, content: {
-                if let selectedImage = selectedImage {
-                    ImageViewer(imageUrl: selectedImage)
-                    //ImageViewer(imageUrl: "https://image.blip.kr/v1/file/b321f5a3b77be82cd8822d04d7bb696d")
+            .sheet(isPresented: $showImageViewer) {
+                if let selectedImage = appState.selectedImage, let selectedImageId = appState.selectedImageId {
+                    ImageViewer(imageUrl: .constant(selectedImage), imageId: .constant(selectedImageId))
+                } else {
+                    Text("Loading...")
                 }
-            })
+            }
+            .onReceive(appState.$selectedImage) { _ in
+                if appState.selectedImage != nil {
+                    showImageViewer = true
+                }
+            }
+            //------------------------
+            
+            .frame(width: geo.size.width)
         }// geo
-        .onAppear {
-            //items = Array(1...100)
-        }
         
         
     }
@@ -136,7 +136,7 @@ struct SearchPageView: View {
         }
         
         let body: [String: String] = ["search_word": searchWord]
-        var request = URLRequest.post(url: url, body: body)
+        let request = URLRequest.post(url: url, body: body)
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
@@ -144,13 +144,42 @@ struct SearchPageView: View {
                 return
             }
             if let response = response as? HTTPURLResponse, response.statusCode == 200 {
-              
+                if let data = data {
+                    if let decodedResponse = try? JSONDecoder().decode([SearchSingleImage].self, from: data) {
+                        DispatchQueue.main.async {
+                            self.images = decodedResponse
+                        }
+                    }
+                } else if let error = error {
+                    VarCollectionFile.myPrint(title: "SearchPageView", content: error)
+                }
                 
             } else {
                 print("Failed to send text to server")
             }
         }.resume()
         
+    }
+}
+
+
+class SearchSingleImage: Identifiable, Decodable, Hashable {
+    let id: String
+    var image_name: String
+    
+    init(id: String, image_name: String) {
+        self.id = id
+        self.image_name = image_name
+    }
+    
+    // Hashable 프로토콜을 준수하기 위해 hash(into:) 메서드를 추가합니다.
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    // Equatable 프로토콜을 준수하기 위해 == 연산자를 구현합니다.
+    static func == (lhs: SearchSingleImage, rhs: SearchSingleImage) -> Bool {
+        return lhs.id == rhs.id && lhs.image_name == rhs.image_name
     }
 }
 

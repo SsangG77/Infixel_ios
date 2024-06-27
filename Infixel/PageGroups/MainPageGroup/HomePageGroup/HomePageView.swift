@@ -4,150 +4,207 @@
 //
 //  Created by 차상진 on 2023/09/18.
 //
-
 import SwiftUI
-import Foundation
 
 struct HomePageView: View {
     
+    @State private var slideImages: [SlideImage] = []
     
-    @State var slideImages: [SlideImage] = []
-    @State var infoBoxReset = false
+    @State private var isLoadingMore = false
+    @State private var isInitialLoad = true
     
-    @State private var selectedTabIndex = 0
     
-    //@State private var albumsOpen = false
-    @Binding var albumsOpen:Bool
-    @Binding var addAlbumOffset : CGFloat
+    @EnvironmentObject var appState: AppState
     
-    @Binding var commentsOpen:Bool
-    @Binding var commentsOffset: CGFloat
+    @State private var reloadTriggers: [UUID] = []
     
     @Binding var slideImage:SlideImage
-    
+ 
+
     var body: some View {
-        
-            ZStack(alignment: .topTrailing) {
-                GeometryReader { geo in
-                    
-                    let width = geo.size.width
-                    let height = geo.size.height
-                TabView(selection : $selectedTabIndex) {
-                    
-                    
-//                    ForEach($slideImages) { $slideImage in
-//                        VStack {
-//                            AsyncImageView(imageURL: $slideImage.link)
-//                                .frame(width: width, height: height)
-//                        }
-//                        .rotationEffect(Angle(degrees: -90))
-//                        .frame(height: height)
-//                        //.tag(slideImage.id)
-//                        .onAppear {
-//                            withAnimation(.easeInOut(duration: 0.5)) {
-//                                infoBoxReset = false
-//                            } //withAnimation
-//                       
-//                            reqImage()
-//                        }//onAppear - VStack
-//                    } //ForEach
-                    
-                    ForEach( 0..<slideImages.count, id: \.self) { i in
-                        VStack {
-                            AsyncImageView(imageURL: $slideImages[i].link)
-                                .frame(width: width, height: height)
+        if #available(iOS 17.0, *) {
+            
+            
+            ZStack {
+                
+                
+                ScrollView(.vertical, showsIndicators: false) {
+                    LazyVStack(spacing: 0) {
+                        ForEach(slideImages.indices, id: \.self) { index in
+                            if let url = URL(string: slideImages[index].link) {
+                                AsyncImage(url: url, transaction: Transaction(animation: .default)) { phase in
+                                    switch phase {
+                                    case .empty:
+                                        ProgressView()
+                                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                    case .success(let image):
+                                        image
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                                            .clipped()
+                                            .onAppear {
+                                                slideImage = slideImages[index]
+                                                
+                                                //마지막 이미지일때 동작
+                                                if slideImages[index].id == slideImages.last?.id {
+                                                    loadMorePhotosIfNeeded(currentPhoto: slideImages[index])
+                                                }
+                                            }
+                                    case .failure:
+                                        VStack {
+                                            Image(systemName: "photo")
+                                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                            Text("Failed to load image, retrying...")
+                                                .foregroundColor(.white)
+                                        }
+                                        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                                        .onAppear {
+                                            reloadImage(photo: slideImages[index])
+                                        }
+                                    @unknown default:
+                                        EmptyView()
+                                    }//--@switch
+                                }//--@AsyncImage
+                                .id(reloadTriggers[index])
+                            }//--@if_let_url
+                        }//--@ForEach
+                        .onChange(of: slideImage) {
+                            withAnimation {
+                                
+                                appState.infoBoxReset = false
+                            }
                         }
-                        .rotationEffect(Angle(degrees: -90))
-                        .frame(height: height)
-                        .onAppear {
-                            withAnimation(.easeInOut(duration: 0.5)) {
-                                infoBoxReset = false
-                            } //withAnimation
-                       
-                            reqImage()
-                        }//onAppear - VStack
-                    } //ForEach
-                    
-                } //TabView
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                .rotationEffect(Angle(degrees: 90))
-                .frame(width: height)
-                .offset(x: -height/4)
-                .ignoresSafeArea()
-                .onChange(of: selectedTabIndex) { newTab in
-                    VarCollectionFile.myPrint(title: "tabView - onChange", content: "test")
-                    // 선택된 탭이 마지막 탭인지 확인
-                    if newTab == slideImages.count - 1 
-                        //|| newTab == slideImages.count - 2
-                    {
-                        // 마지막 탭에 도달했을 때 실행할 함수 호출
-                        reqImage()
+                    }//--@LazyVStack
+                }//--@Scrollview
+                .scrollTargetBehavior(.paging)
+                .edgesIgnoringSafeArea(.all)
+                .onAppear {
+                    VarCollectionFile.myPrint(title: "현재 slideimage", content: slideImage)
+                    if isInitialLoad {
+                        loadInitialPhotos()
                     }
-                    slideImage = slideImages[selectedTabIndex]
-                }//TabView - onChange
-               
-                //===========================================TabView=============================================
-                    
-                    
-                    
+                }
+                
+                
                 VStack {
                     Spacer()
                     if slideImages.count > 0 {
-                        Info_SubButtonView(
-                            arrowBtnState: $infoBoxReset,
-                            slideImage: $slideImages[selectedTabIndex],
-                            albumsOpen : $albumsOpen,
-                            addAlbumOffset : $addAlbumOffset,
-                            commentsOpen: $commentsOpen,
-                            commentsOffset: $commentsOffset
-                        )
-                    
-                        .frame(width: width - 34, height: 300, alignment: .bottom)
-                        .padding([.leading, .trailing], 17)
+                        Info_SubButtonView(slideImage: $slideImage)
+                            .frame(width: UIScreen.main.bounds.width - 34, height: 300, alignment: .bottom)
+                            .padding([.leading, .trailing], 17)
+                            .environmentObject(appState)
                     }
-                    Spacer().frame(height: 120)
+                    Spacer().frame(height: UIScreen.main.bounds.height * 0.05 + UIScreen.main.bounds.height * 0.05)
                 }//VStack
-                .frame(width: height, height: height, alignment: .leading)
-                //======================================info_SubButtonView===================================
                 
-                } //GeometryReader
                 
                 ZStack {
-                    if albumsOpen || commentsOpen {
+                    if appState.albumsOpen || appState.commentsOpen {
                             Rectangle()
                                 .foregroundColor(.secondary.opacity(0.1))
                                 .background(.ultraThinMaterial)
                                 .transition(.opacity)
-                                .opacity(albumsOpen || commentsOpen ? 1.0 : 0.0)
+                                .opacity(appState.albumsOpen || appState.commentsOpen ? 1.0 : 0.0)
                                 .onTapGesture {
                                     withAnimation {
-                                        albumsOpen = false
-                                        commentsOpen = false
-                                        addAlbumOffset = 1000
-                                        commentsOffset = 1000
+                                        appState.albumsOpen = false
+                                        appState.commentsOpen = false
+                                        appState.addAlbumOffset = 1000
+                                        appState.commentsOffset = 1000
                                     }
                                 }
                     }
                     
                 }//ZStack - add album
-            }//Zstack
-        .ignoresSafeArea()
-        .background(.white.opacity(0.3))
-        .onAppear {
-            Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
-              
-                // 배열에 값이 두 개가 되면 타이머 정지
-                if slideImages.count > 2 {
-                    timer.invalidate()
-                } else {
-                    reqImage()
+                
+            }//ZStack
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        } else {
+            // iOS 17이 아닐 때
+            Text("iOS 17 버전 이상이 필요합니다.")
+        }
+    }
+    
+    
+    //최초로 뷰가 생성될때 이미지 배열에 초기값 넣는 함수
+    private func loadInitialPhotos() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            reqImage()
+            isInitialLoad = false
+        }
+    }
+    //========================================================================
+    
+    
+    //이미지 배열의 마지막에 도착했을때 추가로 이미지를 로드하는 함수
+    private func loadMorePhotosIfNeeded(currentPhoto: SlideImage) {
+        guard !isLoadingMore else { return }
+        isLoadingMore = true
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            reloadTriggers.append(UUID())
+            reqImage()
+            isLoadingMore = false
+        }
+    }
+    //========================================================================
+    
+    
+    //이미지 로드에 실패했을때 리로드하는 함수
+    private func reloadImage(photo: SlideImage) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            if let index = slideImages.firstIndex(where: { $0.id == photo.id }) {
+                reloadTriggers[index] = UUID()
+                let serverURL = URL(string: VarCollectionFile.randomImageURL)!
+                
+                let task = URLSession.shared.dataTask(with: serverURL) { (data, response, error) in
+                    if let error = error {
+                        print("요청 중 오류 발생: \(error)")
+                    } else if let data = data, let responseString = String(data: data, encoding: .utf8) {
+                        if let data = responseString.data(using: .utf8) {
+                            do {
+                                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                                   if let id = json["id"] as? String,
+                                      let imageFileName = json["image_link"] as? String,
+                                      let pic = json["pic"] as? Int,
+                                      let description = json["description"] as? String,
+                                      let userNick = json["user_at"] as? String,
+                                      let userProfileImage = json["profile_image"] as? String {
+                                       let newSlideImage = SlideImage(id:id, link: imageFileName, pic: pic, description: description, user_nick: userNick, profile_image: userProfileImage)
+                                       DispatchQueue.main.async {
+                                           slideImage = newSlideImage
+                                           if slideImages.isEmpty {
+                                               slideImages[index] = newSlideImage
+                                           } else {
+                                               withAnimation {
+                                                   slideImages[index] = newSlideImage
+                                               }
+                                           }
+                                       }
+                                   }
+                               }
+                            } catch {
+                                print("error : \(error)")
+                            }
+                        }
+                    }
                 }
-            }//Timer.scheduledTimer
-        }//onAppear - GeometryReader
-    }//body
+                task.resume()
+            }
+        }
+    }
+    //========================================================================
     
-    
-    func reqImage() {
+    private func reqImage() {
         let serverURL = URL(string: VarCollectionFile.randomImageURL)!
         
         let task = URLSession.shared.dataTask(with: serverURL) { (data, response, error) in
@@ -162,35 +219,33 @@ struct HomePageView: View {
                               let pic = json["pic"] as? Int,
                               let description = json["description"] as? String,
                               let userNick = json["user_at"] as? String,
-                              let userProfileImage = json["profile_image"] as? String
-                            {
+                              let userProfileImage = json["profile_image"] as? String {
                                let newSlideImage = SlideImage(id:id, link: imageFileName, pic: pic, description: description, user_nick: userNick, profile_image: userProfileImage)
-                               if slideImages.count == 0 {
-                                   slideImage = newSlideImage
+                               DispatchQueue.main.async {
+                                   if slideImages.isEmpty {
+                                       slideImage = newSlideImage
+                                       reloadTriggers.append(UUID())
+                                       slideImages.append(newSlideImage)
+                                   } else {
+                                       withAnimation {
+                                           reloadTriggers.append(UUID())
+                                           slideImages.append(newSlideImage)
+                                       }
+                                   }
                                }
-                               withAnimation {
-                                   slideImages.append(newSlideImage)
-                               }
-                           }//if let link, pic, description ...
-                       }//if let json
+                           }
+                       }
                     } catch {
                         print("error : \(error)")
-                    }//catch
-                }//if let data
+                    }
+                }
             }
-        }//task
+        }
         task.resume()
-    }//reqImage
-    
-    
-}//HomePageView
+    }
+}
 
 
-    
-
-
-//struct HomePageView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        HomePageView()
-//    }
+//#Preview {
+//    ScrollView_test()
 //}

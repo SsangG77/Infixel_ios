@@ -1,19 +1,8 @@
 import SwiftUI
 
 struct NavView: View {
-    
-//    @State var selectedTab: Tab = Tab.house
-//    
-//    enum Tab {
-//        case house
-//        case search
-//        case plus
-//        case save
-//        case profile
-//    }
-    
-    
-    @Binding var selectedTab:TabViewModel.Tab
+  
+    @EnvironmentObject var appState: AppState
     
     var body: some View {
         GeometryReader { geometry in
@@ -28,7 +17,6 @@ struct NavView: View {
                             .background(.ultraThinMaterial)
                         
                         
-                        
                     } //VStack
                     .frame(width: geometry.size.width * 0.92, height: 70)
                     .cornerRadius(26)
@@ -41,9 +29,9 @@ struct NavView: View {
                         Spacer()
                         
                         Button(action: {
-                            selectedTab = .house
+                            appState.selectedTab = .house
                         }) {
-                            getImage(for: .house, isActive: selectedTab == .house)
+                            getImage(for: .house, isActive: appState.selectedTab == .house)
                             
                         }
                         Spacer()
@@ -53,9 +41,9 @@ struct NavView: View {
                         Spacer()
                         
                         Button(action: {
-                            selectedTab = .search
+                            appState.selectedTab = .search
                         }) {
-                            getImage(for: .search, isActive: selectedTab == .search)
+                            getImage(for: .search, isActive: appState.selectedTab == .search)
                         }
                         
                         Spacer()
@@ -65,9 +53,9 @@ struct NavView: View {
                         Spacer()
                         
                         Button(action: {
-                            selectedTab = .plus
+                            appState.selectedTab = .plus
                         }) {
-                            getImage(for: .plus, isActive: selectedTab == .plus)
+                            getImage(for: .plus, isActive: appState.selectedTab == .plus)
                         }
                         
                         Spacer()
@@ -77,9 +65,9 @@ struct NavView: View {
                         Spacer()
                         
                         Button(action: {
-                            selectedTab = .save
+                            appState.selectedTab = .save
                         }) {
-                            getImage(for: .save, isActive: selectedTab == .save)
+                            getImage(for: .save, isActive: appState.selectedTab == .save)
                         }
                         
                         Spacer()
@@ -89,9 +77,9 @@ struct NavView: View {
                         Spacer()
                         
                         Button(action: {
-                            selectedTab = .profile
+                            appState.selectedTab = .profile
                         }) {
-                            getImage(for: .profile, isActive: selectedTab == .profile)
+                            getImage(for: .profile, isActive: appState.selectedTab == .profile)
                         }
                         
                         Spacer()
@@ -99,8 +87,10 @@ struct NavView: View {
                     }//HStack
                     
                 }// ZStack
+                .frame(height: UIScreen.main.bounds.height * 0.05)
             }//VStack
-            .frame(height: geometry.size.height * 1.02)
+            //.frame(height: geometry.size.height * 1.02)
+            
             
         }
     }

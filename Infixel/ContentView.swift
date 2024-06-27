@@ -11,7 +11,7 @@ struct ContentView: View {
     
     @Binding var isLoggedIn: Bool
     
-    
+    @StateObject private var appState = AppState()
     
 
     
@@ -19,6 +19,7 @@ struct ContentView: View {
         
         if isLoggedIn {
             MainView(isLoggedIn: $isLoggedIn)
+                .environmentObject(appState)
         } else {
             
             LoginPage(isLoggedIn: $isLoggedIn)

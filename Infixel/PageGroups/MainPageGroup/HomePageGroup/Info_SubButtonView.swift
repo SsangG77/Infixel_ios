@@ -11,16 +11,21 @@ struct Info_SubButtonView: View {
     
     var cornerRadius = 18.0
     
-    //@State var arrowBtnState = true
-    @Binding var arrowBtnState:Bool
+    //---@EnviromentObject 적용 전
+//    @Binding var arrowBtnState:Bool
+//
+//    @Binding var slideImage: SlideImage
+//
+//    @Binding var albumsOpen:Bool
+//    @Binding var addAlbumOffset : CGFloat
+//
+//    @Binding var commentsOpen:Bool
+//    @Binding var commentsOffset : CGFloat
     
+    //---@EnviromentObject 적용 후
+    @EnvironmentObject var appState: AppState
     @Binding var slideImage: SlideImage
     
-    @Binding var albumsOpen:Bool
-    @Binding var addAlbumOffset : CGFloat
-    
-    @Binding var commentsOpen:Bool
-    @Binding var commentsOffset : CGFloat
     
     //info
     @State var pic_count = 0
@@ -30,6 +35,7 @@ struct Info_SubButtonView: View {
     @State var pic_result = false
     @State var pic_image_name = "pic down"
     @State var tags:[String] = []
+    
     
     
     var body: some View {
@@ -44,7 +50,11 @@ struct Info_SubButtonView: View {
                         .background(.ultraThinMaterial)
                         
                     HStack {
-                        if arrowBtnState {
+                        //---@EnviromentObject 적용 전
+                        //if arrowBtnState {
+                        
+                        //---@EnviromentObject 적용 후
+                        if appState.infoBoxReset {
                             //버튼을 눌렀을때 들어갈 뷰
                             HStack {
                                 VStack { //프로필, 닉네임 키우기
@@ -73,12 +83,21 @@ struct Info_SubButtonView: View {
                                     .frame(width: 2, height: 185) // - 세로선
                                 
                                 VStack { //사진 설명, 태그들
+                                    //---@EnviromentObject 적용 전
                                     if slideImage.description.count > 25 {
+                                    
+                                    //---@EnviromentObject 적용 후
+                                    //if appState.slideImage.description.count > 25 {
                                         ScrollView {
                                             VStack {
-                                                Text(slideImage.description)
-                                                    .font(Font.custom("Bungee-Regular", size: 13))
-                                                    //.font(.system(size: 14))
+                                                //---@EnviromentObject 적용 전
+                                              Text(slideImage.description)
+                                                  .font(Font.custom("Bungee-Regular", size: 13))
+                                                
+                                                //---@EnviromentObject 적용 후
+//                                                Text(appState.slideImage.description)
+//                                                    .font(Font.custom("Bungee-Regular", size: 13))
+                                                
                                                 
                                             }
                                             
@@ -87,9 +106,17 @@ struct Info_SubButtonView: View {
                                         .frame(height: 120)
                                         
                                     } else {
+                                        //---@EnviromentObject 적용 전
                                         Text(slideImage.description)
                                             .font(.system(size: 17))
                                             .padding(.top, 17)
+                                        
+                                        //---@EnviromentObject 적용 후
+//                                        Text(appState.slideImage.description)
+//                                            .font(.system(size: 17))
+//                                            .padding(.top, 17)
+                                        
+                                        
                                     } // - 사진 설명글
                                     Spacer()
                                     
@@ -141,11 +168,23 @@ struct Info_SubButtonView: View {
                         
                         Spacer()
                         withAnimation {
-                        Image(arrowBtnState ? "arrow_left" : "arrow_right")
+                            
+                            //---@EnviromentObject 적용 전
+                        //Image(arrowBtnState ? "arrow_left" : "arrow_right")
+                            
+                            //---@EnviromentObject 적용 후
+                        Image(appState.infoBoxReset ? "arrow_left" : "arrow_right")
+                            
                                 .frame(width: 10, height: 10)
                                 .onTapGesture {
                                     withAnimation {
-                                        arrowBtnState.toggle()
+                                        
+                                        //---@EnviromentObject 적용 전
+                                        //arrowBtnState.toggle()
+                                        
+                                        //---@EnviromentObject 적용 후
+                                        appState.infoBoxReset.toggle()
+                                        
                                     }//withAnimation
                                 }//onTapGesture
                         }//withAnimation
@@ -153,7 +192,13 @@ struct Info_SubButtonView: View {
                     .padding([.leading, .trailing], 20)
                     
                 }
-                .frame(width : arrowBtnState ? geo.size.width * 0.8 : geo.size.width * 0.45, height: arrowBtnState ? 230 : 50)
+                
+                //---@EnviromentObject 적용 전
+                //.frame(width : arrowBtnState ? geo.size.width * 0.8 : geo.size.width * 0.45, height: arrowBtnState ? 230 : 50)
+                
+                //---@EnviromentObject 적용 후
+                .frame(width : appState.infoBoxReset ? geo.size.width * 0.8 : geo.size.width * 0.45, height: appState.infoBoxReset ? 230 : 50)
+                
                 .cornerRadius(cornerRadius)
                 .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
                 Spacer()
@@ -165,7 +210,12 @@ struct Info_SubButtonView: View {
                             .background(.ultraThinMaterial)
                     }
                     
-                    if arrowBtnState { //세로 일때
+                    //---@EnviromentObject 적용 전
+                    //if arrowBtnState { //세로 일때
+                        
+                    //---@EnviromentObject 적용 후
+                    if appState.infoBoxReset {
+                        
                         VStack {
                             let padding = EdgeInsets(top: 8, leading:0, bottom: 8, trailing: 0)
                             let size = 23.0
@@ -178,7 +228,13 @@ struct Info_SubButtonView: View {
                                        
                                         //서버로 pic 취소 요청
                                         let userId = UserDefaults.standard.string(forKey: "user_id")!
+                                        
+                                        //---@EnviromentObject 적용 전
                                         picOrNot(url_type: 2, image_id: slideImage.id, user_id: userId) { result in
+                                            
+                                        //---@EnviromentObject 적용 후
+                                        //picOrNot(url_type: 2, image_id: appState.slideImage.id, user_id: userId) { result in
+                                            
                                             if result ?? false { //취소하면 true 응답됨. 기본값은 false
                                                 withAnimation {
                                                     pic_image_name = "pic down" //pic down 이미지로 변경
@@ -193,7 +249,13 @@ struct Info_SubButtonView: View {
                                       
                                         //서버로 pic 요청
                                         let userId = UserDefaults.standard.string(forKey: "user_id")!
+                                        
+                                        //---@EnviromentObject 적용 전
                                         picOrNot(url_type: 1, image_id: slideImage.id, user_id: userId) { result in
+                                            
+                                        //---@EnviromentObject 적용 후
+                                        //picOrNot(url_type: 1, image_id: appState.slideImage.id, user_id: userId) { result in
+                                            
                                             if result ?? false { //취소하면 true 응답됨. 기본값은 false
                                                 withAnimation {
                                                     pic_image_name = "pic!"
@@ -213,8 +275,15 @@ struct Info_SubButtonView: View {
                                 
                                 IconView(imageName: "comments", size: size, padding: EdgeInsets(top: 9, leading:0, bottom: 2, trailing: 0)) {
                                     withAnimation {
-                                        commentsOpen = true
-                                        commentsOffset = 200
+                                        
+                                        //---@EnviromentObject 적용 전
+//                                        commentsOpen = true
+//                                        commentsOffset = 200
+                                        
+                                        //---@EnviromentObject 적용 후
+                                        appState.commentsOpen = true
+                                        appState.commentsOffset = 200
+                                        
                                     }
                                 }
                                 Text("56").font(.system(size: 11)).foregroundColor(.white)
@@ -225,8 +294,15 @@ struct Info_SubButtonView: View {
                             
                             IconView(imageName: "add albums", size: size, padding: padding) {
                                 withAnimation {
-                                    albumsOpen = true
-                                    addAlbumOffset = 200
+                                    
+                                    //---@EnviromentObject 적용 전
+//                                    albumsOpen = true
+//                                    addAlbumOffset = 200
+                                    
+                                    //---@EnviromentObject 적용 후
+                                    appState.albumsOpen = true
+                                    appState.addAlbumOffset = 200
+                                    
                                 }
                                 VarCollectionFile.myPrint(title: "info_SubButtonView - IconView, 232", content: "add album 버튼 클릭")
                             }
@@ -253,7 +329,13 @@ struct Info_SubButtonView: View {
                                    
                                     //서버로 pic 취소 요청
                                     if let userId = UserDefaults.standard.string(forKey: "user_id") {
+                                        
+                                        //---@EnviromentObject 적용 전
                                         picOrNot(url_type: 2, image_id: slideImage.id, user_id: userId) { result in
+                                            
+                                        //---@EnviromentObject 적용 후
+                                        //picOrNot(url_type: 2, image_id: appState.slideImage.id, user_id: userId) { result in
+                                            
                                             if result ?? false { //취소하면 true 응답됨. 기본값은 false
                                                 withAnimation {
                                                     pic_image_name = "pic down" //pic down 이미지로 변경
@@ -266,7 +348,13 @@ struct Info_SubButtonView: View {
                                   
                                     //서버로 pic 요청
                                     if let userId = UserDefaults.standard.string(forKey: "user_id") {
+                                        
+                                        //---@EnviromentObject 적용 전
                                         picOrNot(url_type: 1, image_id: slideImage.id, user_id: userId) { result in
+                                            
+                                        //---@EnviromentObject 적용 후
+                                        //picOrNot(url_type: 1, image_id: appState.slideImage.id, user_id: userId) { result in
+                                            
                                             if result ?? false { //취소하면 true 응답됨. 기본값은 false
                                                 withAnimation {
                                                     pic_image_name = "pic!"
@@ -280,14 +368,28 @@ struct Info_SubButtonView: View {
                            
                             IconView(imageName: "comments", size: size, padding: padding) {
                                 withAnimation {
-                                    commentsOpen = true
-                                    commentsOffset = 200
+                                    
+                                    //---@EnviromentObject 적용 전
+//                                    commentsOpen = true
+//                                    commentsOffset = 200
+                                    
+                                    //---@EnviromentObject 적용 후
+                                    appState.commentsOpen = true
+                                    appState.commentsOffset = 200
+                                    
                                 }
                             }
                             IconView(imageName: "add albums", size: size, padding: padding) {
                                 withAnimation {
-                                    albumsOpen = true
-                                    addAlbumOffset = 200
+                                    
+                                    //---@EnviromentObject 적용 전
+//                                    albumsOpen = true
+//                                    addAlbumOffset = 200
+                                    
+                                    //---@EnviromentObject 적용 후
+                                    appState.albumsOpen = true
+                                    appState.addAlbumOffset = 200
+                                    
                                 }
                             }
                             IconView(imageName: "three dots", size: size, padding: padding) {
@@ -297,15 +399,33 @@ struct Info_SubButtonView: View {
                     }
                     
                 }
-                .frame(width: arrowBtnState ? geo.size.width * (0.95 - 0.8) : geo.size.width * (0.95 - 0.45), height: arrowBtnState ? 230 : 50)
-                .cornerRadius(arrowBtnState ? 16.0 : cornerRadius)
+                
+                //---@EnviromentObject 적용 전
+//                .frame(width: arrowBtnState ? geo.size.width * (0.95 - 0.8) : geo.size.width * (0.95 - 0.45), height: arrowBtnState ? 230 : 50)
+                
+                //---@EnviromentObject 적용 후
+                .frame(width: appState.infoBoxReset ? geo.size.width * (0.95 - 0.8) : geo.size.width * (0.95 - 0.45), height: appState.infoBoxReset ? 230 : 50)
+                
+                
+                //---@EnviromentObject 적용 전
+                //.cornerRadius(arrowBtnState ? 16.0 : cornerRadius)
+                
+                //---@EnviromentObject 적용 후
+                .cornerRadius(appState.infoBoxReset ? 16.0 : cornerRadius)
+                
                 .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
             }//HStack
             .frame(width: geo.size.width, height: 300, alignment: .bottom)
             
             
         }//GeometryReader
+        
+        //---@EnviromentObject 적용 전
         .onChange(of: slideImage) { newValue in //slideImage 변수에 새로운 값이 할당 될때마다 실행됨.(사용자가 사진을 넘길때마다)
+            
+        //---@EnviromentObject 적용 후
+        //.onChange(of: appState.slideImage) { newValue in
+            
             getTags(imageId: newValue.id)
             
             pic_count = newValue.pic
@@ -313,7 +433,13 @@ struct Info_SubButtonView: View {
             thumbnail = newValue.profile_image
             
             if let userId = UserDefaults.standard.string(forKey: "user_id") {
+                
+                //---@EnviromentObject 적용 전
                 picOrNot(url_type: 0, image_id: slideImage.id, user_id: userId) { result in
+                   
+                //---@EnviromentObject 적용 후
+                //picOrNot(url_type: 0, image_id: appState.slideImage.id, user_id: userId) { result in
+                    
                     pic_result = result ?? false
                     pic_image_name = pic_result ? "pic!" : "pic down"
                 } //picOrNot
@@ -322,19 +448,29 @@ struct Info_SubButtonView: View {
         }//onChange
         .onAppear {
             if let userId = UserDefaults.standard.string(forKey: "user_id") {
+                
+                //---@EnviromentObject 적용 전
                 picOrNot(url_type: 0, image_id: slideImage.id, user_id: userId) { result in
+                    
+                //---@EnviromentObject 적용 후
+                //picOrNot(url_type: 0, image_id: appState.slideImage.id, user_id: userId) { result in
+                    
                     pic_result = result ?? false
                     pic_image_name = pic_result ? "pic!" : "pic down"
                 } //picOrNot
             }//if
             
+            //---@EnviromentObject 적용 전
             pic_count = slideImage.pic
             user_nick = slideImage.user_nick
             thumbnail = slideImage.profile_image
-            
-            
-            
             getTags(imageId: slideImage.id)
+            
+            //---@EnviromentObject 적용 후
+//            pic_count = appState.slideImage.pic
+//            user_nick = appState.slideImage.user_nick
+//            thumbnail = appState.slideImage.profile_image
+//            getTags(imageId: appState.slideImage.id)
             
             
         }//onAppear

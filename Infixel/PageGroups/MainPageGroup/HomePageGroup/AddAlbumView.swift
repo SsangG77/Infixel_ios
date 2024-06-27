@@ -11,15 +11,14 @@ import SwiftUI
 struct AddAlbumView: View {
     
     @State var albumList:[Album] = []
-    
-    @Binding var slideImage:SlideImage
-    
-    @Binding var albumsOpen:Bool
-    
-    let _height = 800.0
-    
     @State private var dragOffset: CGFloat = 0.0
-    @Binding var addAlbumOffset : CGFloat
+    @Binding var slideImage:SlideImage
+    //@Binding var albumsOpen:Bool
+    //@Binding var addAlbumOffset : CGFloat
+    
+    @EnvironmentObject var appState: AppState
+    
+    
     
     var body: some View {
         GeometryReader { geo in
@@ -32,18 +31,31 @@ struct AddAlbumView: View {
                         .padding([.top, .bottom], 20)
                         .gesture(DragGesture()
                            .onChanged { value in
-                               // Update dragOffset based on drag gesture
-                               addAlbumOffset = value.translation.height + 300
-                               print(addAlbumOffset)
+                               //---@EnviromentObject 적용 전
+                               //addAlbumOffset = value.translation.height + 300
+                               
+                               //---@EnviromentObject 적용 후
+                               appState.addAlbumOffset = value.translation.height + 300
                            }
                             .onEnded { value in
-                                if addAlbumOffset > 250 {
-                                    addAlbumOffset = 1000
-                                    albumsOpen = false
-                                } else if addAlbumOffset < 270 {
-                                    addAlbumOffset = 200
-                                    albumsOpen = true
+                                //---@EnviromentObject 적용 전
+//                                if addAlbumOffset > 250 {
+//                                    addAlbumOffset = 1000
+//                                    albumsOpen = false
+//                                } else if addAlbumOffset < 270 {
+//                                    addAlbumOffset = 200
+//                                    albumsOpen = true
+//                                }
+                                
+                                //---@EnviromentObject 적용 후
+                                if appState.addAlbumOffset > 250 {
+                                    appState.addAlbumOffset = 1000
+                                    appState.albumsOpen = false
+                                } else if appState.addAlbumOffset < 270 {
+                                    appState.addAlbumOffset = 200
+                                    appState.albumsOpen = true
                                 }
+                                
                             }
                        )
                 }//VStack
@@ -72,7 +84,7 @@ struct AddAlbumView: View {
             
             
         }//GeometryReader
-        .onChange(of: albumsOpen) { albumsOpen in
+        .onChange(of: appState.albumsOpen) { albumsOpen in
             if albumsOpen {
                 if let userId = UserDefaults.standard.string(forKey: "user_id") {
                     VarCollectionFile.myPrint(title: "AddAlbumView - onChange userId", content: userId)

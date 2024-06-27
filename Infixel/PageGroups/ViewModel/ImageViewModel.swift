@@ -6,3 +6,15 @@
 //
 
 import Foundation
+import Combine
+import SwiftUI
+
+class ImageViewModel: ObservableObject {
+    @Published var selectedImage: String? = nil
+    @Published var selectedImageId: String? = nil
+    
+    func selectImage(imageUrl: String, imageId: String) {
+        selectedImage = imageUrl
+        selectedImageId = imageId
+    }
+}
