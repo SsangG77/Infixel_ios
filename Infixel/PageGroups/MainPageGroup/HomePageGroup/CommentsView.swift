@@ -10,7 +10,7 @@ import SwiftUI
 struct CommentsView: View {
     
     @Binding var slideImage             :   SlideImage
-    @EnvironmentObject var appState: AppState
+    @EnvironmentObject var appState     :   AppState
     
     
     @State var commentList              :   [Comment] = []
@@ -34,28 +34,35 @@ struct CommentsView: View {
                             .padding([.top, .bottom], 20)
                             .gesture(DragGesture()
                                .onChanged { value in
-                                   //commentsOffset = value.translation.height + 200
-                                   appState.commentsOffset = value.translation.height + 200
+                                   if appState.imageViewerOrNot {
+                                       appState.commentOffset_imageViewer = value.translation.height + 200
+                                   } else {
+                                       appState.commentsOffset = value.translation.height + 200
+                                       
+                                   }
+                                   
                                } // onChanged
                                 .onEnded { value in
-                                    //---@EnviromentObject--- 적용 전
-//                                    if commentsOffset > 250 {
-//                                        commentsOffset = 1000
-//                                        commentsOpen = false
-//                                    } else if commentsOffset < 270 {
-//                                        commentsOffset = 200
-//                                        commentsOpen = true
-//                                        
-//                                    } //if문
                                     
-                                    //---@EnviromentObject--- 적용 전
-                                    if appState.commentsOffset > 250 {
-                                        appState.commentsOffset = 1000
-                                        appState.commentsOpen = false
-                                    } else if appState.commentsOffset < 270 {
-                                        appState.commentsOffset = 200
-                                        appState.commentsOpen = true
+                                    if appState.imageViewerOrNot {
+                                        if appState.commentOffset_imageViewer > 250 {
+                                            appState.commentOffset_imageViewer = 1000
+                                            appState.commentOpen_imageViewer = false
+                                        } else if appState.commentOffset_imageViewer < 270 {
+                                            appState.commentOffset_imageViewer = 200
+                                            appState.commentOpen_imageViewer = true
+                                        }
+                                    } else {
+                                        if appState.commentsOffset > 250 {
+                                            appState.commentsOffset = 1000
+                                            appState.commentsOpen = false
+                                        } else if appState.commentsOffset < 270 {
+                                            appState.commentsOffset = 200
+                                            appState.commentsOpen = true
+                                        }
                                     }
+                                    
+                                    
                                     
                                     
                                 } //.onEnded
@@ -85,7 +92,7 @@ struct CommentsView: View {
                         }
                     }//ScrollView
                     .frame(height: geo.size.height - top_handle_height - bottom_textfield_height - 200)
-                    .onChange(of: appState.commentsOpen) { value in
+                    .onChange(of: appState.commentsOpen || appState.commentOpen_imageViewer) { value in
                         if value {
                             getComments(imageId: slideImage.id)
                             
@@ -139,6 +146,9 @@ struct CommentsView: View {
                 .edgesIgnoringSafeArea(.all)
         }//GeometryReader
     }//body
+    
+    
+    
     
     func getComments(imageId:String) {
         

@@ -30,7 +30,7 @@ struct SingleCommentView: View {
                     VStack(alignment: .leading) {
                         HStack {
                             Text(user_name)
-                                .font(.system(size: 14, weight: .bold))
+                                .font(.system(size: 16, weight: .bold))
                             
                             Text(created_at)
                                 .font(.system(size: 14, weight: .thin))

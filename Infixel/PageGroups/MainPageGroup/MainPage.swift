@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOS 17.0, *)
 struct MainView: View {
     
     @Binding var isLoggedIn: Bool
@@ -17,6 +18,8 @@ struct MainView: View {
     
     //-------
     @State private var showImageViewer: Bool = false
+    
+    @Namespace private var animationNamespace
  
     
     
@@ -27,11 +30,10 @@ struct MainView: View {
             case .house:
                 HomePageView(slideImage: $slideImage)
                     .environmentObject(appState)
-//                ScrollView_test(slideImage: $slideImage)
-//                    .environmentObject(appState)
                 
             case .search:
-                SearchPageView()
+                SearchPageView(animationNamespace: animationNamespace)
+                    .environmentObject(appState)
                 
             case .plus:
                 Text("사진 앨범 나오게 하기")
@@ -60,6 +62,19 @@ struct MainView: View {
             
         }//zstack
         .ignoresSafeArea(.keyboard, edges: .bottom)
+        .overlay(
+            Group {
+                if let selectedAlbum = appState.selectedAlbum {
+                    AlbumDetailView(album: $appState.selectedAlbum, animationNamespace: animationNamespace) {
+                        withAnimation(.spring()) {
+                            appState.selectedAlbum = nil
+                        }
+                    }
+                    
+                }
+            }
+        )
+        
         
     }
     

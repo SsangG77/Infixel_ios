@@ -36,7 +36,8 @@ struct HomePageView: View {
                                     switch phase {
                                     case .empty:
                                         ProgressView()
-                                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                                            //.frame(maxWidth: .infinity, maxHeight: .infinity)
                                     case .success(let image):
                                         image
                                             .resizable()
@@ -99,28 +100,26 @@ struct HomePageView: View {
                 }//VStack
                 
                 
-                ZStack {
-                    if appState.albumsOpen || appState.commentsOpen {
-                            Rectangle()
-                                .foregroundColor(.secondary.opacity(0.1))
-                                .background(.ultraThinMaterial)
-                                .transition(.opacity)
-                                .opacity(appState.albumsOpen || appState.commentsOpen ? 1.0 : 0.0)
-                                .onTapGesture {
-                                    withAnimation {
-                                        appState.albumsOpen = false
-                                        appState.commentsOpen = false
-                                        appState.addAlbumOffset = 1000
-                                        appState.commentsOffset = 1000
-                                    }
-                                }
-                    }
+                //ZStack {
+                if appState.albumsOpen || appState.commentsOpen {
+                    Rectangle()
+                        .foregroundColor(.secondary.opacity(0.1))
+                        .background(.ultraThinMaterial)
+                        .transition(.opacity)
+                        .opacity(appState.albumsOpen || appState.commentsOpen ? 1.0 : 0.0)
+                        .onTapGesture {
+                            withAnimation {
+                                appState.albumsOpen = false
+                                appState.commentsOpen = false
+                                appState.addAlbumOffset = 1000
+                                appState.commentsOffset = 1000
+                            }
+                        }
+                }
                     
-                }//ZStack - add album
+                //}//ZStack - add album
                 
             }//ZStack
-            
-            
             
             
             
@@ -151,7 +150,10 @@ struct HomePageView: View {
         isLoadingMore = true
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            reloadTriggers.append(UUID())
+            //reloadTriggers.append(UUID())
+            reloadTriggers.append(contentsOf: [UUID(), UUID(), UUID()])
+            reqImage()
+            reqImage()
             reqImage()
             isLoadingMore = false
         }
@@ -193,7 +195,9 @@ struct HomePageView: View {
                                    }
                                }
                             } catch {
+                                print("================================ HomePageView Error ================================")
                                 print("error : \(error)")
+                                print("====================================================================================")
                             }
                         }
                     }
@@ -236,7 +240,9 @@ struct HomePageView: View {
                            }
                        }
                     } catch {
+                        print("================================ HomePageView reqImage() Error ================================")
                         print("error : \(error)")
+                        print("===============================================================================================")
                     }
                 }
             }

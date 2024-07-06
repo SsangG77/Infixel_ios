@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOS 17.0, *)
 struct ContentView: View {
     
     @Binding var isLoggedIn: Bool

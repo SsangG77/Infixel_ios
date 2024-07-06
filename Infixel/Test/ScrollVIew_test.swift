@@ -69,14 +69,15 @@ struct ScrollView_test: View {
                         
                     }//--@LazyVStack
                 }//--@Scrollview
+                
                 .scrollTargetBehavior(.paging)
                 .edgesIgnoringSafeArea(.all)
                 .onAppear {
-                    VarCollectionFile.myPrint(title: "현재 slideimage", content: slideImage)
                     if isInitialLoad {
                         loadInitialPhotos()
                     }
                 }
+                
                 
                 
                 VStack {

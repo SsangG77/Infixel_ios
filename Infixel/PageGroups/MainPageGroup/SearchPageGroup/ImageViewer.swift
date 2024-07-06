@@ -52,35 +52,63 @@ struct ImageViewer: View {
             
             
             VStack {
-            Spacer()
-            Info_SubButtonView(slideImage: $slideImage)
+                Spacer()
+                Info_SubButtonView(slideImage: $slideImage)
                 .environmentObject(appState)
                 .frame(width: UIScreen.main.bounds.width - 26, height: 300, alignment: .bottom)
             }//VStack
             
+            if appState.albumsOpen_imageViewer || appState.commentOpen_imageViewer {
+                Rectangle()
+                    .foregroundColor(.secondary.opacity(0.1))
+                    .background(.ultraThinMaterial)
+                    .transition(.opacity)
+                    .opacity(appState.albumsOpen_imageViewer || appState.commentOpen_imageViewer ? 1.0 : 0.0)
+                    .onTapGesture {
+                        withAnimation {
+                            appState.albumsOpen_imageViewer = false
+                            appState.commentOpen_imageViewer = false
+                            appState.addAlbumOffset_imageViewer = 1000
+                            appState.commentOffset_imageViewer = 1000
+                        }
+                    }
+            }
+            
+            
+            
+            
             AddAlbumView(slideImage: $slideImage)
                 .environmentObject(appState)
-                .offset(y : appState.addAlbumOffset)
+                .offset(y : appState.addAlbumOffset_imageViewer)
                 .animation(.easeInOut)
             
             CommentsView(slideImage: $slideImage)
                 .environmentObject(appState)
-                .offset(y : appState.commentsOffset)
+                .offset(y : appState.commentOffset_imageViewer)
                 .animation(.easeInOut)
             
             
         }//ZStack
         .onAppear {
             VarCollectionFile.myPrint(title: "image viewer", content: imageId)
+            appState.imageViewerOrNot = true
             getImageFromId(imageId: imageId)
             
         }//onAppear
         .onDisappear {
             appState.infoBoxReset = false
+            appState.imageViewerOrNot = false
+
+            
             appState.commentsOpen = false
             appState.albumsOpen = false
             appState.commentsOffset = 1000
             appState.addAlbumOffset = 1000
+            
+            appState.commentOpen_imageViewer = false
+            appState.commentOffset_imageViewer = 1000
+            appState.albumsOpen_imageViewer = false
+            appState.addAlbumOffset_imageViewer = 1000
         }
         
     }//body

@@ -16,16 +16,15 @@ class SlideImage: Identifiable, Hashable, ObservableObject {
     var profile_image:String
     var pic: Int                //좋아요 갯수
     var description: String    //이미지 설명 글
-    var tags:[String] = ["tagasdf1", "tag2", "tag3", "tag4"]
 
     
     init() {
-        self.id = ""
-        self.link = ""
+        self.id = UUID().uuidString
+        self.link = "http://localhost:3000/image/resjpg?filename=haewon4.jpeg"
         self.pic = 0
-        self.description = ""
-        self.user_nick = ""
-        self.profile_image = ""
+        self.description = "init 슬라이드 이미지 객체"
+        self.user_nick = "init"
+        self.profile_image = "http://localhost:3000/image/resjpg?filename=winter6.jpeg"
     }
     
 
