@@ -11,16 +11,16 @@
 		910801592BCF968400BC9137 /* SingleCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910801582BCF968400BC9137 /* SingleCommentView.swift */; };
 		911A925B2C1A0067006B2A16 /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911A925A2C1A0067006B2A16 /* ImageViewer.swift */; };
 		9125C4602C39939000431998 /* MasonryGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9125C45F2C39939000431998 /* MasonryGridView.swift */; };
+		9125C4622C3A885700431998 /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9125C4612C3A885700431998 /* SignUpViewModel.swift */; };
+		9125C4642C3A8D5E00431998 /* ImageGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9125C4632C3A8D5E00431998 /* ImageGridView.swift */; };
+		9125C4662C3AA7D100431998 /* LoginButtonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9125C4652C3AA7D100431998 /* LoginButtonViewModel.swift */; };
 		912B68872AB088BF00505677 /* InfixelApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B68862AB088BF00505677 /* InfixelApp.swift */; };
 		912B68892AB088BF00505677 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B68882AB088BF00505677 /* ContentView.swift */; };
 		912B688B2AB088C100505677 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 912B688A2AB088C100505677 /* Assets.xcassets */; };
 		912B688E2AB088C100505677 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 912B688D2AB088C100505677 /* Preview Assets.xcassets */; };
 		912B68962AB089EF00505677 /* LoginPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B68952AB089EF00505677 /* LoginPage.swift */; };
 		912B689A2AB0A13100505677 /* AsyncImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B68992AB0A13100505677 /* AsyncImageView.swift */; };
-		912B689C2AB4759300505677 /* TwoRowImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B689B2AB4759300505677 /* TwoRowImageView.swift */; };
-		912B689F2AB47B2100505677 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B689E2AB47B2100505677 /* UIColor.swift */; };
 		912B68A22AB4892E00505677 /* Bungee-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 912B68A12AB4892E00505677 /* Bungee-Regular.ttf */; };
-		912B68A72AB5E38300505677 /* LoginInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B68A62AB5E38300505677 /* LoginInputView.swift */; };
 		912B68AD2AB6CF8B00505677 /* SNSLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B68AC2AB6CF8B00505677 /* SNSLoginView.swift */; };
 		912B68AF2AB6D8F700505677 /* LoginButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B68AE2AB6D8F700505677 /* LoginButtonView.swift */; };
 		912B68B22AB802C000505677 /* MainPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B68B12AB802C000505677 /* MainPage.swift */; };
@@ -61,6 +61,9 @@
 		910801582BCF968400BC9137 /* SingleCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleCommentView.swift; sourceTree = "<group>"; };
 		911A925A2C1A0067006B2A16 /* ImageViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewer.swift; sourceTree = "<group>"; };
 		9125C45F2C39939000431998 /* MasonryGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasonryGridView.swift; sourceTree = "<group>"; };
+		9125C4612C3A885700431998 /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
+		9125C4632C3A8D5E00431998 /* ImageGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGridView.swift; sourceTree = "<group>"; };
+		9125C4652C3AA7D100431998 /* LoginButtonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginButtonViewModel.swift; sourceTree = "<group>"; };
 		912B68832AB088BF00505677 /* Infixel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Infixel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		912B68862AB088BF00505677 /* InfixelApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfixelApp.swift; sourceTree = "<group>"; };
 		912B68882AB088BF00505677 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -68,11 +71,8 @@
 		912B688D2AB088C100505677 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		912B68952AB089EF00505677 /* LoginPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPage.swift; sourceTree = "<group>"; };
 		912B68992AB0A13100505677 /* AsyncImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncImageView.swift; sourceTree = "<group>"; };
-		912B689B2AB4759300505677 /* TwoRowImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwoRowImageView.swift; sourceTree = "<group>"; };
-		912B689E2AB47B2100505677 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		912B68A12AB4892E00505677 /* Bungee-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Bungee-Regular.ttf"; sourceTree = "<group>"; };
 		912B68A32AB48C9A00505677 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		912B68A62AB5E38300505677 /* LoginInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginInputView.swift; sourceTree = "<group>"; };
 		912B68AC2AB6CF8B00505677 /* SNSLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SNSLoginView.swift; sourceTree = "<group>"; };
 		912B68AE2AB6D8F700505677 /* LoginButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginButtonView.swift; sourceTree = "<group>"; };
 		912B68B12AB802C000505677 /* MainPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainPage.swift; sourceTree = "<group>"; };
@@ -138,8 +138,9 @@
 		912B68852AB088BF00505677 /* Infixel */ = {
 			isa = PBXGroup;
 			children = (
-				917B43672AC539470029609B /* Classes */,
 				9192B1192AC3C67D007F7ED9 /* Test */,
+				912B689D2AB47B0300505677 /* modules */,
+				917B43672AC539470029609B /* Classes */,
 				912B68B32AB81B3200505677 /* PageGroups */,
 				912B68A32AB48C9A00505677 /* Info.plist */,
 				912B68A02AB488EC00505677 /* Font */,
@@ -162,13 +163,11 @@
 		912B68942AB089C000505677 /* LoginPageGroup */ = {
 			isa = PBXGroup;
 			children = (
-				912B689D2AB47B0300505677 /* modules */,
 				9192B10B2ABBFD3F007F7ED9 /* SignUpPageGroup */,
 				912B68952AB089EF00505677 /* LoginPage.swift */,
-				912B689B2AB4759300505677 /* TwoRowImageView.swift */,
-				912B68A62AB5E38300505677 /* LoginInputView.swift */,
 				912B68AC2AB6CF8B00505677 /* SNSLoginView.swift */,
 				912B68AE2AB6D8F700505677 /* LoginButtonView.swift */,
+				9125C4652C3AA7D100431998 /* LoginButtonViewModel.swift */,
 			);
 			path = LoginPageGroup;
 			sourceTree = "<group>";
@@ -176,7 +175,8 @@
 		912B689D2AB47B0300505677 /* modules */ = {
 			isa = PBXGroup;
 			children = (
-				912B689E2AB47B2100505677 /* UIColor.swift */,
+				91309F212AF0A8FB006E852F /* ColorExtension.swift */,
+				9125C4632C3A8D5E00431998 /* ImageGridView.swift */,
 			);
 			path = modules;
 			sourceTree = "<group>";
@@ -258,13 +258,11 @@
 		917B43672AC539470029609B /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				91309F212AF0A8FB006E852F /* ColorExtension.swift */,
 				917B43682AC5397A0029609B /* SlideImage_class.swift */,
 				917B436A2AC541180029609B /* User_class.swift */,
 				917B436C2AC541A80029609B /* Comment_class.swift */,
 				912F959E2B4FEF430045A250 /* Album_class.swift */,
 				91FDAAD62B6265D700C8EE8F /* VarCollectionFile.swift */,
-				91DA58832C25AAB9007609F5 /* AppState.swift */,
 				914EB7F92C31A2AF002D1B96 /* SearchSingleImage.swift */,
 				914EB7FB2C31A86A002D1B96 /* SearchSingleUser.swift */,
 			);
@@ -275,6 +273,7 @@
 			isa = PBXGroup;
 			children = (
 				9192B1092ABBE4D6007F7ED9 /* SignUpView.swift */,
+				9125C4612C3A885700431998 /* SignUpViewModel.swift */,
 			);
 			path = SignUpPageGroup;
 			sourceTree = "<group>";
@@ -282,6 +281,7 @@
 		9192B10C2ABC0646007F7ED9 /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
+				91DA58832C25AAB9007609F5 /* AppState.swift */,
 				914B4F172AB99E6200643262 /* TabViewModel.swift */,
 				912B68992AB0A13100505677 /* AsyncImageView.swift */,
 				9192B10D2ABC065B007F7ED9 /* InputView.swift */,
@@ -379,7 +379,6 @@
 				914EB7FA2C31A2AF002D1B96 /* SearchSingleImage.swift in Sources */,
 				912F959F2B4FEF430045A250 /* Album_class.swift in Sources */,
 				912F959D2B4E761C0045A250 /* SingleAlbumView.swift in Sources */,
-				912B689F2AB47B2100505677 /* UIColor.swift in Sources */,
 				914EB7EE2C2EF4EC002D1B96 /* SearchPageView_tag.swift in Sources */,
 				91FDAAD72B6265D800C8EE8F /* VarCollectionFile.swift in Sources */,
 				912B68C22AB8291D00505677 /* NavView.swift in Sources */,
@@ -392,6 +391,7 @@
 				9192B10A2ABBE4D6007F7ED9 /* SignUpView.swift in Sources */,
 				91309F262AF0F3F3006E852F /* horizentalScrollView.swift in Sources */,
 				914EB7F02C2EF7C9002D1B96 /* SearchPageView_user.swift in Sources */,
+				9125C4662C3AA7D100431998 /* LoginButtonViewModel.swift in Sources */,
 				91DA58842C25AAB9007609F5 /* AppState.swift in Sources */,
 				912B68962AB089EF00505677 /* LoginPage.swift in Sources */,
 				910801572BCF8F4D00BC9137 /* CommentsView.swift in Sources */,
@@ -402,9 +402,8 @@
 				912B68872AB088BF00505677 /* InfixelApp.swift in Sources */,
 				912B68AF2AB6D8F700505677 /* LoginButtonView.swift in Sources */,
 				917B43692AC5397A0029609B /* SlideImage_class.swift in Sources */,
-				912B689C2AB4759300505677 /* TwoRowImageView.swift in Sources */,
 				912B68AD2AB6CF8B00505677 /* SNSLoginView.swift in Sources */,
-				912B68A72AB5E38300505677 /* LoginInputView.swift in Sources */,
+				9125C4642C3A8D5E00431998 /* ImageGridView.swift in Sources */,
 				91DA588A2C2AFB0E007609F5 /* ScrollVIew_test.swift in Sources */,
 				912B68B72AB81B8100505677 /* HomePageView.swift in Sources */,
 				9192B10E2ABC065B007F7ED9 /* InputView.swift in Sources */,
@@ -416,6 +415,7 @@
 				917B436B2AC541180029609B /* User_class.swift in Sources */,
 				912B68C02AB81F3D00505677 /* ProfilePageView.swift in Sources */,
 				91309F222AF0A8FB006E852F /* ColorExtension.swift in Sources */,
+				9125C4622C3A885700431998 /* SignUpViewModel.swift in Sources */,
 				914EB7F82C317630002D1B96 /* SearchUserSingleView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

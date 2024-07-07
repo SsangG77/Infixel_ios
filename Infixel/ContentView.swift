@@ -10,23 +10,21 @@ import SwiftUI
 @available(iOS 17.0, *)
 struct ContentView: View {
     
-    @Binding var isLoggedIn: Bool
+    //@Binding var isLoggedIn: Bool
     
     @StateObject private var appState = AppState()
     
+    @ObservedObject var loginViewModel = LoginButtonViewModel()
 
     
     var body: some View {
         
-        if isLoggedIn {
-            MainView(isLoggedIn: $isLoggedIn)
+        if loginViewModel.isLoggedIn {
+            MainView(isLoggedIn: $loginViewModel.isLoggedIn)
                 .environmentObject(appState)
         } else {
             
-            LoginPage(isLoggedIn: $isLoggedIn)
-            
-            //프리뷰용
-            //LoginPage(isLoggedIn: isLoggedIn)
+            LoginPage(viewModel: loginViewModel)
         }
         
     }

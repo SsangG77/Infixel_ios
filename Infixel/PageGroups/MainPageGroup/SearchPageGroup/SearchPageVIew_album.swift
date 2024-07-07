@@ -85,78 +85,12 @@ struct AlbumDetailView: View {
                             .frame(height: headerHeight)
                         
                         
-                        HStack(alignment: .top, spacing: 10) {
-                            LazyVStack(spacing: 10) {
-                                ForEach(0..<($images.count + 1) / 2, id: \.self) { index in
-                                    if index * 2 < images.count {
-                                        
-                                        AsyncImage(url: URL(string: images[index * 2].image_name)) { phase in
-                                            switch phase {
-                                            case .empty:
-                                                ProgressView()
-                                                    .frame(height: 150)
-                                            case .success(let image):
-                                                    image
-                                                        .resizable()
-                                                        .scaledToFit()
-                                                        .clipShape(RoundedRectangle(cornerRadius: 15))
-                                                        .onTapGesture {
-//                                                            appState.selectImage(imageUrl: images[index * 2].image_name, imageId: images[index * 2].id)
-                                                            appState.album_selectedImage = images[index * 2].image_name
-                                                            appState.album_selectedImageId = images[index * 2].id
-                                                            showImageViewer = true
-                                                        }//onTapGesture
-                                                        
-                                            case .failure:
-                                                Image(systemName: "photo")
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .frame(height: 150)
-                                                    .foregroundColor(.gray)
-                                            @unknown default:
-                                                EmptyView()
-                                            }
-                                        }
-                                        
-                                    }
-                                }
-                            }
-                            
-                            LazyVStack(spacing: 10) {
-                                ForEach(0..<(images.count + 1) / 2, id: \.self) { index in
-                                    if index * 2 + 1 < $images.count {
-                                        AsyncImage(url: URL(string: images[index * 2 + 1].image_name)) { phase in
-                                            switch phase {
-                                            case .empty:
-                                                ProgressView()
-                                                    .frame(height: 150)
-                                            case .success(let image):
-                                                    image
-                                                        .resizable()
-                                                        .scaledToFit()
-                                                        .clipShape(RoundedRectangle(cornerRadius: 15))
-                                                        .onTapGesture {
-//                                                            appState.selectImage(imageUrl: images[index * 2 + 1].image_name, imageId: images[index * 2 + 1].id)
-                                                            appState.album_selectedImage = images[index * 2 + 1].image_name
-                                                            appState.album_selectedImageId = images[index * 2 + 1].id
-                                                            showImageViewer = true
-                                                        }//onTapGesture
-                                                        
-                                            case .failure:
-                                                Image(systemName: "photo")
-                                                    .resizable()
-                                                    .scaledToFit()
-                                                    .frame(height: 150)
-                                                    .foregroundColor(.gray)
-                                            @unknown default:
-                                                EmptyView()
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                        ImageGridView(images: $images) { imageId, imageName in
+                            appState.album_selectedImage = imageName
+                            appState.album_selectedImageId = imageId
+                            showImageViewer = true
                         }
-                        .padding(.horizontal, 10)
+                        
                     }//VStack
                 }//ScrollView
                 

@@ -9,25 +9,42 @@ import SwiftUI
 
 struct LoginPage: View {
     
-    @Binding var isLoggedIn: Bool
-    
-    //프리뷰용 변수
-    //@State var isLoggedIn = false
-    
+    //@Binding var isLoggedIn: Bool
+
     @State private var userId: String = ""
     @State private var userPW: String = ""
     
-
+    @State var placeHolder_email:String = "E-mail"
+    @State var placeHolder_pw:String = "Password"
+    
+    @State var secure:Bool = true
+    @State var notSecure:Bool = false
+    
+    @ObservedObject var viewModel = LoginButtonViewModel()
+    
+    @State var images:[SearchSingleImage] = [
+        SearchSingleImage(id: UUID().uuidString, image_name: VarCollectionFile.randomJpgURL),
+        SearchSingleImage(id: UUID().uuidString, image_name: VarCollectionFile.randomJpgURL),
+        SearchSingleImage(id: UUID().uuidString, image_name: VarCollectionFile.randomJpgURL),
+        SearchSingleImage(id: UUID().uuidString, image_name: VarCollectionFile.randomJpgURL),
+        SearchSingleImage(id: UUID().uuidString, image_name: VarCollectionFile.randomJpgURL),
+        SearchSingleImage(id: UUID().uuidString, image_name: VarCollectionFile.randomJpgURL),
+        SearchSingleImage(id: UUID().uuidString, image_name: VarCollectionFile.randomJpgURL),
+        SearchSingleImage(id: UUID().uuidString, image_name: VarCollectionFile.randomJpgURL),
+        SearchSingleImage(id: UUID().uuidString, image_name: VarCollectionFile.randomJpgURL)
+    ]
     
     var body: some View {
         NavigationView {
             ZStack {
                 
-                TwoRowImageView().blur(radius: 15)
+                ImageGridView(images: $images)
+                    .blur(radius: 15)
                 
                 //회색 blur 배경
                 GeometryReader { geometry in
-                    Rectangle().fill(Color(UIColor(hexCode: "898989")).opacity(0.7))
+                    Rectangle()
+                        .fill(Color(hexString: "898989", opacity: 0.7))
                         .frame(height: geometry.size.height * 2)
                         .offset(y: -100)
                 }//GeometryReader
@@ -44,9 +61,12 @@ struct LoginPage: View {
                         .padding(.bottom, 60)
                         .padding(.top, 140)
                
-              
-                    LoginInputView(userId: $userId, userPW: $userPW)
+                    //ID
+                    InputView(placeHolder: $placeHolder_email, secure: $notSecure, viewModel: viewModel)
                         .padding(.top, 15)
+                    
+                    //PW
+                    InputView(placeHolder: $placeHolder_pw, secure: $secure, viewModel: viewModel)
            
                     //회원가입
                     NavigationLink(destination: SignUpView()) {
@@ -64,7 +84,7 @@ struct LoginPage: View {
                     
                     
                     
-                    LoginButtonView(isLoggedIn : $isLoggedIn, userId: $userId, userPW: $userPW)
+                    LoginButtonView(viewModel: viewModel)
                         .padding(.top, 70)
                     
                     
@@ -73,6 +93,7 @@ struct LoginPage: View {
                     
                     
                 }
+                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
                 
             }
             
@@ -80,10 +101,8 @@ struct LoginPage: View {
     }
 }
 
-//struct LoginPage_Previews: PreviewProvider {
-//   static var previews: some View {
-//        LoginPage()
-//    }
-//}
+#Preview {
+    LoginPage()
+}
 
 

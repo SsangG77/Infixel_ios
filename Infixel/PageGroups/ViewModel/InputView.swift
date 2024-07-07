@@ -14,18 +14,19 @@ struct InputView: View {
     //@State var placeHolder:String = "test"
     
     //
-    @Binding var inputValue:String
+    //@Binding var inputValue:String
     @Binding var placeHolder:String
     @Binding var secure:Bool
     
+    @ObservedObject var viewModel: LoginButtonViewModel
+    
     
     var body: some View {
-        VStack {
             HStack {
                 Spacer().frame(width: 30)
                 VStack {
                     ZStack(alignment: .leading) {
-                        if inputValue.isEmpty {
+                        if viewModel.userId.isEmpty && viewModel.userPW.isEmpty {
                             Text(placeHolder)
                             .bold()
                             .foregroundColor(Color.white.opacity(0.6))
@@ -35,14 +36,14 @@ struct InputView: View {
                             .font(Font.custom("Bungee-Regular", size: 20))
                         } //if
                         if secure {
-                            SecureField("", text: $inputValue)
+                            SecureField("", text: $viewModel.userPW)
                                 .foregroundColor(Color.white.opacity(0.6))
                                 .padding()
                                 .padding(.leading, 10)
                                 .frame(height: 60)
                         }//if
                         else {
-                            TextField("", text: $inputValue)
+                            TextField("", text: $viewModel.userId)
                                 .foregroundColor(Color.white.opacity(0.6))
                                 .padding()
                                 .padding(.leading, 10)
@@ -58,7 +59,6 @@ struct InputView: View {
                 .cornerRadius(25)
                 Spacer().frame(width: 30)
             }//HStack
-        }//VStack
     }
 }
 
