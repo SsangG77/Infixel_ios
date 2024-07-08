@@ -17,6 +17,7 @@ struct VarCollectionFile {
     static let resjpgURL                = host + "/image/resjpg?filename=" //jpg 파일을 가져옴
     static let imageIdURL               = host + "/image/getimagefromid"
     static let randomJpgURL             = host + "/image/randomjpg"
+    static let imageUploadURL           = host + "/image/upload"
     
     static let loginURL                 = host + "/user/login"
     static let signupURL                = host + "/user/signup"

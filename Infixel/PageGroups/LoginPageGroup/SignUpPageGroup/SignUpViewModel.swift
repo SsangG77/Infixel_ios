@@ -19,6 +19,7 @@ class SignUpViewModel: ObservableObject {
     @Published var showAlert: Bool = false
     @Published var isSignup: Bool = false
     
+    
     func sendTextToServer() {
         let userDict: [String: Any] = [
             "userEmail": self.userEmail,
@@ -32,7 +33,7 @@ class SignUpViewModel: ObservableObject {
             let jsonData = try JSONSerialization.data(withJSONObject: userDict, options: [])
             
             if let jsonString = String(data: jsonData, encoding: .utf8) {
-                print("JSON: \(jsonString)")
+                print("SignUpViewModel - JSON: \(jsonString)")
             }
             
             guard let url = URL(string: VarCollectionFile.signupURL) else {

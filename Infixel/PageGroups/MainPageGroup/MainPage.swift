@@ -36,7 +36,8 @@ struct MainView: View {
                     .environmentObject(appState)
                 
             case .plus:
-                Text("사진 앨범 나오게 하기")
+                //Text("사진 앨범 나오게 하기")
+                UploadImageView()
                 
             case .save:
                 SavePageView()

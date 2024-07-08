@@ -6,6 +6,8 @@
 //
 import SwiftUI
 
+
+@available(iOS 17.0, *)
 struct HomePageView: View {
     
     @State private var slideImages: [SlideImage] = []
@@ -22,7 +24,6 @@ struct HomePageView: View {
  
 
     var body: some View {
-        if #available(iOS 17.0, *) {
             
             
             ZStack {
@@ -120,17 +121,6 @@ struct HomePageView: View {
                 //}//ZStack - add album
                 
             }//ZStack
-            
-            
-            
-            
-            
-            
-            
-        } else {
-            // iOS 17이 아닐 때
-            Text("iOS 17 버전 이상이 필요합니다.")
-        }
     }
     
     

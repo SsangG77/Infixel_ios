@@ -15,6 +15,7 @@ struct ContentView: View {
     @StateObject private var appState = AppState()
     
     @ObservedObject var loginViewModel = LoginButtonViewModel()
+    @ObservedObject var signupViewModel = SignUpViewModel()
 
     
     var body: some View {
@@ -24,7 +25,7 @@ struct ContentView: View {
                 .environmentObject(appState)
         } else {
             
-            LoginPage(viewModel: loginViewModel)
+            LoginPage(loginViewModel: loginViewModel, signupViewModel: signupViewModel)
         }
         
     }

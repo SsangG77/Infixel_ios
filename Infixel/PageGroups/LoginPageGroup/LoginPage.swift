@@ -20,7 +20,8 @@ struct LoginPage: View {
     @State var secure:Bool = true
     @State var notSecure:Bool = false
     
-    @ObservedObject var viewModel = LoginButtonViewModel()
+    @ObservedObject var loginViewModel = LoginButtonViewModel()
+    @ObservedObject var signupViewModel = SignUpViewModel()
     
     @State var images:[SearchSingleImage] = [
         SearchSingleImage(id: UUID().uuidString, image_name: VarCollectionFile.randomJpgURL),
@@ -62,11 +63,15 @@ struct LoginPage: View {
                         .padding(.top, 140)
                
                     //ID
-                    InputView(placeHolder: $placeHolder_email, secure: $notSecure, viewModel: viewModel)
-                        .padding(.top, 15)
+                    InputView(inputValue: $userId, placeHolder: $placeHolder_email, secure: $notSecure, loginViewModel: loginViewModel, signupViewModel: signupViewModel) { loginViewModel, signupViewModel in
+                        loginViewModel.userId = userId
+                    }
+                    .padding(.top, 15)
                     
                     //PW
-                    InputView(placeHolder: $placeHolder_pw, secure: $secure, viewModel: viewModel)
+                    InputView(inputValue: $userPW, placeHolder: $placeHolder_pw, secure: $secure, loginViewModel: loginViewModel, signupViewModel: signupViewModel) { loginViewModel, signupViewModel in
+                        loginViewModel.userPW = userPW
+                    }
            
                     //회원가입
                     NavigationLink(destination: SignUpView()) {
@@ -84,7 +89,7 @@ struct LoginPage: View {
                     
                     
                     
-                    LoginButtonView(viewModel: viewModel)
+                    LoginButtonView(viewModel: loginViewModel)
                         .padding(.top, 70)
                     
                     

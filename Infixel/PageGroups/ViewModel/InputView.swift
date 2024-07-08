@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+
 struct InputView: View {
     
     //프리뷰용 변수
@@ -14,11 +15,14 @@ struct InputView: View {
     //@State var placeHolder:String = "test"
     
     //
-    //@Binding var inputValue:String
+    @Binding var inputValue:String
     @Binding var placeHolder:String
     @Binding var secure:Bool
     
-    @ObservedObject var viewModel: LoginButtonViewModel
+    @ObservedObject var loginViewModel: LoginButtonViewModel
+    @ObservedObject var signupViewModel: SignUpViewModel
+    let setInputValue: (LoginButtonViewModel, SignUpViewModel) -> ()
+    
     
     
     var body: some View {
@@ -26,7 +30,7 @@ struct InputView: View {
                 Spacer().frame(width: 30)
                 VStack {
                     ZStack(alignment: .leading) {
-                        if viewModel.userId.isEmpty && viewModel.userPW.isEmpty {
+                        if inputValue.isEmpty {
                             Text(placeHolder)
                             .bold()
                             .foregroundColor(Color.white.opacity(0.6))
@@ -36,18 +40,24 @@ struct InputView: View {
                             .font(Font.custom("Bungee-Regular", size: 20))
                         } //if
                         if secure {
-                            SecureField("", text: $viewModel.userPW)
+                            SecureField("", text: $inputValue)
                                 .foregroundColor(Color.white.opacity(0.6))
                                 .padding()
                                 .padding(.leading, 10)
                                 .frame(height: 60)
+                                .onChange(of: inputValue) {
+                                    setInputValue(loginViewModel, signupViewModel)
+                                }
                         }//if
                         else {
-                            TextField("", text: $viewModel.userId)
+                            TextField("", text: $inputValue)
                                 .foregroundColor(Color.white.opacity(0.6))
                                 .padding()
                                 .padding(.leading, 10)
                                 .frame(height: 60)
+                                .onChange(of: inputValue) {
+                                    setInputValue(loginViewModel, signupViewModel)
+                                }
                         }//else
                     }//ZStack
                 }//VStack

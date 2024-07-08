@@ -8,11 +8,15 @@
 import Foundation
 import Combine
 
+
 class LoginButtonViewModel: ObservableObject {
+    
     @Published var isLoggedIn: Bool = false
     @Published var userId: String = ""
     @Published var userPW: String = ""
     @Published var showAlert: Bool = false
+    
+    
 
     func sendTextToServer() {
         let userDict: [String: Any] = ["userId": self.userId, "userPW": self.userPW]
