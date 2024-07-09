@@ -15,6 +15,7 @@
 		9125C4642C3A8D5E00431998 /* ImageGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9125C4632C3A8D5E00431998 /* ImageGridView.swift */; };
 		9125C4662C3AA7D100431998 /* LoginButtonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9125C4652C3AA7D100431998 /* LoginButtonViewModel.swift */; };
 		9125C4682C3C161800431998 /* UploadeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9125C4672C3C161700431998 /* UploadeImageView.swift */; };
+		9125C46A2C3D652800431998 /* UploadImagePlusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9125C4692C3D652700431998 /* UploadImagePlusView.swift */; };
 		912B68872AB088BF00505677 /* InfixelApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B68862AB088BF00505677 /* InfixelApp.swift */; };
 		912B68892AB088BF00505677 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912B68882AB088BF00505677 /* ContentView.swift */; };
 		912B688B2AB088C100505677 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 912B688A2AB088C100505677 /* Assets.xcassets */; };
@@ -66,6 +67,7 @@
 		9125C4632C3A8D5E00431998 /* ImageGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGridView.swift; sourceTree = "<group>"; };
 		9125C4652C3AA7D100431998 /* LoginButtonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginButtonViewModel.swift; sourceTree = "<group>"; };
 		9125C4672C3C161700431998 /* UploadeImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadeImageView.swift; sourceTree = "<group>"; };
+		9125C4692C3D652700431998 /* UploadImagePlusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UploadImagePlusView.swift; sourceTree = "<group>"; };
 		912B68832AB088BF00505677 /* Infixel.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Infixel.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		912B68862AB088BF00505677 /* InfixelApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfixelApp.swift; sourceTree = "<group>"; };
 		912B68882AB088BF00505677 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 				910801562BCF8F4D00BC9137 /* CommentsView.swift */,
 				910801582BCF968400BC9137 /* SingleCommentView.swift */,
 				9125C4672C3C161700431998 /* UploadeImageView.swift */,
+				9125C4692C3D652700431998 /* UploadImagePlusView.swift */,
 			);
 			path = HomePageGroup;
 			sourceTree = "<group>";
@@ -419,6 +422,7 @@
 				917B436B2AC541180029609B /* User_class.swift in Sources */,
 				912B68C02AB81F3D00505677 /* ProfilePageView.swift in Sources */,
 				91309F222AF0A8FB006E852F /* ColorExtension.swift in Sources */,
+				9125C46A2C3D652800431998 /* UploadImagePlusView.swift in Sources */,
 				9125C4622C3A885700431998 /* SignUpViewModel.swift in Sources */,
 				914EB7F82C317630002D1B96 /* SearchUserSingleView.swift in Sources */,
 			);

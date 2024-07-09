@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ProfilePageView: View {
     
-    @Binding var isLoggedIn: Bool
+    //@Binding var isLoggedIn: Bool
     
     
     var body: some View {
@@ -17,7 +17,7 @@ struct ProfilePageView: View {
             
             Text("Profile Page")
             Button("Log out") {
-                isLoggedIn = false
+                //isLoggedIn = false
            }
            .font(.headline)
            .padding()

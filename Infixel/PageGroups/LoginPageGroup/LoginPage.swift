@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LoginPage: View {
     
-    //@Binding var isLoggedIn: Bool
+    @Binding var isLoggedIn: Bool
 
     @State private var userId: String = ""
     @State private var userPW: String = ""
@@ -89,7 +89,7 @@ struct LoginPage: View {
                     
                     
                     
-                    LoginButtonView(viewModel: loginViewModel)
+                    LoginButtonView(viewModel: loginViewModel, isLoggedIn: $isLoggedIn)
                         .padding(.top, 70)
                     
                     
@@ -106,8 +106,8 @@ struct LoginPage: View {
     }
 }
 
-#Preview {
-    LoginPage()
-}
+//#Preview {
+//    LoginPage()
+//}
 
 

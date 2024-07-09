@@ -62,6 +62,10 @@ class AppState : ObservableObject {
     //SearchAlbumPageView_album 변수
     @Published var album_selectedImage : String? = nil
     @Published var album_selectedImageId : String? = nil
+    
+    
+    //이미지 업로드 플러스 버튼 클릭 유무 변수
+    @Published var uploadPlusBtnClicked = false
   
     
     private func ensureMainThread(error_value:String) {

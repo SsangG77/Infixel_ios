@@ -3,6 +3,93 @@ import SwiftUI
 import PhotosUI
 
 
+struct UploadImageView: View {
+    @StateObject private var viewModel = UploadImageViewModel()
+    @State private var isPickerPresented = false
+    
+    @EnvironmentObject var appState:AppState
+    
+    var body: some View {
+        VStack {
+            HStack {
+                Spacer()
+                UploadImagePlusView()
+                    .environmentObject(appState)
+                    .onTapGesture {
+                        withAnimation {
+                            appState.uploadPlusBtnClicked.toggle()
+                        }
+                    }
+            }//HStak
+            
+            Text("이미지 업로드")
+                .font(.title)
+            
+            /// 이미지 선택하는 부분
+            if let selectedImage = viewModel.selectedImage {
+                Image(uiImage: selectedImage)
+                    .resizable()
+                    .scaledToFit()
+                    .onTapGesture {
+                        isPickerPresented.toggle()
+                    }
+                    .padding()
+            } else {
+                Text("Select an Image")
+                    .foregroundColor(.gray)
+                    .frame(width: 200, height: 200)
+                    .background(Color(UIColor.systemFill))
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .onTapGesture {
+                        isPickerPresented.toggle()
+                    }
+            }
+            
+            ///Description 입력 부분
+            TextField("게시글 작성", text: $viewModel.description)
+                .padding()
+                .frame(height: 200)
+            
+            
+            ///Tag 선택 부분
+            
+            Spacer()
+            
+            ///업로드 버튼
+            Button(action: {
+                if viewModel.selectedImage != nil {
+                    viewModel.uploadImage()
+                } else {
+                    
+                }
+            }) {
+                if viewModel.uploadStatus == "" {
+                    Text("Upload")
+                    
+                } else {
+                    Text(viewModel.uploadStatus)
+                }
+            }
+            .disabled(viewModel.selectedImage != nil)
+            .padding()
+            .background(viewModel.selectedImage != nil ? Color.blue : Color.gray)
+            .foregroundColor(.white)
+            .cornerRadius(8)
+            
+            Text(viewModel.uploadStatus)
+                .padding()
+                .foregroundColor(.blue)
+            
+            Spacer()
+        }//VStack
+        .sheet(isPresented: $isPickerPresented) {
+            ImagePicker(selectedImage: $viewModel.selectedImage)
+        }
+    }
+    
+}
+
+
 struct ImagePicker: UIViewControllerRepresentable {
     @Binding var selectedImage: UIImage?
     
@@ -41,57 +128,40 @@ struct ImagePicker: UIViewControllerRepresentable {
     }
 }
 
-struct UploadImageView: View {
-    @StateObject private var viewModel = UploadImageViewModel()
-    @State private var isPickerPresented = false
+
+
+
+
+class UploadImageViewModel: ObservableObject {
+    @Published var selectedImage: UIImage? = nil
+    @Published var uploadStatus: String = ""
+    //@Published var userId: String = "userid1"
+    @Published var description: String = ""
     
-    var body: some View {
-        VStack {
-            if let selectedImage = viewModel.selectedImage {
-                Image(uiImage: selectedImage)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 200, height: 200)
-            } else {
-                Text("Select an Image")
-                    .foregroundColor(.gray)
-                    .frame(width: 200, height: 200)
-                    .background(Color(UIColor.systemFill))
-            }
-            
-            Button(action: {
-                isPickerPresented.toggle()
-            }) {
-                Text("Upload Image")
-            }
-            .padding()
-            .sheet(isPresented: $isPickerPresented) {
-                ImagePicker(selectedImage: $viewModel.selectedImage)
-            }
-            
-            if viewModel.selectedImage != nil {
-                Button(action: {
-                    viewModel.uploadImage()
-                }) {
-                    Text("Upload to Server")
-                }
-                .padding()
-            }
-            
-            Text(viewModel.uploadStatus)
-                .padding()
-                .foregroundColor(.blue)
+    private var imageUploader = ImageUploader()
+    
+    func uploadImage() {
+        guard let selectedImage = selectedImage else {
+            uploadStatus = "No image selected"
+            return
         }
-        .padding()
+        
+        uploadStatus = "Uploading..."
+        imageUploader.uploadImage(selectedImage, userId: UserDefaults.standard.string(forKey: "user_id")!, description: description, to: VarCollectionFile.imageUploadURL) { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let response):
+                    self?.uploadStatus = response.message
+                case .failure(let error):
+                    self?.uploadStatus = "Upload Failed: \(error.localizedDescription)"
+                }
+            }
+        }
     }
 }
 
-struct UploadResponse: Codable {
-    let message: String
-    let filePath: String
-    let userId: String
-    let description: String
-}
+
+
 
 class ImageUploader {
     func uploadImage(_ image: UIImage, userId: String, description: String, to urlString: String, completion: @escaping (Result<UploadResponse, Error>) -> Void) {
@@ -145,34 +215,26 @@ class ImageUploader {
 
 
 
-class UploadImageViewModel: ObservableObject {
-    @Published var selectedImage: UIImage? = nil
-    @Published var uploadStatus: String = ""
-    @Published var userId: String = "userid1"
-    @Published var description: String = "example_description"
-    
-    private var imageUploader = ImageUploader()
-    
-    func uploadImage() {
-        guard let selectedImage = selectedImage else {
-            uploadStatus = "No image selected"
-            return
-        }
-        
-        uploadStatus = "Uploading..."
-        imageUploader.uploadImage(selectedImage, userId: userId, description: description, to: VarCollectionFile.imageUploadURL) { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let response):
-                    self?.uploadStatus = response.message
-                case .failure(let error):
-                    self?.uploadStatus = "Upload Failed: \(error.localizedDescription)"
-                }
-            }
-        }
-    }
+
+
+
+
+
+struct UploadResponse: Codable {
+    let message: String
+    let filePath: String
+//    let userId: String
+//    let description: String
 }
 
-#Preview {
-    UploadImageView()
-}
+
+
+
+
+
+
+
+
+
+
+

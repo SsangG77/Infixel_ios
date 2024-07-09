@@ -21,14 +21,14 @@ struct HomePageView: View {
     @State private var reloadTriggers: [UUID] = []
     
     @Binding var slideImage:SlideImage
+    
+    
  
 
     var body: some View {
             
             
             ZStack {
-                
-                
                 ScrollView(.vertical, showsIndicators: false) {
                     LazyVStack(spacing: 0) {
                         ForEach(slideImages.indices, id: \.self) { index in
@@ -37,13 +37,13 @@ struct HomePageView: View {
                                     switch phase {
                                     case .empty:
                                         ProgressView()
-                                            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                                            //.frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
                                             //.frame(maxWidth: .infinity, maxHeight: .infinity)
                                     case .success(let image):
                                         image
                                             .resizable()
                                             .scaledToFill()
-                                            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                                            //.frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
                                             .clipped()
                                             .onAppear {
                                                 slideImage = slideImages[index]
@@ -60,7 +60,7 @@ struct HomePageView: View {
                                             Text("Failed to load image, retrying...")
                                                 .foregroundColor(.white)
                                         }
-                                        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                                        //.frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
                                         .onAppear {
                                             reloadImage(photo: slideImages[index])
                                         }
@@ -69,6 +69,7 @@ struct HomePageView: View {
                                     }//--@switch
                                 }//--@AsyncImage
                                 .id(reloadTriggers[index])
+                                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
                             }//--@if_let_url
                         }//--@ForEach
                         .onChange(of: slideImage) {
@@ -82,7 +83,6 @@ struct HomePageView: View {
                 .scrollTargetBehavior(.paging)
                 .edgesIgnoringSafeArea(.all)
                 .onAppear {
-                    VarCollectionFile.myPrint(title: "현재 slideimage", content: slideImage)
                     if isInitialLoad {
                         loadInitialPhotos()
                     }
@@ -90,6 +90,17 @@ struct HomePageView: View {
                 
                 
                 VStack {
+                    HStack {
+                        Spacer()
+                        UploadImagePlusView()
+                            .environmentObject(appState)
+                            .onTapGesture {
+                                withAnimation {
+                                    appState.uploadPlusBtnClicked.toggle()
+                                }
+                            }
+                    }
+                    
                     Spacer()
                     if slideImages.count > 0 {
                         Info_SubButtonView(slideImage: $slideImage)
@@ -101,7 +112,6 @@ struct HomePageView: View {
                 }//VStack
                 
                 
-                //ZStack {
                 if appState.albumsOpen || appState.commentsOpen {
                     Rectangle()
                         .foregroundColor(.secondary.opacity(0.1))
@@ -117,8 +127,14 @@ struct HomePageView: View {
                             }
                         }
                 }
-                    
-                //}//ZStack - add album
+                
+                if appState.uploadPlusBtnClicked {
+                    GeometryReader { geo in
+                        UploadImageView()
+                            .frame(width: geo.size.width, height: geo.size.height)
+                            .background(Color.white)
+                    }
+                }
                 
             }//ZStack
     }
@@ -243,5 +259,5 @@ struct HomePageView: View {
 
 
 //#Preview {
-//    ScrollView_test()
+//    HomePageView(slideImage: .constant(SlideImage()))
 //}

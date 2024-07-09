@@ -10,7 +10,8 @@ import SwiftUI
 @available(iOS 17.0, *)
 struct ContentView: View {
     
-    //@Binding var isLoggedIn: Bool
+    @Binding var isLoggedIn: Bool
+//    var isLoggedIn: Bool
     
     @StateObject private var appState = AppState()
     
@@ -20,12 +21,12 @@ struct ContentView: View {
     
     var body: some View {
         
-        if loginViewModel.isLoggedIn {
-            MainView(isLoggedIn: $loginViewModel.isLoggedIn)
+        if isLoggedIn {
+            MainView()
                 .environmentObject(appState)
         } else {
             
-            LoginPage(loginViewModel: loginViewModel, signupViewModel: signupViewModel)
+            LoginPage(isLoggedIn: $isLoggedIn, loginViewModel: loginViewModel, signupViewModel: signupViewModel)
         }
         
     }

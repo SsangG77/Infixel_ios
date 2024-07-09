@@ -10,7 +10,7 @@ import SwiftUI
 @available(iOS 17.0, *)
 struct MainView: View {
     
-    @Binding var isLoggedIn: Bool
+    //@Binding var isLoggedIn: Bool
     
     @EnvironmentObject var appState: AppState
     @State var slideImage: SlideImage = SlideImage()
@@ -37,13 +37,14 @@ struct MainView: View {
                 
             case .plus:
                 //Text("사진 앨범 나오게 하기")
-                UploadImageView()
+                UploadImagePlusView()
                 
             case .save:
                 SavePageView()
                 
             case .profile:
-                ProfilePageView(isLoggedIn: $isLoggedIn)
+                //ProfilePageView(isLoggedIn: $isLoggedIn)
+                ProfilePageView()
             
             }//switch
 

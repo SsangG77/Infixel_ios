@@ -16,8 +16,7 @@ struct InfixelApp: App {
     
     var body: some Scene {
         WindowGroup {
-//            ContentView(isLoggedIn: $isLoggedIn)
-            ContentView()
+            ContentView(isLoggedIn: $isLoggedIn)
         }
     }
 }
