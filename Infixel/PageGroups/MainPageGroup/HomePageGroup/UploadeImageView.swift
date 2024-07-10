@@ -7,13 +7,18 @@ struct UploadImageView: View {
     @StateObject private var viewModel = UploadImageViewModel()
     @State private var isPickerPresented = false
     
+    //@State var tagText:String = ""
+    //@State var tags:[String] = []
+    
     @EnvironmentObject var appState:AppState
     
     var body: some View {
-        VStack {
+        VStack(spacing: 0) {
             HStack {
                 Spacer()
                 UploadImagePlusView()
+                    .contentTransition(.symbolEffect)
+                    .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
                     .environmentObject(appState)
                     .onTapGesture {
                         withAnimation {
@@ -23,68 +28,144 @@ struct UploadImageView: View {
             }//HStak
             
             Text("이미지 업로드")
-                .font(.title)
+                .fontWeight(.bold)
+                .font(Font.custom("Bungee-Regular", size: 20))
+                .padding(.bottom, 10)
             
             /// 이미지 선택하는 부분
             if let selectedImage = viewModel.selectedImage {
                 Image(uiImage: selectedImage)
                     .resizable()
                     .scaledToFit()
-                    .onTapGesture {
-                        isPickerPresented.toggle()
-                    }
-                    .padding()
-            } else {
-                Text("Select an Image")
-                    .foregroundColor(.gray)
-                    .frame(width: 200, height: 200)
-                    .background(Color(UIColor.systemFill))
                     .clipShape(RoundedRectangle(cornerRadius: 20))
                     .onTapGesture {
                         isPickerPresented.toggle()
                     }
+                    .padding()
+                    .frame(height: 200)
+                    .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
+                
+            } else {
+                VStack {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 20)
+                                        .fill(Color(hexString: "e8e8e8"))
+                                        .frame(width: 200, height: 200)
+                                        .background(Color(UIColor.systemFill))
+                                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                                        .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
+
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .strokeBorder(Color.clear, lineWidth: 0) // 필요시 경계선 설정
+                                        .frame(width: 200, height: 200)
+                                        //.background(Color(UIColor.systemFill))
+                                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        
+                        Text("Select an Image")
+                    }
+                    
+                    .onTapGesture {
+                        isPickerPresented.toggle()
+                    }
+                    
+                }
+                
             }
             
             ///Description 입력 부분
-            TextField("게시글 작성", text: $viewModel.description)
-                .padding()
-                .frame(height: 200)
+            ///
             
+            VStack(spacing: 0) {
+                HStack {
+                    Text("게시글 작성")
+                        .fontDesign(.rounded)
+                    Spacer()
+                }
+                
+                TextField("문구를 작성해주세요.", text: $viewModel.description)
+                    .padding()
+                    .textFieldStyle(PlainTextFieldStyle())
+                
+                Divider()
+                
+            }
+            .padding(.top, 10.0)
+            .padding()
             
             ///Tag 선택 부분
-            
-            Spacer()
-            
-            ///업로드 버튼
-            Button(action: {
-                if viewModel.selectedImage != nil {
-                    viewModel.uploadImage()
-                } else {
+            VStack(spacing: 0) {
+                
+                HStack {
                     
+                    Text("태그 작성")
+                    Spacer()
                 }
-            }) {
-                if viewModel.uploadStatus == "" {
-                    Text("Upload")
-                    
-                } else {
-                    Text(viewModel.uploadStatus)
+                
+                TextField("띄어쓰기로 태그를 구분합니다.", text: $viewModel.tagText)
+                    .padding()
+                    .textFieldStyle(PlainTextFieldStyle())
+                .onChange(of: viewModel.tagText) { newValue in
+                    viewModel.checkForSpace(newValue)
+                }
+                
+                Divider()
+            }
+            .padding()
+            
+            
+            ScrollView(.horizontal) {
+                HStack(spacing: 0) {
+                    ForEach(viewModel.tags, id: \.self) { tag in
+                        Text("#"+tag)
+                            .padding()
+                            .foregroundColor(.blue)
+                        
+                    }
                 }
             }
-            .disabled(viewModel.selectedImage != nil)
-            .padding()
-            .background(viewModel.selectedImage != nil ? Color.blue : Color.gray)
-            .foregroundColor(.white)
-            .cornerRadius(8)
-            
-            Text(viewModel.uploadStatus)
-                .padding()
-                .foregroundColor(.blue)
+            .frame(height: 50)
             
             Spacer()
+                .frame(height: 50)
+            
+            ///업로드 버튼
+            GeometryReader { geometry in
+                        VStack {
+                            Button(action: {
+                                if viewModel.selectedImage != nil {
+                                    viewModel.uploadImage()
+                                }
+                            }) {
+                                if viewModel.uploadStatus == "" {
+                                    Text("Upload")
+                                } else {
+                                    Text(viewModel.uploadStatus)
+                                }
+                            }
+                            .disabled(viewModel.selectedImage == nil)
+                            .padding()
+                            .frame(width: geometry.size.width * 0.8) // 버튼 너비를 전체 화면의 80%로 설정
+                            .background(viewModel.selectedImage != nil ? Color.blue : Color.gray)
+                            .foregroundColor(.white)
+                            .cornerRadius(8)
+                            .padding()
+                        }
+                        .frame(width: geometry.size.width, height: 100, alignment: .center)
+                    }
+                    .edgesIgnoringSafeArea(.all) // 전체 화면을 사용하도록 설정
+                    
+            
+//
+//            Text(viewModel.uploadStatus)
+//                .padding()
+//                .foregroundColor(.blue)
+            
+            
         }//VStack
         .sheet(isPresented: $isPickerPresented) {
             ImagePicker(selectedImage: $viewModel.selectedImage)
         }
+        
     }
     
 }
@@ -137,8 +218,20 @@ class UploadImageViewModel: ObservableObject {
     @Published var uploadStatus: String = ""
     //@Published var userId: String = "userid1"
     @Published var description: String = ""
+    @Published var tags: [String] = []
+    @Published var tagText = ""
+    
     
     private var imageUploader = ImageUploader()
+    
+    
+    func checkForSpace(_ text: String) {
+            if let lastCharacter = text.last, lastCharacter == " " {
+                let components = text.split(separator: " ")
+                tags.append(String(components[0]))
+                tagText = String(text.dropFirst(components[0].count + 1))
+            }
+        }
     
     func uploadImage() {
         guard let selectedImage = selectedImage else {
@@ -147,7 +240,7 @@ class UploadImageViewModel: ObservableObject {
         }
         
         uploadStatus = "Uploading..."
-        imageUploader.uploadImage(selectedImage, userId: UserDefaults.standard.string(forKey: "user_id")!, description: description, to: VarCollectionFile.imageUploadURL) { [weak self] result in
+        imageUploader.uploadImage(selectedImage, userId: UserDefaults.standard.string(forKey: "user_id")!, description: description, tags: tags, to: VarCollectionFile.imageUploadURL) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let response):
@@ -164,7 +257,7 @@ class UploadImageViewModel: ObservableObject {
 
 
 class ImageUploader {
-    func uploadImage(_ image: UIImage, userId: String, description: String, to urlString: String, completion: @escaping (Result<UploadResponse, Error>) -> Void) {
+    func uploadImage(_ image: UIImage, userId: String, description: String, tags:[String], to urlString: String, completion: @escaping (Result<UploadResponse, Error>) -> Void) {
         guard let url = URL(string: urlString) else {
             completion(.failure(NSError(domain: "Invalid URL", code: 400, userInfo: nil)))
             return
@@ -187,6 +280,14 @@ class ImageUploader {
         data.append("--\(boundary)\r\n".data(using: .utf8)!)
         data.append("Content-Disposition: form-data; name=\"description\"\r\n\r\n".data(using: .utf8)!)
         data.append("\(description)\r\n".data(using: .utf8)!)
+        
+        for tag in tags {
+               data.append("--\(boundary)\r\n".data(using: .utf8)!)
+               data.append("Content-Disposition: form-data; name=\"tags\"\r\n\r\n".data(using: .utf8)!)
+               data.append("\(tag)\r\n".data(using: .utf8)!)
+           }
+        
+        
         data.append("--\(boundary)--\r\n".data(using: .utf8)!)
         
         let task = URLSession.shared.uploadTask(with: request, from: data) { responseData, response, error in
@@ -226,7 +327,6 @@ struct UploadResponse: Codable {
 //    let userId: String
 //    let description: String
 }
-
 
 
 

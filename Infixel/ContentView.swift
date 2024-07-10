@@ -22,7 +22,7 @@ struct ContentView: View {
     var body: some View {
         
         if isLoggedIn {
-            MainView()
+            MainView(isLoggedIn: $isLoggedIn)
                 .environmentObject(appState)
         } else {
             

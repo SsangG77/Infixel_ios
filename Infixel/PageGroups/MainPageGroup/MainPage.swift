@@ -10,7 +10,7 @@ import SwiftUI
 @available(iOS 17.0, *)
 struct MainView: View {
     
-    //@Binding var isLoggedIn: Bool
+    @Binding var isLoggedIn: Bool
     
     @EnvironmentObject var appState: AppState
     @State var slideImage: SlideImage = SlideImage()
@@ -43,14 +43,16 @@ struct MainView: View {
                 SavePageView()
                 
             case .profile:
-                //ProfilePageView(isLoggedIn: $isLoggedIn)
-                ProfilePageView()
+                ProfilePageView(isLoggedIn: $isLoggedIn)
+//                ProfilePageView()
             
             }//switch
 
             NavView()
                 .padding(.bottom, 10)
                 .environmentObject(appState)
+                .offset(y: appState.uploadPlusBtnClicked ? 100 : 0)
+                .animation(.easeInOut, value: appState.uploadPlusBtnClicked)
             
             AddAlbumView(slideImage: $slideImage)
                 .environmentObject(appState)

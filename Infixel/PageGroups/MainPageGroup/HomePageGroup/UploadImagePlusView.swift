@@ -17,11 +17,14 @@ struct UploadImagePlusView: View {
     var body: some View {
         // 플러스 모양 커스텀 이미지 버튼
         ZStack {
+            
+            
             Rectangle()
                 .background(.ultraThinMaterial)
                 .foregroundColor(.secondary.opacity(0.1))
                 .clipShape(Circle())
                 .frame(width: size, height: size)
+            
             Image("thick_plus")
                 .resizable()
                 .frame(width: size * 0.4, height: size  * 0.4)
