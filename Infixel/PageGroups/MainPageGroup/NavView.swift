@@ -53,9 +53,9 @@ struct NavView: View {
                         Spacer()
                         
                         Button(action: {
-                            appState.selectedTab = .plus
+                            appState.selectedTab = .chart
                         }) {
-                            getImage(for: .plus, isActive: appState.selectedTab == .plus)
+                            getImage(for: .chart, isActive: appState.selectedTab == .chart)
                         }
                         
                         Spacer()
@@ -96,15 +96,15 @@ struct NavView: View {
     }
     
     
-    private func getImage(for tab: TabViewModel.Tab, isActive: Bool) -> some View {
+    private func getImage(for tab: AppState.Tab, isActive: Bool) -> some View {
         let imageName: String
         switch tab {
         case .house:
             imageName = isActive ? "house active" : "house inactive"
         case .search:
             imageName = isActive ? "search active" : "search inactive"
-        case .plus:
-            imageName = isActive ? "plus active" : "plus inactive"
+        case .chart:
+            imageName = isActive ? "chart active" : "chart inactive"
         case .save:
             imageName = isActive ? "save active" : "save inactive"
         case .profile:

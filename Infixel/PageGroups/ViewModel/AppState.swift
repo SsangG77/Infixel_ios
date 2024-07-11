@@ -19,7 +19,7 @@ class AppState : ObservableObject {
     enum Tab {
         case house
         case search
-        case plus
+        case chart
         case save
         case profile
     }

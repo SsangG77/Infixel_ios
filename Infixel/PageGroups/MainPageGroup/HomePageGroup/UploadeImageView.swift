@@ -13,31 +13,47 @@ struct UploadImageView: View {
     @EnvironmentObject var appState:AppState
     
     var body: some View {
-        VStack(spacing: 0) {
-            HStack {
-                Spacer()
-                UploadImagePlusView()
-                    .contentTransition(.symbolEffect)
-                    .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
-                    .environmentObject(appState)
-                    .onTapGesture {
-                        withAnimation {
-                            appState.uploadPlusBtnClicked.toggle()
+        
+        ZStack {
+            
+            VStack {
+                HStack {
+                    Spacer()
+                    UploadImagePlusView()
+                        .contentTransition(.symbolEffect)
+                        .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
+                        .environmentObject(appState)
+                        .onTapGesture {
+                            withAnimation {
+                                appState.uploadPlusBtnClicked.toggle()
+                            }
                         }
-                    }
-            }//HStak
+                }//HStak
+                Spacer()
+            }
+            
+            
+            
+            
+            
+            
+        
+        
+        
+        VStack(spacing: 0) {
+            
             
             Text("이미지 업로드")
                 .fontWeight(.bold)
                 .font(Font.custom("Bungee-Regular", size: 20))
-                .padding(.bottom, 10)
+                .padding(.bottom, 30)
             
             /// 이미지 선택하는 부분
             if let selectedImage = viewModel.selectedImage {
                 Image(uiImage: selectedImage)
                     .resizable()
                     .scaledToFit()
-                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
                     .onTapGesture {
                         isPickerPresented.toggle()
                     }
@@ -48,18 +64,18 @@ struct UploadImageView: View {
             } else {
                 VStack {
                     ZStack {
+                        RoundedRectangle(cornerRadius: 15)
+                            .fill(Color(hexString: "e8e8e8"))
+                            .frame(width: 200, height: 200)
+                            .background(Color(UIColor.systemFill))
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                            .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
+                        
                         RoundedRectangle(cornerRadius: 20)
-                                        .fill(Color(hexString: "e8e8e8"))
-                                        .frame(width: 200, height: 200)
-                                        .background(Color(UIColor.systemFill))
-                                        .clipShape(RoundedRectangle(cornerRadius: 20))
-                                        .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
-
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .strokeBorder(Color.clear, lineWidth: 0) // 필요시 경계선 설정
-                                        .frame(width: 200, height: 200)
-                                        //.background(Color(UIColor.systemFill))
-                                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                            .strokeBorder(Color.clear, lineWidth: 0) // 필요시 경계선 설정
+                            .frame(width: 200, height: 200)
+                        //.background(Color(UIColor.systemFill))
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
                         
                         Text("Select an Image")
                     }
@@ -89,7 +105,7 @@ struct UploadImageView: View {
                 Divider()
                 
             }
-            .padding(.top, 10.0)
+            .padding(.top, 15)
             .padding()
             
             ///Tag 선택 부분
@@ -104,12 +120,13 @@ struct UploadImageView: View {
                 TextField("띄어쓰기로 태그를 구분합니다.", text: $viewModel.tagText)
                     .padding()
                     .textFieldStyle(PlainTextFieldStyle())
-                .onChange(of: viewModel.tagText) { newValue in
-                    viewModel.checkForSpace(newValue)
-                }
+                    .onChange(of: viewModel.tagText) { newValue in
+                        viewModel.checkForSpace(newValue)
+                    }
                 
                 Divider()
             }
+            .padding(.top, 15)
             .padding()
             
             
@@ -123,48 +140,46 @@ struct UploadImageView: View {
                     }
                 }
             }
-            .frame(height: 50)
+            .frame(height: 30)
             
             Spacer()
                 .frame(height: 50)
             
             ///업로드 버튼
             GeometryReader { geometry in
-                        VStack {
-                            Button(action: {
-                                if viewModel.selectedImage != nil {
-                                    viewModel.uploadImage()
-                                }
-                            }) {
-                                if viewModel.uploadStatus == "" {
-                                    Text("Upload")
-                                } else {
-                                    Text(viewModel.uploadStatus)
-                                }
-                            }
-                            .disabled(viewModel.selectedImage == nil)
-                            .padding()
-                            .frame(width: geometry.size.width * 0.8) // 버튼 너비를 전체 화면의 80%로 설정
-                            .background(viewModel.selectedImage != nil ? Color.blue : Color.gray)
-                            .foregroundColor(.white)
-                            .cornerRadius(8)
-                            .padding()
+                VStack {
+                    Button(action: {
+                        if viewModel.selectedImage != nil {
+                            viewModel.uploadImage(appState)
                         }
-                        .frame(width: geometry.size.width, height: 100, alignment: .center)
+                    }) {
+                        if viewModel.uploadStatus == "" {
+                            Text("Upload")
+                        } else {
+                            Text(viewModel.uploadStatus)
+                        }
                     }
-                    .edgesIgnoringSafeArea(.all) // 전체 화면을 사용하도록 설정
-                    
+                    .disabled(viewModel.selectedImage == nil)
+                    .padding()
+                    .frame(width: geometry.size.width * 0.8) // 버튼 너비를 전체 화면의 80%로 설정
+                    .background(viewModel.selectedImage != nil ? Color.blue : Color.gray)
+                    .foregroundColor(.white)
+                    .cornerRadius(15)
+                    .padding()
+                }
+                .frame(width: geometry.size.width, height: 100, alignment: .center)
+            }
+            .edgesIgnoringSafeArea(.all) // 전체 화면을 사용하도록 설정
             
-//
-//            Text(viewModel.uploadStatus)
-//                .padding()
-//                .foregroundColor(.blue)
+            
             
             
         }//VStack
+        .padding(.top, 40)
         .sheet(isPresented: $isPickerPresented) {
             ImagePicker(selectedImage: $viewModel.selectedImage)
         }
+    }
         
     }
     
@@ -222,6 +237,8 @@ class UploadImageViewModel: ObservableObject {
     @Published var tagText = ""
     
     
+    
+    
     private var imageUploader = ImageUploader()
     
     
@@ -233,7 +250,7 @@ class UploadImageViewModel: ObservableObject {
             }
         }
     
-    func uploadImage() {
+    func uploadImage(_ appState: AppState) {
         guard let selectedImage = selectedImage else {
             uploadStatus = "No image selected"
             return
@@ -245,8 +262,13 @@ class UploadImageViewModel: ObservableObject {
                 switch result {
                 case .success(let response):
                     self?.uploadStatus = response.message
+                    withAnimation {
+                        appState.uploadPlusBtnClicked = false
+                    }
+                    
                 case .failure(let error):
-                    self?.uploadStatus = "Upload Failed: \(error.localizedDescription)"
+                    self?.uploadStatus = "업로드 실패"
+                    appState.uploadPlusBtnClicked = false
                 }
             }
         }

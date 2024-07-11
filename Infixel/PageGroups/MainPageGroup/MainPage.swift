@@ -35,9 +35,9 @@ struct MainView: View {
                 SearchPageView(animationNamespace: animationNamespace)
                     .environmentObject(appState)
                 
-            case .plus:
-                //Text("사진 앨범 나오게 하기")
-                UploadImagePlusView()
+            case .chart:
+                Text("실시간 이미지, 유저 pic 순위 나타내기")
+                
                 
             case .save:
                 SavePageView()
