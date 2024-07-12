@@ -57,6 +57,9 @@ struct SearchPageView_tag: View {
             }
             
         }//ScrollView
+        .onDisappear {
+            appState.selectImageReset()
+        }
     }//body
     
     

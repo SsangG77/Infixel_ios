@@ -40,6 +40,10 @@ struct VarCollectionFile {
     static let tagsSearchURL            = host + "/tags/search"
     
     
+    //WebSocket
+    static let webSocketChartURL        = "ws://localhost:3000/chart"
+    
+    
     
     
     static func myPrint<T>(title:String, content:T) {

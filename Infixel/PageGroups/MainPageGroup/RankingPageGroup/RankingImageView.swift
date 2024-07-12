@@ -1,11 +1,14 @@
 //
-//  WebSocketViewTest.swift
+//  RankingImageView.swift
 //  Infixel
 //
-//  Created by 차상진 on 7/12/24.
+//  Created by 차상진 on 7/13/24.
 //
 
 import SwiftUI
+
+
+
 
 struct Ranking: Codable, Identifiable {
     var id: String { name }
@@ -13,12 +16,15 @@ struct Ranking: Codable, Identifiable {
     let score: Int
 }
 
+
+
 class WebSocketManager: ObservableObject {
     private var webSocketTask: URLSessionWebSocketTask?
-    @Published var rankings: [Ranking] = []
+    //@Published var rankings: [Ranking] = []
+    @Published var rankingImages: [SlideImage] = []
 
     func connect() {
-        guard let url = URL(string: "ws://localhost:3000/chart") else { return }
+        guard let url = URL(string: VarCollectionFile.webSocketChartURL) else { return }
         webSocketTask = URLSession.shared.webSocketTask(with: url)
         webSocketTask?.resume()
         receiveMessage()
@@ -47,9 +53,10 @@ class WebSocketManager: ObservableObject {
 
     func handleMessageData(_ data: Data) {
         let decoder = JSONDecoder()
-        if let rankings = try? decoder.decode([Ranking].self, from: data) {
+        print(decoder)
+        if let rankings = try? decoder.decode([SlideImage].self, from: data) {
             DispatchQueue.main.async {
-                self.rankings = rankings
+                self.rankingImages = rankings
             }
         }
     }
@@ -57,23 +64,24 @@ class WebSocketManager: ObservableObject {
     func disconnect() {
         webSocketTask?.cancel(with: .goingAway, reason: nil)
     }
-}
+} //class - WebSocketManager
 
-struct WebSocketViewTest: View {
+
+
+
+struct RankingImageView: View {
     @StateObject private var webSocketManager = WebSocketManager()
 
     var body: some View {
         VStack {
-            Text("실시간 순위")
-                .font(.largeTitle)
-                .padding()
-
-            List(webSocketManager.rankings) { ranking in
-                HStack {
-                    Text(ranking.name)
-                    Spacer()
-                    Text("\(ranking.score)")
+            List($webSocketManager.rankingImages) { ranking in
+                
+                VStack {
+                    RankingImageSingleView(ranking: .constant(2), imageURL: ranking.link, pic: ranking.pic, profile_image: ranking.profile_image, user_nick: ranking.user_nick, description: ranking.description)
                 }
+                .frame(width: UIScreen.main.bounds.width)
+                
+                
             }
         }
         .onAppear {
@@ -86,5 +94,5 @@ struct WebSocketViewTest: View {
 }
 
 #Preview {
-    WebSocketViewTest()
+    RankingImageView()
 }

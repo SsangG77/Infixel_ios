@@ -8,10 +8,10 @@
 import Foundation
 
 
-class SlideImage: Identifiable, Hashable, ObservableObject {
+class SlideImage: Identifiable, Hashable, ObservableObject, Decodable {
    
-    let id: String            // 고유 아이디
-    var link: String            // 이미지 링크
+    var id: String            // 고유 아이디
+    var link: String            // 이미지 링크p
     var user_nick:String
     var profile_image:String
     var pic: Int                //좋아요 갯수

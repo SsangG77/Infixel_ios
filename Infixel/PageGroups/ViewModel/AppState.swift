@@ -52,6 +52,10 @@ class AppState : ObservableObject {
         selectedImage = imageUrl
         selectedImageId = imageId
     }
+    func selectImageReset() {
+        selectedImage = nil
+        selectedImageId = nil
+    }
     
     //searchPage 버튼 클릭 유무 변수
     @Published var searchBtnClicked                 : Bool       = false

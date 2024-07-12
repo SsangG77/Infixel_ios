@@ -12,7 +12,7 @@ class User {
     
     let id: String
     let user_nick : String
-    let thumbnail_link : String
+    var thumbnail_link : String
     let user_name : String
     //let profileImage
     

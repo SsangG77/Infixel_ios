@@ -33,42 +33,42 @@ struct HomePageView: View {
                     LazyVStack(spacing: 0) {
                         ForEach(slideImages.indices, id: \.self) { index in
                             if let url = URL(string: slideImages[index].link) {
-                                AsyncImage(url: url, transaction: Transaction(animation: .default)) { phase in
-                                    switch phase {
-                                    case .empty:
-                                        ProgressView()
-                                            //.frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-                                            //.frame(maxWidth: .infinity, maxHeight: .infinity)
-                                    case .success(let image):
-                                        image
-                                            .resizable()
-                                            .scaledToFill()
-                                            //.frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-                                            .clipped()
-                                            .onAppear {
-                                                slideImage = slideImages[index]
-                                                
-                                                //마지막 이미지일때 동작
-                                                if slideImages[index].id == slideImages.last?.id {
-                                                    loadMorePhotosIfNeeded(currentPhoto: slideImages[index])
+                                
+                                GeometryReader { geo in
+                                    AsyncImage(url: url, transaction: Transaction(animation: .default)) { phase in
+                                        switch phase {
+                                        case .empty:
+                                            ProgressView()
+                                        case .success(let image):
+                                            image
+                                                .resizable()
+                                                .scaledToFill()
+                                                .position(x: geo.size.width/2, y: geo.size.height/2)
+                                                .clipped()
+                                                .onAppear {
+                                                    slideImage = slideImages[index]
+                                                    
+                                                    //마지막 이미지일때 동작
+                                                    if slideImages[index].id == slideImages.last?.id {
+                                                        loadMorePhotosIfNeeded(currentPhoto: slideImages[index])
+                                                    }
                                                 }
+                                        case .failure:
+                                            VStack {
+                                                Image(systemName: "photo")
+                                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                                Text("Failed to load image, retrying...")
+                                                    .foregroundColor(.white)
                                             }
-                                    case .failure:
-                                        VStack {
-                                            Image(systemName: "photo")
-                                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                            Text("Failed to load image, retrying...")
-                                                .foregroundColor(.white)
-                                        }
-                                        //.frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-                                        .onAppear {
-                                            reloadImage(photo: slideImages[index])
-                                        }
-                                    @unknown default:
-                                        EmptyView()
-                                    }//--@switch
-                                }//--@AsyncImage
-                                .id(reloadTriggers[index])
+                                            .onAppear {
+                                                reloadImage(photo: slideImages[index])
+                                            }
+                                        @unknown default:
+                                            EmptyView()
+                                        }//--@switch
+                                    }//--@AsyncImage
+                                    .id(reloadTriggers[index])
+                                }
                                 .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
                             }//--@if_let_url
                         }//--@ForEach
