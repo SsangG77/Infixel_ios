@@ -38,6 +38,7 @@ struct MainView: View {
             case .chart:
                 //Text("실시간 이미지, 유저 pic 순위 나타내기")
                 RankingView()
+                    .ignoresSafeArea()
                 
                 
             case .save:

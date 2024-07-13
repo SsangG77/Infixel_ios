@@ -8,12 +8,6 @@
 import SwiftUI
 
 struct RankingImageSingleView: View {
-//    @State var imageURL = VarCollectionFile.resjpgURL + "winter6.jpeg"
-//    @State var ranking  = 1
-//    @State var pic = 751
-//    @State var profile_image = VarCollectionFile.resjpgURL + "1720457448108-211017711.jpg"
-//    @State var user_nick = "user_sj"
-//    @State var desciption = "lorem ipsum seekcdospzedqewr"
     
     @Binding var ranking: Int
     @Binding var imageURL: String
@@ -32,32 +26,35 @@ struct RankingImageSingleView: View {
     var body: some View {
         
         
-        
         ZStack {
             GeometryReader { geo in
-                                AsyncImage(url: URL(string: imageURL)) { phase in
-                                    switch phase {
-                                    case .empty:
-                                        ProgressView()
-                                    case .success(let image):
-                                        image
-                                            .resizable()
-                                            .scaledToFill()
-                                            .position(x: geo.size.width/2, y: geo.size.height/2)
-                                            
-                
-                                    case .failure:
-                                        Image(systemName: "photo")
-                                    @unknown default:
-                                        EmptyView()
-                                    }//phase
-                                }//AsyncImage
-            }
+                AsyncImage(url: URL(string: imageURL)) { phase in
+                    switch phase {
+                    case .empty:
+                        ProgressView()
+                            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                        
+                    case .success(let image):
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .position(x: geo.size.width/2, y: geo.size.height/2)
+                            
+
+                    case .failure:
+                        VStack {
+                            Image(systemName: "photo")
+                        }
+                        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                        
+                    @unknown default:
+                        EmptyView()
+                    }//phase
+                }//AsyncImage
+            }//geo
             .clipShape(RoundedRectangle(cornerRadius: corner))
             .frame(width: width_)
             
-            
-                
             
             Rectangle()
                 .fill(LinearGradient(
@@ -119,7 +116,7 @@ struct RankingImageSingleView: View {
                                 .fontWeight(.semibold)
                                 .font(.system(size: 20))
                             
-                        }
+                        }//HStack
                     }//VStack
                     .padding(.leading, 5)
                     
@@ -129,25 +126,16 @@ struct RankingImageSingleView: View {
                         .foregroundStyle(.white)
                         .fontWeight(.regular)
                     
-                    
-                }
+                }//HStack
                 
-                
-                
-            }
+            }//VStack
             .padding(20)
             
-            
-            
-            
-        }
+        }//ZStack
         .frame(width: width_, height: 450)
         .cornerRadius(corner)
         .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 4)
         .padding()
-        
-        
-        
         
     }
 }

@@ -10,24 +10,51 @@ import SwiftUI
 
 
 
-struct Ranking: Codable, Identifiable {
-    var id: String { name }
-    let name: String
-    let score: Int
+struct RankingImage: Codable, Identifiable, Hashable {
+    
+    var rank: Int
+    var id: String
+    var link: String
+    var user_nick: String
+    var profile_image: String
+    var pic: Int
+    var description: String
 }
+
+struct RankingUser: Codable, Identifiable, Hashable {
+    var rank: Int
+    var id: String
+    var user_id: String
+    var profile_image:String
+    var follower_count:String
+    var pic_count:String
+}
+
+
 
 
 
 class WebSocketManager: ObservableObject {
     private var webSocketTask: URLSessionWebSocketTask?
-    //@Published var rankings: [Ranking] = []
-    @Published var rankingImages: [SlideImage] = []
+    @Published var rankingImages: [RankingImage] = []
+    @Published var rankingUsers: [RankingUser] = []
+    @Published var type:Bool = false
 
     func connect() {
-        guard let url = URL(string: VarCollectionFile.webSocketChartURL) else { return }
+        var urlString = ""
+        
+        
+        if type {
+            urlString = VarCollectionFile.rankingImageURL
+        } else {
+            urlString = VarCollectionFile.rankingUserURL
+        }
+        
+        guard let url = URL(string: urlString) else { return }
         webSocketTask = URLSession.shared.webSocketTask(with: url)
         webSocketTask?.resume()
         receiveMessage()
+        
     }
 
     func receiveMessage() {
@@ -35,6 +62,7 @@ class WebSocketManager: ObservableObject {
             switch result {
             case .failure(let error):
                 print("WebSocket error: \(error)")
+                return
             case .success(let message):
                 switch message {
                 case .data(let data):
@@ -52,13 +80,29 @@ class WebSocketManager: ObservableObject {
     }
 
     func handleMessageData(_ data: Data) {
-        let decoder = JSONDecoder()
-        print(decoder)
-        if let rankings = try? decoder.decode([SlideImage].self, from: data) {
-            DispatchQueue.main.async {
-                self.rankingImages = rankings
+        
+        do {
+            if type {
+                let rankings: [RankingImage] = try decodeData(ofType: RankingImage.self, from: data)
+                DispatchQueue.main.async {
+                    self.rankingImages = rankings
+                }
+            } else {
+                let rankingUsers: [RankingUser] = try decodeData(ofType: RankingUser.self, from: data)
+                DispatchQueue.main.async {
+                    self.rankingUsers = rankingUsers
+                }
             }
+        } catch {
+            print("Decoding failed")
         }
+            
+        
+    }
+    
+    func decodeData<T: Decodable>(ofType type: T.Type, from data: Data) throws -> [T] {
+        let decoder = JSONDecoder()
+        return try decoder.decode([T].self, from: data)
     }
 
     func disconnect() {
@@ -74,20 +118,29 @@ struct RankingImageView: View {
 
     var body: some View {
         VStack {
-            List($webSocketManager.rankingImages) { ranking in
-                
-                VStack {
-                    RankingImageSingleView(ranking: .constant(2), imageURL: ranking.link, pic: ranking.pic, profile_image: ranking.profile_image, user_nick: ranking.user_nick, description: ranking.description)
+            
+            ScrollView {
+                LazyVStack {
+                    ForEach($webSocketManager.rankingImages, id: \.self) { ranking in
+                        VStack {
+                            RankingImageSingleView(ranking: ranking.rank, imageURL: ranking.link, pic: ranking.pic, profile_image: ranking.profile_image, user_nick: ranking.user_nick, description: ranking.description)
+                                .padding()
+                        }
+                        .frame(width: UIScreen.main.bounds.width)
+                    }
                 }
-                .frame(width: UIScreen.main.bounds.width)
-                
-                
+                .padding(.top, 50)
             }
+            
         }
+        //.ignoresSafeArea()
         .onAppear {
+            webSocketManager.type = true
             webSocketManager.connect()
+            print(webSocketManager.type)
         }
         .onDisappear {
+            VarCollectionFile.myPrint(title: "RankingImageView - disconnect()", content: "웹소켓 종료됨")
             webSocketManager.disconnect()
         }
     }

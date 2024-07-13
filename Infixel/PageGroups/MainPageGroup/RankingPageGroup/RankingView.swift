@@ -17,79 +17,93 @@ struct RankingView: View {
     
     var body: some View {
         
-        
-        Tabbar(.gray)
-            .overlay {
-                if let collectionViewBounds = offsetObserver.collecttionVIew?.bounds {
-                    GeometryReader {
-                        let width = $0.size.width
-                        let tabCount = CGFloat(DummyTab.allCases.count)
-                        let capsuleWidth = width/tabCount
-                        let progress = offsetObserver.offset / collectionViewBounds.width
-                        
-                        Capsule()
-                            .fill(.black)
-                            .frame(width: capsuleWidth)
-                            .offset(x: progress * capsuleWidth)
-                        
-                        Tabbar(.white, .semibold)
-                            .mask(alignment: .leading) {
+        ZStack {
+            
+            TabView(selection: $activeTab) {
+                RankingImageView()
+                    .tag(DummyTab.image)
+                    .background {
+                        if !offsetObserver.isObserving {
+                            FindCollectionView {
+                                offsetObserver.collecttionVIew = $0
+                                offsetObserver.observe()
+                            }
+                            
+                        }
+                    }
+                
+                RankingUserView()
+                    .tag(DummyTab.user)
+                    .background {
+                        if !offsetObserver.isObserving {
+                            FindCollectionView {
+                                offsetObserver.collecttionVIew = $0
+                                offsetObserver.observe()
+                            }
+                            
+                        }
+                    }
+                
+            }
+            .ignoresSafeArea()
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            
+//TabView =======================================================================
+            
+            VStack {
+                Tabbar(.gray)
+                    .overlay {
+                        if let collectionViewBounds = offsetObserver.collecttionVIew?.bounds {
+                            GeometryReader {
+                                let width = $0.size.width
+                                let tabCount = CGFloat(DummyTab.allCases.count)
+                                let capsuleWidth = width/tabCount
+                                let progress = offsetObserver.offset / collectionViewBounds.width
+                                
                                 Capsule()
+                                    .fill(.black)
                                     .frame(width: capsuleWidth)
                                     .offset(x: progress * capsuleWidth)
+                                
+                                Tabbar(.white, .semibold)
+                                    .mask(alignment: .leading) {
+                                        Capsule()
+                                            .frame(width: capsuleWidth)
+                                            .offset(x: progress * capsuleWidth)
+                                    }
                             }
-                    }
-                }
-            }
-            .background(.ultraThinMaterial)
-            .clipShape(.capsule)
-            .shadow(color: .black.opacity(0.1), radius: 5, x: 5, y: 5)
-            .shadow(color: .black.opacity(0.05), radius: 5, x: -5, y: -5)
-            .frame(width: UIScreen.main.bounds.width * 0.7)
-// Tabbar =============================================================================================
-        
-        TabView(selection: $activeTab) {
-            
-            RankingImageView()
-                .tag(DummyTab.image)
-                .background {
-                    if !offsetObserver.isObserving {
-                        FindCollectionView {
-                            offsetObserver.collecttionVIew = $0
-                            offsetObserver.observe()
                         }
-                        
                     }
-                }
+                    .background(.ultraThinMaterial)
+                    .clipShape(.capsule)
+                    .shadow(color: .black.opacity(0.1), radius: 5, x: 5, y: 5)
+                    .shadow(color: .black.opacity(0.05), radius: 5, x: -5, y: -5)
+                    .frame(width: UIScreen.main.bounds.width * 0.7)
+                    .padding(.top, UIScreen.main.bounds.height * 0.07)
+                
+                Spacer()
+            }//VStack
             
-            
-            RankingUserView()
-                .tag(DummyTab.user)
-                .background {
-                    if !offsetObserver.isObserving {
-                        FindCollectionView {
-                            offsetObserver.collecttionVIew = $0
-                            offsetObserver.observe()
-                        }
-                        
-                    }
-                }
-            
+// Tabbar ======================================================================
+                
             
             
         }
-        .tabViewStyle(.page(indexDisplayMode: .never))
-        
-        
+        //.padding(.top, 70)
+        .ignoresSafeArea()
+        .padding(.top, 20)
         
         
     }
+ 
+    
     
     
     
     enum DummyTab: String, CaseIterable {
         case image = "Image"
         case user = "User"
+        //case album = "test"
         
         var color: Color {
             switch self {

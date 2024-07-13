@@ -9,8 +9,11 @@ import Foundation
 
 
 struct VarCollectionFile {
-    static let host = "http://192.168.31.200:3000"
-    //static let host = "http://localhost:3000"
+    
+    
+    static let server = "192.168.31.200:3000"
+    
+    static let host = "http://" + server
     
     
     static let randomImageURL           = host + "/image/randomimage" //이 요청문은 슬라이드 이미지 객체를 가져옴
@@ -41,7 +44,10 @@ struct VarCollectionFile {
     
     
     //WebSocket
-    static let webSocketChartURL        = "ws://localhost:3000/chart"
+    static let ws = "ws://" + server
+    
+    static let rankingImageURL   = ws + "/imagerank"
+    static let rankingUserURL    = ws + "/userrank"
     
     
     

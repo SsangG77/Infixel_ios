@@ -20,7 +20,7 @@ struct SearchPageView_user: View {
             
             if !users.isEmpty {
                 ForEach($users, id:\.self) { user in
-                    SearchUserSingleView(
+                    UserSingleView(
                         profile_image: user.profile_image,
                         user_id: user.user_id,
                         pic_count: user.pic_count,

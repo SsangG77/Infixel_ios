@@ -7,13 +7,9 @@
 
 import SwiftUI
 
-struct SearchUserSingleView: View {
+struct UserSingleView: View {
     
     
-//    @State var profile_image = "http://localhost:3000/image/resjpg?filename=haewon4.jpeg"
-//    @State var user_id = "test_user"
-//    @State var pic_count = 4320
-//    @State var follower_count = 120
     @Binding var profile_image:String
     @Binding var user_id:String
     @Binding var pic_count:String

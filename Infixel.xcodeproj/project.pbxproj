@@ -45,7 +45,7 @@
 		914EB7EE2C2EF4EC002D1B96 /* SearchPageView_tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914EB7ED2C2EF4EC002D1B96 /* SearchPageView_tag.swift */; };
 		914EB7F02C2EF7C9002D1B96 /* SearchPageView_user.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914EB7EF2C2EF7C9002D1B96 /* SearchPageView_user.swift */; };
 		914EB7F22C2F1244002D1B96 /* SearchPageVIew_album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914EB7F12C2F1244002D1B96 /* SearchPageVIew_album.swift */; };
-		914EB7F82C317630002D1B96 /* SearchUserSingleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914EB7F72C317630002D1B96 /* SearchUserSingleView.swift */; };
+		914EB7F82C317630002D1B96 /* UserSingleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914EB7F72C317630002D1B96 /* UserSingleView.swift */; };
 		914EB7FA2C31A2AF002D1B96 /* SearchSingleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914EB7F92C31A2AF002D1B96 /* SearchSingleImage.swift */; };
 		914EB7FC2C31A86A002D1B96 /* SearchSingleUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914EB7FB2C31A86A002D1B96 /* SearchSingleUser.swift */; };
 		914EB7FE2C32DB19002D1B96 /* SearchAlbumSingleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914EB7FD2C32DB19002D1B96 /* SearchAlbumSingleView.swift */; };
@@ -104,7 +104,7 @@
 		914EB7ED2C2EF4EC002D1B96 /* SearchPageView_tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageView_tag.swift; sourceTree = "<group>"; };
 		914EB7EF2C2EF7C9002D1B96 /* SearchPageView_user.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageView_user.swift; sourceTree = "<group>"; };
 		914EB7F12C2F1244002D1B96 /* SearchPageVIew_album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageVIew_album.swift; sourceTree = "<group>"; };
-		914EB7F72C317630002D1B96 /* SearchUserSingleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchUserSingleView.swift; sourceTree = "<group>"; };
+		914EB7F72C317630002D1B96 /* UserSingleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserSingleView.swift; sourceTree = "<group>"; };
 		914EB7F92C31A2AF002D1B96 /* SearchSingleImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSingleImage.swift; sourceTree = "<group>"; };
 		914EB7FB2C31A86A002D1B96 /* SearchSingleUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSingleUser.swift; sourceTree = "<group>"; };
 		914EB7FD2C32DB19002D1B96 /* SearchAlbumSingleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAlbumSingleView.swift; sourceTree = "<group>"; };
@@ -261,7 +261,7 @@
 				914EB7ED2C2EF4EC002D1B96 /* SearchPageView_tag.swift */,
 				914EB7EF2C2EF7C9002D1B96 /* SearchPageView_user.swift */,
 				914EB7F12C2F1244002D1B96 /* SearchPageVIew_album.swift */,
-				914EB7F72C317630002D1B96 /* SearchUserSingleView.swift */,
+				914EB7F72C317630002D1B96 /* UserSingleView.swift */,
 				914EB7FD2C32DB19002D1B96 /* SearchAlbumSingleView.swift */,
 			);
 			path = SearchPageGroup;
@@ -452,7 +452,7 @@
 				91309F222AF0A8FB006E852F /* ColorExtension.swift in Sources */,
 				9125C46A2C3D652800431998 /* UploadImagePlusView.swift in Sources */,
 				9125C4622C3A885700431998 /* SignUpViewModel.swift in Sources */,
-				914EB7F82C317630002D1B96 /* SearchUserSingleView.swift in Sources */,
+				914EB7F82C317630002D1B96 /* UserSingleView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
