@@ -49,9 +49,11 @@ struct UserSingleView: View {
                                 .font(.system(size: 14, weight: .thin))
                         }
                     }
+            
                     Spacer()
+            
                 }
-                .padding()
+                .padding(5)
     }
 }
 

@@ -10,8 +10,8 @@ import SwiftUI
 struct RankingView: View {
     @State private var activeTab: DummyTab = .image
     var offsetObserver = PageOffsetObserver()
-    
-    
+    @EnvironmentObject var appState:AppState
+    @State private var showImageViewer: Bool = false
     
     
     
@@ -20,7 +20,8 @@ struct RankingView: View {
         ZStack {
             
             TabView(selection: $activeTab) {
-                RankingImageView()
+                RankingImageView(showImageViewer: $showImageViewer)
+                    .environmentObject(appState)
                     .tag(DummyTab.image)
                     .background {
                         if !offsetObserver.isObserving {
@@ -92,6 +93,22 @@ struct RankingView: View {
         //.padding(.top, 70)
         .ignoresSafeArea()
         .padding(.top, 20)
+        .sheet(isPresented: $showImageViewer) {
+            if let selectedImage = appState.selectedImage, let selectedImageId = appState.selectedImageId {
+                ImageViewer(imageUrl: .constant(selectedImage), imageId: .constant(selectedImageId))
+            } else {
+                Text("Loading...")
+            }
+        }
+//        .onReceive(appState.$selectedImage) { _ in
+//            if appState.selectedImage != nil {
+//                showImageViewer = true
+//            }
+//        }
+        .onDisappear {
+            showImageViewer = false
+            print("랭킹 뷰 종료됨. ", showImageViewer)
+        }
         
         
     }

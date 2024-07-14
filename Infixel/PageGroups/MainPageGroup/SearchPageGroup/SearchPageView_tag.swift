@@ -19,7 +19,7 @@ struct SearchPageView_tag: View {
         
         ScrollView {
             
-            if images.isEmpty || images.count != 0 {
+            if !images.isEmpty {
                 
                 LazyVGrid(columns: Array(repeating: .init(.flexible()), count: 3), spacing: 3) {
                     ForEach(images, id: \.self) { single_image in

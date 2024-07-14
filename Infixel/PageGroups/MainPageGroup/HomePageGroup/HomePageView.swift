@@ -22,8 +22,6 @@ struct HomePageView: View {
     
     @Binding var slideImage:SlideImage
     
-    
- 
 
     var body: some View {
             
@@ -53,6 +51,7 @@ struct HomePageView: View {
                                                         loadMorePhotosIfNeeded(currentPhoto: slideImages[index])
                                                     }
                                                 }
+                                                
                                         case .failure:
                                             VStack {
                                                 Image(systemName: "photo")
@@ -138,8 +137,23 @@ struct HomePageView: View {
                     }
                 }
                 
+                
+                
             }//ZStack
+        
     }
+    
+    
+    
+    @ViewBuilder
+    private func scaledToFit(_ condition: Bool) -> some View {
+        if condition {
+            self.scaledToFit()
+        } else {
+            self.scaledToFill()
+        }
+    }
+    
     
     
     //최초로 뷰가 생성될때 이미지 배열에 초기값 넣는 함수

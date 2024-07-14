@@ -46,7 +46,7 @@ struct UploadImageView: View {
             Text("이미지 업로드")
                 .fontWeight(.bold)
                 .font(Font.custom("Bungee-Regular", size: 20))
-                .padding(.bottom, 30)
+                .padding(.bottom, 20)
             
             /// 이미지 선택하는 부분
             if let selectedImage = viewModel.selectedImage {
@@ -88,9 +88,6 @@ struct UploadImageView: View {
                 
             }
             
-            ///Description 입력 부분
-            ///
-            
             VStack(spacing: 0) {
                 HStack {
                     Text("게시글 작성")
@@ -99,13 +96,13 @@ struct UploadImageView: View {
                 }
                 
                 TextField("문구를 작성해주세요.", text: $viewModel.description)
-                    .padding()
+                    .padding(5)
                     .textFieldStyle(PlainTextFieldStyle())
                 
                 Divider()
                 
             }
-            .padding(.top, 15)
+            .padding(.top, 5)
             .padding()
             
             ///Tag 선택 부분
@@ -118,7 +115,7 @@ struct UploadImageView: View {
                 }
                 
                 TextField("띄어쓰기로 태그를 구분합니다.", text: $viewModel.tagText)
-                    .padding()
+                    .padding(5)
                     .textFieldStyle(PlainTextFieldStyle())
                     .onChange(of: viewModel.tagText) { newValue in
                         viewModel.checkForSpace(newValue)
@@ -133,9 +130,19 @@ struct UploadImageView: View {
             ScrollView(.horizontal) {
                 HStack(spacing: 0) {
                     ForEach(viewModel.tags, id: \.self) { tag in
-                        Text("#"+tag)
+                        HStack(spacing: 2) {
+                            Text("#"+tag)
+                            
+                            Image(systemName: "xmark.circle.fill")   // << base !!
+                                .resizable()
+                                .frame(width: 15, height: 15)
+                            
+                        }
                             .padding()
                             .foregroundColor(.blue)
+                            .onTapGesture {
+                                viewModel.removeTag(tag)
+                            }
                         
                     }
                 }
@@ -143,7 +150,7 @@ struct UploadImageView: View {
             .frame(height: 30)
             
             Spacer()
-                .frame(height: 50)
+                .frame(height: 100)
             
             ///업로드 버튼
             GeometryReader { geometry in
@@ -240,6 +247,12 @@ class UploadImageViewModel: ObservableObject {
     
     
     private var imageUploader = ImageUploader()
+    
+    func removeTag(_ tag: String) {
+            if let index = tags.firstIndex(of: tag) {
+                tags.remove(at: index)
+            }
+        }
     
     
     func checkForSpace(_ text: String) {

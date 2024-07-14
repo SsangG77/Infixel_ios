@@ -115,16 +115,23 @@ class WebSocketManager: ObservableObject {
 
 struct RankingImageView: View {
     @StateObject private var webSocketManager = WebSocketManager()
+    @EnvironmentObject var appState: AppState
+    
+    @Binding var showImageViewer: Bool
 
     var body: some View {
         VStack {
             
             ScrollView {
                 LazyVStack {
-                    ForEach($webSocketManager.rankingImages, id: \.self) { ranking in
+                    ForEach($webSocketManager.rankingImages) { ranking in
                         VStack {
                             RankingImageSingleView(ranking: ranking.rank, imageURL: ranking.link, pic: ranking.pic, profile_image: ranking.profile_image, user_nick: ranking.user_nick, description: ranking.description)
                                 .padding()
+                                .onTapGesture {
+                                    appState.selectImage(imageUrl: ranking.link.wrappedValue, imageId: ranking.id.wrappedValue)
+                                    showImageViewer = true
+                                }
                         }
                         .frame(width: UIScreen.main.bounds.width)
                     }
@@ -142,10 +149,11 @@ struct RankingImageView: View {
         .onDisappear {
             VarCollectionFile.myPrint(title: "RankingImageView - disconnect()", content: "웹소켓 종료됨")
             webSocketManager.disconnect()
+            appState.selectImageReset()
         }
     }
 }
 
 #Preview {
-    RankingImageView()
+    RankingImageView(showImageViewer: .constant(false))
 }

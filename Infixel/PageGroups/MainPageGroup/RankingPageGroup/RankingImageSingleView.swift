@@ -28,11 +28,11 @@ struct RankingImageSingleView: View {
         
         ZStack {
             GeometryReader { geo in
-                AsyncImage(url: URL(string: imageURL)) { phase in
+                AsyncImage(url: URL(string: imageURL), transaction: Transaction(animation: .easeInOut)) { phase in
                     switch phase {
                     case .empty:
                         ProgressView()
-                            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                            .frame(width: geo.size.width, height: geo.size.height)
                         
                     case .success(let image):
                         image
@@ -73,22 +73,22 @@ struct RankingImageSingleView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .foregroundColor(.white)
                     .fontWeight(.heavy)
-                    .font(.system(size: 45))
+                    .font(.system(size: 55))
                 Spacer()
                 
                 
                 HStack {
                     
                     VStack(alignment: .leading) {
-                        HStack(spacing: 10) {
+                        HStack(alignment: .bottom, spacing: 10) {
                             Image("pic!")
                                 .resizable()
-                                .frame(width: 30, height: 30)
+                                .frame(width: 37, height: 37)
                             
                             Text(String(pic))
                                 .foregroundStyle(.white)
                                 .fontWeight(.heavy)
-                                .font(.system(size: 25))
+                                .font(.system(size: 30))
                         }
                         
                         HStack {
@@ -121,10 +121,14 @@ struct RankingImageSingleView: View {
                     .padding(.leading, 5)
                     
                     Spacer()
-                    
-                    Text(description)
-                        .foregroundStyle(.white)
-                        .fontWeight(.regular)
+                        
+                    VStack {
+                        Text(description)
+                            .foregroundStyle(.white)
+                            .fontWeight(.regular)
+                            .font(.system(size: 16))
+                    }
+                    .frame(width: 170)
                     
                 }//HStack
                 
@@ -141,5 +145,5 @@ struct RankingImageSingleView: View {
 }
 
 #Preview {
-    RankingImageSingleView(ranking: .constant(1), imageURL: .constant(VarCollectionFile.resjpgURL + "1720700859535-777012927.jpg"), pic: .constant(751), profile_image: .constant(VarCollectionFile.resjpgURL + "1720457448108-211017711.jpg"), user_nick: .constant("user"), description: .constant("ddddd"))
+    RankingImageSingleView(ranking: .constant(1), imageURL: .constant(VarCollectionFile.resjpgURL + "1720700859535-777012927.jpg"), pic: .constant(751), profile_image: .constant(VarCollectionFile.resjpgURL + "1720457448108-211017711.jpg"), user_nick: .constant("user"), description: .constant("lidcasd;clknsc;lskdfnmaslk;cmsalcksldmca;sdcmasdl;kcmasdc;lkamsdc;al"))
 }

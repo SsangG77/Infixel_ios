@@ -17,15 +17,21 @@ struct SearchPageView_album: View {
     
     var body: some View {
         ScrollView {
-            ForEach($albums, id: \.self) { album in
-                SearchAlbumSingleView(album: album, animationNamespace: animationNamespace)
-                    .onTapGesture {
-                        withAnimation(.spring()) {
-                            appState.selectedAlbum = album.wrappedValue
+            
+            if !albums.isEmpty {
+                ForEach($albums, id: \.self) { album in
+                    SearchAlbumSingleView(album: album, animationNamespace: animationNamespace)
+                        .onTapGesture {
+                            withAnimation(.spring()) {
+                                appState.selectedAlbum = album.wrappedValue
+                            }
                         }
-                    }
-                    
+                }
+                
+            } else {
+                Text("검색된 결과가 없습니다.")
             }
+            
         }
     }
 }

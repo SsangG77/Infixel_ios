@@ -29,7 +29,7 @@ struct SearchPageView: View {
     @State private var showImageViewer: Bool = false
     
 
-    
+    @FocusState var FocusState
     
     @EnvironmentObject var appState: AppState
     
@@ -64,52 +64,32 @@ struct SearchPageView: View {
         
             VStack {
                 
-                HStack {
-                    VStack {
-                        ZStack(alignment: .leading) {
-                            if searchValue.isEmpty {
-                                Text(placeHolder)
-                                .bold()
-                                .foregroundColor(Color.white.opacity(0.6))
-                                .padding(.leading, 17)
-                                .underline(true, color: .white.opacity(0.6))
-                                .font(Font.custom("Bungee-Regular", size: 20))
-                            } //if
-                            TextField("", text: $searchValue, onCommit: {
-                                if searchValue != "" {
-                                    searchTag(searchWord: searchValue, type:0)
-                                    appState.searchBtnClicked = true
-                                }
-                            })
-                            .onChange(of : searchValue) { newValue in
-                                VarCollectionFile.myPrint(title: "search value onchange", content: searchValue)
-                                searchPageUserOnAppear = true
-                                searchPageAlbumOnAppear = true
-                            }
-                            .foregroundColor(Color.white.opacity(0.6))
-                            .padding(.leading, 17)
-                            .frame(height: 50)
-                
-                        }//ZStack
-                    }//VStack
-                    .overlay(
-                           RoundedRectangle(cornerRadius: 14)
-                               .stroke(.white, lineWidth: 6)
-                    )//overlay
-                    .background(.black)
-                    .cornerRadius(14)
-                    .frame(width: UIScreen.main.bounds.width*0.85)
-                    
-                    IconView(imageName: "search active", size: 30.0, padding: EdgeInsets(top: 2, leading:-5, bottom: 2, trailing: 10)) {
-                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                VStack {
+                    TextField(placeHolder, text:$searchValue, onCommit: {
                         if searchValue != "" {
-                            searchTag(searchWord: searchValue, type: 0)
+                            searchTag(searchWord: searchValue, type:0)
                             appState.searchBtnClicked = true
                         }
-                        
-                    }//IconView
-                }//HStack - 검색
-                //=============================================================
+                    })
+                    .onChange(of : searchValue) { newValue in
+                        searchPageUserOnAppear = true
+                        searchPageAlbumOnAppear = true
+                    }
+                    .padding(10)
+                    .padding(.bottom, 5)
+                    .frame(height: 50)
+                    .background(.gray.opacity(0.3), in: .rect(cornerRadius: 12))
+                    .focused($FocusState)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 12).stroke(lineWidth: 2)
+                            .foregroundStyle(FocusState ? .blue : .clear)
+                    }
+                    
+                }
+                .padding([.leading, .trailing], 10)
+                
+                
+                
                 
                 
                 Tabbar(.gray)
@@ -224,13 +204,14 @@ struct SearchPageView: View {
                     Text("Loading...")
                 }
             }
-            .onReceive(appState.$selectedImage) { _ in
-                if appState.selectedImage != nil {
-                    showImageViewer = true
-                }
-            }
+//            .onReceive(appState.$selectedImage) { _ in
+//                if appState.selectedImage != nil {
+//                    showImageViewer = true
+//                }
+//            }
             .onDisappear {
                 appState.searchBtnClicked = false
+                showImageViewer = false
                 images.removeAll()
                 users.removeAll()
                 albums.removeAll()
@@ -340,47 +321,6 @@ struct SearchPageView: View {
 }
 
 
-
-
-
-
-
-
-
-
-//@available(iOS 17.0, *)
-//@Observable
-//class PageOffsetObserver: NSObject {
-//    var collecttionVIew: UICollectionView?
-//    var offset: CGFloat = 0
-//    private(set) var isObserving: Bool = false
-//    
-//    deinit {
-//        remove()
-//    }
-//    
-//    func observe() {
-//        guard !isObserving else { return }
-//        collecttionVIew?.addObserver(self, forKeyPath: "contentOffset", context: nil)
-//        isObserving = true
-//    }
-//    
-//    func remove() {
-//        collecttionVIew?.removeObserver(self, forKeyPath: "contentOffset")
-//    }
-//    
-//    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-//        guard keyPath == "contentOffset" else { return }
-//        if let contentOffset = (object as? UICollectionView)?.contentOffset {
-//            offset = contentOffset.x
-//        }
-//    }
-//    
-//    
-//}//PageOffsetObserver
-
-
-
 struct FindCollectionView: UIViewRepresentable {
     var result: (UICollectionView) -> ()
     
@@ -415,8 +355,3 @@ extension UIView {
 
 
 
-//struct SearchPageView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SearchPageView()
-//    }
-//}

@@ -15,7 +15,13 @@ struct RankingUserView: View {
         ScrollView {
             LazyVStack {
                 ForEach($webSocketManager.rankingUsers, id: \.self) { ranking in
-                    VStack {
+                    HStack(spacing:0) {
+                        Text(String(ranking.rank.wrappedValue))
+                            .fontWeight(.bold)
+                            .font(.system(size: 30))
+                            //.padding(.leading, 15)
+                            .frame(width: 50)
+                        
                         UserSingleView(profile_image: ranking.profile_image, user_id: ranking.user_id, pic_count: ranking.pic_count, follower_count: ranking.follower_count)
                     }
                 }
