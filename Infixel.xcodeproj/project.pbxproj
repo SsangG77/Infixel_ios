@@ -10,6 +10,7 @@
 		910801572BCF8F4D00BC9137 /* CommentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910801562BCF8F4D00BC9137 /* CommentsView.swift */; };
 		910801592BCF968400BC9137 /* SingleCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910801582BCF968400BC9137 /* SingleCommentView.swift */; };
 		911A925B2C1A0067006B2A16 /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911A925A2C1A0067006B2A16 /* ImageViewer.swift */; };
+		911B48AA2C456E280075F784 /* ThreeDotsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911B48A92C456E280075F784 /* ThreeDotsView.swift */; };
 		9125C4602C39939000431998 /* MasonryGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9125C45F2C39939000431998 /* MasonryGridView.swift */; };
 		9125C4622C3A885700431998 /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9125C4612C3A885700431998 /* SignUpViewModel.swift */; };
 		9125C4642C3A8D5E00431998 /* ImageGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9125C4632C3A8D5E00431998 /* ImageGridView.swift */; };
@@ -67,6 +68,7 @@
 		910801562BCF8F4D00BC9137 /* CommentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsView.swift; sourceTree = "<group>"; };
 		910801582BCF968400BC9137 /* SingleCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleCommentView.swift; sourceTree = "<group>"; };
 		911A925A2C1A0067006B2A16 /* ImageViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewer.swift; sourceTree = "<group>"; };
+		911B48A92C456E280075F784 /* ThreeDotsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeDotsView.swift; sourceTree = "<group>"; };
 		9125C45F2C39939000431998 /* MasonryGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasonryGridView.swift; sourceTree = "<group>"; };
 		9125C4612C3A885700431998 /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
 		9125C4632C3A8D5E00431998 /* ImageGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGridView.swift; sourceTree = "<group>"; };
@@ -249,6 +251,7 @@
 				910801582BCF968400BC9137 /* SingleCommentView.swift */,
 				9125C4672C3C161700431998 /* UploadeImageView.swift */,
 				9125C4692C3D652700431998 /* UploadImagePlusView.swift */,
+				911B48A92C456E280075F784 /* ThreeDotsView.swift */,
 			);
 			path = HomePageGroup;
 			sourceTree = "<group>";
@@ -441,6 +444,7 @@
 				9125C47C2C41A17A00431998 /* RankingUserView.swift in Sources */,
 				912B68B72AB81B8100505677 /* HomePageView.swift in Sources */,
 				9192B10E2ABC065B007F7ED9 /* InputView.swift in Sources */,
+				911B48AA2C456E280075F784 /* ThreeDotsView.swift in Sources */,
 				912B689A2AB0A13100505677 /* AsyncImageView.swift in Sources */,
 				91DA58862C26E870007609F5 /* ImageViewModel.swift in Sources */,
 				9125C4732C419C1700431998 /* RankingImageView.swift in Sources */,

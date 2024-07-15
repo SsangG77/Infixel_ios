@@ -9,11 +9,12 @@ import Foundation
 import Combine
 
 class AppState : ObservableObject {
-    @Published var selectedTab: Tab = Tab.house {
-        didSet {
-            ensureMainThread(error_value: "selectedTab")
-        }
-    }
+    @Published var selectedTab: Tab = Tab.house 
+//    {
+//        didSet {
+//            ensureMainThread(error_value: "selectedTab")
+//        }
+//    }
     
     
     enum Tab {
@@ -31,6 +32,9 @@ class AppState : ObservableObject {
     @Published var commentsOpen                     : Bool       = false
     @Published var addAlbumOffset                   : CGFloat    = 1000
     @Published var commentsOffset                   : CGFloat    = 1000
+    
+    //slideImage
+    @Published var slideImage : SlideImage = SlideImage()
     
     
     
@@ -70,12 +74,15 @@ class AppState : ObservableObject {
     
     //이미지 업로드 플러스 버튼 클릭 유무 변수
     @Published var uploadPlusBtnClicked = false
+    
+    //점 세개 버튼 눌렀을때 뷰 offset
+    @Published var threeDotsOffset :CGFloat = 1000
   
     
-    private func ensureMainThread(error_value:String) {
-        if !Thread.isMainThread {
-            VarCollectionFile.myPrint(title: "enviroment error", content: error_value)
-            fatalError("Publishing changes from background threads is not allowed.")
-        }
-    }
+//    private func ensureMainThread(error_value:String) {
+//        if !Thread.isMainThread {
+//            VarCollectionFile.myPrint(title: "enviroment error", content: error_value)
+//            fatalError("Publishing changes from background threads is not allowed.")
+//        }
+//    }
 }

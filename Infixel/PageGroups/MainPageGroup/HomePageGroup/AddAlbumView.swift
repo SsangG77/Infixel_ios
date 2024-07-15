@@ -58,9 +58,6 @@ struct AddAlbumView: View {
                                         appState.albumsOpen = true
                                     }
                                 }
-                                
-                                
-                                
                             }
                        )
                 }//VStack

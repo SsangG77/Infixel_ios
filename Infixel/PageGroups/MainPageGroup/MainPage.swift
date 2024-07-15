@@ -53,7 +53,7 @@ struct MainView: View {
             NavView()
                 .padding(.bottom, 10)
                 .environmentObject(appState)
-                .offset(y: appState.uploadPlusBtnClicked ? 100 : 0)
+                .offset(y: appState.uploadPlusBtnClicked ? 200 : 0)
                 .animation(.easeInOut, value: appState.uploadPlusBtnClicked)
             
             AddAlbumView(slideImage: $slideImage)
@@ -65,6 +65,11 @@ struct MainView: View {
                 .environmentObject(appState)
                 .offset(y : appState.commentsOffset)
                 .animation(.easeInOut)
+            
+            
+            ThreeDotsView()
+                .environmentObject(appState)
+            
             
         }//zstack
         .ignoresSafeArea(.keyboard, edges: .bottom)
