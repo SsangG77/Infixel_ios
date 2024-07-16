@@ -67,8 +67,10 @@ struct MainView: View {
                 .animation(.easeInOut)
             
             
-            ThreeDotsView()
+            ThreeDotsView(slideImage: $slideImage)
                 .environmentObject(appState)
+                .offset(y: appState.threeDotsOffset)
+                .animation(.easeInOut)
             
             
         }//zstack

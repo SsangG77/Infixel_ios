@@ -22,7 +22,7 @@ class HomePageViewModel: ObservableObject {
     @Published var reloadTriggers: [UUID] = []
     @Published var selectedSlideImage: SlideImage
 
-    private var cancellables = Set<AnyCancellable>()
+    //private var cancellables = Set<AnyCancellable>()
     
     init(initialSlideImage: SlideImage) {
         self.selectedSlideImage = initialSlideImage
@@ -233,18 +233,21 @@ struct HomePageView: View {
                 Spacer().frame(height: UIScreen.main.bounds.height * 0.05 + UIScreen.main.bounds.height * 0.05)
             }//VStack
             
-            if appState.albumsOpen || appState.commentsOpen {
+            if appState.albumsOpen || appState.commentsOpen || appState.threeDotsOpen {
                 Rectangle()
                     .foregroundColor(.secondary.opacity(0.1))
                     .background(.ultraThinMaterial)
                     .transition(.opacity)
-                    .opacity(appState.albumsOpen || appState.commentsOpen ? 1.0 : 0.0)
+                    .opacity(appState.albumsOpen || appState.commentsOpen || appState.threeDotsOpen ? 1.0 : 0.0)
                     .onTapGesture {
                         withAnimation {
                             appState.albumsOpen = false
                             appState.commentsOpen = false
+                            appState.threeDotsOpen = false
+                            
                             appState.addAlbumOffset = 1000
                             appState.commentsOffset = 1000
+                            appState.threeDotsOffset = 1000
                         }
                     }
             }

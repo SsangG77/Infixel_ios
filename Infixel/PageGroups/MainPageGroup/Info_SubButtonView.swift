@@ -287,7 +287,15 @@ struct Info_SubButtonView: View {
                             
                             IconView(imageName: "three dots", size: size, padding: padding) {
                                 
-                                print("+1")
+                                withAnimation {
+                                    if appState.imageViewerOrNot {
+                                        
+                                    } else {
+                                        appState.threeDotsOpen = true
+                                        appState.threeDotsOffset = 300
+                                    }
+                                }
+                                
                             }
                             
                             Spacer()
@@ -367,7 +375,14 @@ struct Info_SubButtonView: View {
                                 }
                             }
                             IconView(imageName: "three dots", size: size, padding: padding) {
-                                print("+1")
+                                withAnimation {
+                                    if appState.imageViewerOrNot {
+                                        
+                                    } else {
+                                        appState.threeDotsOpen = true
+                                        appState.threeDotsOffset = 300
+                                    }
+                                }
                             }
                         }
                     }

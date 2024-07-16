@@ -77,6 +77,7 @@ class AppState : ObservableObject {
     
     //점 세개 버튼 눌렀을때 뷰 offset
     @Published var threeDotsOffset :CGFloat = 1000
+    @Published var threeDotsOpen = false
   
     
 //    private func ensureMainThread(error_value:String) {
