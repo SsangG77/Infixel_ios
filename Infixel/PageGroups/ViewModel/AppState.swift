@@ -42,8 +42,11 @@ class AppState : ObservableObject {
     @Published var imageViewerOrNot                 : Bool       = false    //commentView, addAlbumView가 나타날때 현재 뷰가 imageViewer인지 아닌지 판단하는 함수
     @Published var albumsOpen_imageViewer           : Bool       = false
     @Published var commentOpen_imageViewer          : Bool       = false
+    @Published var threedotsOpen_imageViewer        : Bool       = false
+    
     @Published var addAlbumOffset_imageViewer       : CGFloat    = 1000
     @Published var commentOffset_imageViewer        : CGFloat    = 1000
+    @Published var threedotsOffset_imageViewer      : CGFloat    = 1000
     
     //이미지에 있는 댓글 수
     @Published var commentsCount                    : Int        = 0

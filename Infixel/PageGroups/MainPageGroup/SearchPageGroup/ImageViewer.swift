@@ -87,6 +87,11 @@ struct ImageViewer: View {
                 .offset(y : appState.commentOffset_imageViewer)
                 .animation(.easeInOut)
             
+            ThreeDotsView(slideImage: $slideImage)
+                .environmentObject(appState)
+                .offset(y: appState.threedotsOffset_imageViewer)
+                .animation(.easeInOut)
+            
             
         }//ZStack
         .onAppear {

@@ -17,12 +17,13 @@ struct ThreeDotsView: View {
        
     @EnvironmentObject var appState: AppState
     
-    
+    @Binding var slideImage:SlideImage
     @State var isDownloadTapped = false
     @State var isReportTapped = false
     
     init(slideImage: Binding<SlideImage>) {
-        _viewModel = StateObject(wrappedValue: ThreeDotsViewModel(slideImage: slideImage.wrappedValue))
+        self._slideImage = slideImage
+        self._viewModel = StateObject(wrappedValue: ThreeDotsViewModel(slideImage: slideImage))
     }
     
     
@@ -50,7 +51,6 @@ struct ThreeDotsView: View {
                     
                     Spacer()
                 }
-                //.padding(.leading)
                 .padding(7)
                 .background(isDownloadTapped ? .black.opacity(0.4) : .clear)
 //                .background(isDownloadTapped ? .ultraThinMaterial : .clear)
@@ -58,37 +58,45 @@ struct ThreeDotsView: View {
                 .onTapGesture {
                     withAnimation {
                         isDownloadTapped = true // 사용자가 탭하면 isTapped를 true로 설정
-                        viewModel.imageDownload(from: "https://i.pinimg.com/originals/db/9f/49/db9f4993cfd5f36c1afb940c8071fc07.jpg")
+                        
                     }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                         withAnimation {
                            isDownloadTapped = false // 0.5초 후에 isTapped를 false로 설정하여 원래 색으로 돌아감
+                            viewModel.imageDownload(
+                                from: slideImage.link
+                            ) {
+                                withAnimation {
+                                    print(slideImage.link)
+                                    appState.threeDotsOpen = false
+                                    appState.threeDotsOffset = 1000
+                                }
+                            }
                         }
                     }
                 }
                 
-                HStack {
-                    
-                    Text("이미지 신고")
-                        .fontWeight(.bold)
-                        .font(.system(size: 24))
-                    
-                    Spacer()
-                }
-                .padding(7)
-                .background(isReportTapped ? .black.opacity(0.4) : .clear)
-                .cornerRadius(5)
-//                .padding(.leading)
-                .onTapGesture {
-                    withAnimation {
-                        isReportTapped = true // 사용자가 탭하면 isTapped를 true로 설정
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                        withAnimation {
-                            isReportTapped = false // 0.5초 후에 isTapped를 false로 설정하여 원래 색으로 돌아감
-                        }
-                    }
-                }
+//                HStack {
+//                    
+//                    Text("이미지 신고")
+//                        .fontWeight(.bold)
+//                        .font(.system(size: 24))
+//                    
+//                    Spacer()
+//                }
+//                .padding(7)
+//                .background(isReportTapped ? .black.opacity(0.4) : .clear)
+//                .cornerRadius(5)
+//                .onTapGesture {
+//                    withAnimation {
+//                        isReportTapped = true // 사용자가 탭하면 isTapped를 true로 설정
+//                    }
+//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+//                        withAnimation {
+//                            isReportTapped = false // 0.5초 후에 isTapped를 false로 설정하여 원래 색으로 돌아감
+//                        }
+//                    }
+//                }
                 
                 Spacer()
             }
@@ -101,7 +109,7 @@ struct ThreeDotsView: View {
             DragGesture()
            .onChanged { value in
                if appState.imageViewerOrNot {
-                   
+                   appState.threedotsOffset_imageViewer = value.translation.height + 300
                } else {
                    appState.threeDotsOffset = value.translation.height + 300
                }
@@ -109,7 +117,13 @@ struct ThreeDotsView: View {
            }
             .onEnded { value in
                 if appState.imageViewerOrNot {
-                    
+                    if appState.threedotsOffset_imageViewer > 250 {
+                        appState.threedotsOffset_imageViewer = 1000
+                        appState.threedotsOpen_imageViewer = false
+                    } else if appState.threedotsOffset_imageViewer < 270 {
+                        appState.threedotsOffset_imageViewer = 300
+                        appState.threedotsOpen_imageViewer = true
+                    }
                 } else {
                     if appState.threeDotsOffset > 250 {
                         appState.threeDotsOffset = 1000
@@ -124,18 +138,23 @@ struct ThreeDotsView: View {
     }
 }
 
+
+//view model
 class ThreeDotsViewModel: ObservableObject {
     @Published var slideImage: SlideImage
-    @EnvironmentObject var appState: AppState
     @Published var downloadImage: UIImage?
     
-    init(slideImage: SlideImage) {
-        self.slideImage = slideImage
+//    var downloadComplete: (() -> Void)?
+    
+    init(slideImage: Binding<SlideImage>) {
+        self._slideImage = Published(initialValue: slideImage.wrappedValue)
     }
     
     
-    func imageDownload(from url:String) {
+    func imageDownload(from url:String, downloadComplete: @escaping (()-> Void)) {
+        print(url)
         guard let imageURL = URL(string: url) else {
+            
             print("Invalid URL")
             return
         }
@@ -154,6 +173,7 @@ class ThreeDotsViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self.downloadImage = image
                     self.saveImageToAlbum(image)
+                    downloadComplete()
                 }
             }.resume()
     }
@@ -172,8 +192,6 @@ class ThreeDotsViewModel: ObservableObject {
                 }
             }
         }
-    
-    
 }
 
 
@@ -184,7 +202,7 @@ class ThreeDotsViewModel: ObservableObject {
 #Preview {
     ZStack {
         Color(.black).edgesIgnoringSafeArea(.all)
-        ThreeDotsView(slideImage: .constant(SlideImage()))
+        //ThreeDotsView(slideImage: .constant(SlideImage()))
     }
     
 }
