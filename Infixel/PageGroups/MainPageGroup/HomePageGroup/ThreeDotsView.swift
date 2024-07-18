@@ -57,17 +57,14 @@ struct ThreeDotsView: View {
                 .cornerRadius(5)
                 .onTapGesture {
                     withAnimation {
-                        isDownloadTapped = true // 사용자가 탭하면 isTapped를 true로 설정
+                        isDownloadTapped = true
                         
                     }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                         withAnimation {
-                           isDownloadTapped = false // 0.5초 후에 isTapped를 false로 설정하여 원래 색으로 돌아감
-                            viewModel.imageDownload(
-                                from: slideImage.link
-                            ) {
+                           isDownloadTapped = false
+                            viewModel.imageDownload(from: slideImage.link) {
                                 withAnimation {
-                                    print(slideImage.link)
                                     appState.threeDotsOpen = false
                                     appState.threeDotsOffset = 1000
                                 }
@@ -76,27 +73,28 @@ struct ThreeDotsView: View {
                     }
                 }
                 
-//                HStack {
-//                    
-//                    Text("이미지 신고")
-//                        .fontWeight(.bold)
-//                        .font(.system(size: 24))
-//                    
-//                    Spacer()
-//                }
-//                .padding(7)
-//                .background(isReportTapped ? .black.opacity(0.4) : .clear)
-//                .cornerRadius(5)
-//                .onTapGesture {
-//                    withAnimation {
-//                        isReportTapped = true // 사용자가 탭하면 isTapped를 true로 설정
-//                    }
-//                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-//                        withAnimation {
-//                            isReportTapped = false // 0.5초 후에 isTapped를 false로 설정하여 원래 색으로 돌아감
-//                        }
-//                    }
-//                }
+                HStack {
+                    
+                    Text("이미지 신고")
+                        .fontWeight(.bold)
+                        .font(.system(size: 24))
+                    
+                    Spacer()
+                }
+                .padding(7)
+                .background(isReportTapped ? .black.opacity(0.4) : .clear)
+                .cornerRadius(5)
+                .onTapGesture {
+                    withAnimation {
+                        isReportTapped = true
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                        withAnimation {
+                            isReportTapped = false
+                            viewModel.reportImage(imageId: slideImage.id)
+                        }
+                    }
+                }
                 
                 Spacer()
             }
@@ -143,6 +141,7 @@ struct ThreeDotsView: View {
 class ThreeDotsViewModel: ObservableObject {
     @Published var slideImage: SlideImage
     @Published var downloadImage: UIImage?
+    @Published var report_res: Bool = false
     
 //    var downloadComplete: (() -> Void)?
     
@@ -181,17 +180,58 @@ class ThreeDotsViewModel: ObservableObject {
     
     func saveImageToAlbum(_ image: UIImage) {
 
-            PHPhotoLibrary.requestAuthorization { status in
-                if status == .authorized {
-                    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
-                    //return false
-                    
-                    
-                } else {
-                    print("Permission not granted to access photo library")
-                }
+        PHPhotoLibrary.requestAuthorization { status in
+            if status == .authorized {
+                UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+                //return false
+                
+                
+            } else {
+                print("Permission not granted to access photo library")
             }
         }
+    }
+    
+    func reportImage(imageId: String) {
+        print("report image", imageId)
+        
+        
+        guard let url = URL(string: VarCollectionFile.reportImageURL) else {
+            return
+        }
+        
+        let params: [String: Any] = [
+            "image_id" : imageId,
+            "user_id" : String(UserDefaults.standard.string(forKey: "user_id")!)
+        ]
+        
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: params, options: []) else {
+                print("Failed to encode JSON")
+                return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = jsonData
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let data = data, let report_data = String(data: data, encoding: .utf8) {
+                DispatchQueue.main.async {
+                    print(report_data)
+                    
+                }
+            } else if let error = error {
+                DispatchQueue.main.async {
+                    print("Error : \(error)")
+                }
+            }
+        }.resume()
+        
+        
+        
+    }//reportImage
+    
 }
 
 

@@ -445,7 +445,7 @@ struct Info_SubButtonView: View {
     func getCommentCount(imageId: String) {
         guard let url = URL(string: VarCollectionFile.commentCountURL) else {
                     return
-                }
+        }
 
         let requestBody = ["image_id": imageId]
         let request = URLRequest.post(url: url, body: requestBody)
@@ -537,12 +537,12 @@ extension URLRequest {
         } catch {
             print("Error converting data to JSON:", error)
         }
-        
-        // URLSession 객체 생성
-        let session = URLSession.shared
-        
+//        
+//        // URLSession 객체 생성
+//        let session = URLSession.shared
+//        
         // URLSessionDataTask 객체 생성
-        let task = session.dataTask(with: request) { (data, response, error) in
+        let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
             // 에러 처리
             if let error = error {
                 print("Error: \(error)")

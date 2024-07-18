@@ -118,7 +118,7 @@ struct AddAlbumView: View {
         guard let jsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: []) else {
                 print("Failed to encode JSON")
                 return
-            }
+        }
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"

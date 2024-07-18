@@ -21,6 +21,7 @@ struct VarCollectionFile {
     static let imageIdURL               = host + "/image/getimagefromid"
     static let randomJpgURL             = host + "/image/randomjpg"
     static let imageUploadURL           = host + "/image/upload"
+    static let reportImageURL           = host + "/image/report"
     
     static let loginURL                 = host + "/user/login"
     static let signupURL                = host + "/user/signup"
