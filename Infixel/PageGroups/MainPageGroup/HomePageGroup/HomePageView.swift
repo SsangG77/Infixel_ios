@@ -374,6 +374,6 @@ struct HomePageView: View {
 
 
 
-#Preview {
-    HomePageView(slideImage: .constant(SlideImage()))
-}
+//#Preview {
+//    HomePageView(slideImage: .constant(SlideImage()))
+//}
