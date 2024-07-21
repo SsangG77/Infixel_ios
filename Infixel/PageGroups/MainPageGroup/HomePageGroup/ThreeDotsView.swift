@@ -18,7 +18,7 @@ struct ThreeDotsView: View {
     @EnvironmentObject var appState: AppState
     
     @Binding var slideImage:SlideImage
-    @State var isDownloadTapped = false
+    @State var isDownloadTapped = false ///버튼 눌렀을때 효과용 변수
     @State var isReportTapped = false
     
     init(slideImage: Binding<SlideImage>) {
@@ -53,21 +53,17 @@ struct ThreeDotsView: View {
                 }
                 .padding(7)
                 .background(isDownloadTapped ? .black.opacity(0.4) : .clear)
-//                .background(isDownloadTapped ? .ultraThinMaterial : .clear)
                 .cornerRadius(5)
                 .onTapGesture {
                     withAnimation {
                         isDownloadTapped = true
-                        
                     }
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                         withAnimation {
                            isDownloadTapped = false
                             viewModel.imageDownload(from: slideImage.link) {
-                                withAnimation {
                                     appState.threeDotsOpen = false
                                     appState.threeDotsOffset = 1000
-                                }
                             }
                         }
                     }
@@ -98,7 +94,7 @@ struct ThreeDotsView: View {
                 
                 Spacer()
             }
-            .frame(height: UIScreen.main.bounds.height * 0.4)
+            .frame(height: UIScreen.main.bounds.height * 0.7)
             .padding(7)
             .background(.white)
         }
