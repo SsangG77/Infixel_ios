@@ -8,9 +8,55 @@
 import SwiftUI
 
 
+class AddAlbumViewModel: ObservableObject {
+    @Published var albumList:[Album] = []
+    
+    
+    func getAlbums() {
+        //유저 아이디로 앨범의 리스트를 가져온다.
+        //앨범은 이름, 앨범 프로필, 앨범 id를 가져온다.
+      
+        guard let url = URL(string: VarCollectionFile.imageGetAlbumURL) else {
+            print("Invalid URL")
+            return
+        }
+        
+        let jsonObject: [String: Any] = [
+               "user_id": UserDefaults.standard.string(forKey: "user_id")!
+           ]
+        
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: []) else {
+                print("Failed to encode JSON")
+                return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = jsonData
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let data = data {
+                if let decodedResponse = try? JSONDecoder().decode([Album].self, from: data) {
+                    DispatchQueue.main.async {
+                        self.albumList = decodedResponse
+                    }
+                } else {
+                    print("JSON Decoding failed")
+                }
+            } else if let error = error {
+                print("HTTP Request Failed \(error)")
+            }
+            }.resume()
+    }
+    
+}
+
 struct AddAlbumView: View {
     
-    @State var albumList:[Album] = []
+    @StateObject private var viewModel = AddAlbumViewModel()
+    
+//    @State var albumList:[Album] = []
     @State private var dragOffset: CGFloat = 0.0
     @Binding var slideImage:SlideImage
     //@Binding var albumsOpen:Bool
@@ -66,7 +112,7 @@ struct AddAlbumView: View {
                 
                 ScrollView() {
                     
-                    ForEach($albumList) { album in
+                    ForEach($viewModel.albumList) { album in
                         SingleAlbumView(
                             albumId:album.id,
                             slideImage: $slideImage,
@@ -84,9 +130,8 @@ struct AddAlbumView: View {
             .cornerRadius(40)
             .edgesIgnoringSafeArea(.all)
             .onAppear {
-                if let userId = UserDefaults.standard.string(forKey: "user_id") {
-                    getAlbums(userId: userId)
-                }
+                viewModel.getAlbums()
+                
             }
             
             
@@ -102,44 +147,6 @@ struct AddAlbumView: View {
         
     } // body view
     
-    func getAlbums(userId:String) {
-        //유저 아이디로 앨범의 리스트를 가져온다.
-        //앨범은 이름, 앨범 프로필, 앨범 id를 가져온다.
-      
-        guard let url = URL(string: VarCollectionFile.imageGetAlbumURL) else {
-            print("Invalid URL")
-            return
-        }
-        
-        let jsonObject: [String: Any] = [
-               "user_id": UserDefaults.standard.string(forKey: "user_id")!
-           ]
-        
-        guard let jsonData = try? JSONSerialization.data(withJSONObject: jsonObject, options: []) else {
-                print("Failed to encode JSON")
-                return
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = jsonData
-        
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let data = data {
-                if let decodedResponse = try? JSONDecoder().decode([Album].self, from: data) {
-                    DispatchQueue.main.async {
-                        self.albumList = decodedResponse
-                    }
-                } else {
-                    print("JSON Decoding failed")
-                }
-            } else if let error = error {
-                print("HTTP Request Failed \(error)")
-            }
-            }.resume()
-        
-    }
         
 }
 

@@ -38,7 +38,44 @@ struct SearchPageView_album: View {
 
 
 
-
+class AlbumDetailViewModel: ObservableObject {
+    @Published var images: [SearchSingleImage] = []
+    
+    
+    
+    func searchAlbumImage(albumId: String) {
+        guard let url = URL(string: VarCollectionFile.searchAlbumImageURL) else {
+            return
+        }
+        
+        let body: [String: String] = ["album_id": albumId]
+        let request = URLRequest.post(url: url, body: body)
+        
+        DispatchQueue.global(qos: .background).async {
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error: \(error)")
+                    return
+                }
+            
+            
+                if let data = data {
+                    if let decodedResponse = try? JSONDecoder().decode([SearchSingleImage].self, from: data) {
+                        DispatchQueue.main.async {
+                            self.images = decodedResponse
+                        }
+                    }
+                } else if let error = error {
+                    VarCollectionFile.myPrint(title: "SearchPageView_album", content: error)
+                } else {
+                    print("Failed to send text to server")
+                }
+                
+            }.resume()
+        }
+    }
+    
+}
 
 
 
@@ -59,7 +96,7 @@ struct AlbumDetailView: View {
 
     
     @EnvironmentObject var appState: AppState
-    @State private var images: [SearchSingleImage] = []
+//    @State private var images: [SearchSingleImage] = []
     @State private var showImageViewer: Bool = false
     @State private var imageHeights: [String: CGFloat] = [:]
 
@@ -69,6 +106,9 @@ struct AlbumDetailView: View {
     let minHeight: CGFloat = 140
     @State private var textPadding: CGFloat = 20 // 텍스트 패딩
     @State private var showButton: Bool = false // 버튼 표시 상태
+    
+    
+    @StateObject private var viewModel = AlbumDetailViewModel()
 
     
     
@@ -91,7 +131,7 @@ struct AlbumDetailView: View {
                             .frame(height: headerHeight)
                         
                         
-                        ImageGridView(images: $images) { imageId, imageName in
+                        ImageGridView(images: $viewModel.images) { imageId, imageName in
                             appState.album_selectedImage = imageName
                             appState.album_selectedImageId = imageId
                             showImageViewer = true
@@ -192,8 +232,12 @@ struct AlbumDetailView: View {
             .frame(height: UIScreen.main.bounds.height)
             .ignoresSafeArea()
             .onAppear {
-                print(album.id)
-                searchAlbumImage(albumId: album.id)
+                viewModel.searchAlbumImage(albumId: album.id)
+            }
+            .onDisappear {
+                showImageViewer = false
+                appState.album_selectedImage = nil
+                appState.album_selectedImageId = nil
             }
             .sheet(isPresented: $showImageViewer) {
                 if let selectedImage = appState.album_selectedImage, let selectedImageId = appState.album_selectedImageId {
@@ -218,39 +262,37 @@ struct AlbumDetailView: View {
     //=============================================================
     
 
-    func searchAlbumImage(albumId: String) {
-        guard let url = URL(string: VarCollectionFile.searchAlbumImageURL) else {
-            return
-        }
-        
-        let body: [String: String] = ["album_id": albumId]
-        let request = URLRequest.post(url: url, body: body)
-        
-        DispatchQueue.global(qos: .background).async {
-            URLSession.shared.dataTask(with: request) { data, response, error in
-                if let error = error {
-                    print("Error: \(error)")
-                    return
-                }
-            
-            
-                if let data = data {
-                    if let decodedResponse = try? JSONDecoder().decode([SearchSingleImage].self, from: data) {
-                        DispatchQueue.main.async {
-                            self.images = decodedResponse
-                        }
-                    }
-                } else if let error = error {
-                    VarCollectionFile.myPrint(title: "SearchPageView_album", content: error)
-                } else {
-                    print("Failed to send text to server")
-                }
-                
-            }.resume()
-        }
-        
-        
-    }
+//    func searchAlbumImage(albumId: String) {
+//        guard let url = URL(string: VarCollectionFile.searchAlbumImageURL) else {
+//            return
+//        }
+//        
+//        let body: [String: String] = ["album_id": albumId]
+//        let request = URLRequest.post(url: url, body: body)
+//        
+//        DispatchQueue.global(qos: .background).async {
+//            URLSession.shared.dataTask(with: request) { data, response, error in
+//                if let error = error {
+//                    print("Error: \(error)")
+//                    return
+//                }
+//            
+//            
+//                if let data = data {
+//                    if let decodedResponse = try? JSONDecoder().decode([SearchSingleImage].self, from: data) {
+//                        DispatchQueue.main.async {
+//                            self.images = decodedResponse
+//                        }
+//                    }
+//                } else if let error = error {
+//                    VarCollectionFile.myPrint(title: "SearchPageView_album", content: error)
+//                } else {
+//                    print("Failed to send text to server")
+//                }
+//                
+//            }.resume()
+//        }
+//    }
     
     
     
