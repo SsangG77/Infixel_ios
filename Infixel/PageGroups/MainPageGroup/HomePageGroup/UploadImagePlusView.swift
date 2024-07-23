@@ -24,6 +24,7 @@ struct UploadImagePlusView: View {
                 .foregroundColor(.secondary.opacity(0.1))
                 .clipShape(Circle())
                 .frame(width: size, height: size)
+                .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
             
             Image("thick_plus")
                 .resizable()

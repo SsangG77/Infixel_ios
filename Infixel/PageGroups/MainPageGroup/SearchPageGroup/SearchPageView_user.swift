@@ -32,6 +32,7 @@ struct SearchPageView_user: View {
                 Text("검색 결과가 없습니다.")
             }
         }
+        
     }
     
     

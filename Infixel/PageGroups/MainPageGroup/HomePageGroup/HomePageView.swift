@@ -8,128 +8,6 @@ import SwiftUI
 import Combine
 
 
-
-//@available(iOS 17.0, *)
-//class HomePageViewModel: ObservableObject {
-//    @Published var slideImages: [SlideImage] = []
-//    @Published var isLoadingMore = false
-//    @Published var isInitialLoad = true
-//    @Published var reloadTriggers: [UUID] = []
-//    @Published var selectedSlideImage: SlideImage
-
-//    init(slideImage: Binding<SlideImage>) {
-//        self._selectedSlideImage = Published(initialValue: slideImage.wrappedValue)
-//            loadInitialPhotos()
-//        }
-
-//    func loadInitialPhotos() {
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//            self.reqImage()
-//            self.isInitialLoad = false
-//        }
-//    }
-    
-//    func loadMorePhotosIfNeeded(currentPhoto: SlideImage) {
-//        guard !isLoadingMore else { return }
-//        isLoadingMore = true
-//        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//            self.reloadTriggers.append(contentsOf: [UUID(), UUID(), UUID()])
-//            self.reqImage()
-//            self.reqImage()
-//            self.reqImage()
-//            self.isLoadingMore = false
-//        }
-//    }
-    
-//    func reloadImage(photo: SlideImage) {
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-//            if let index = self.slideImages.firstIndex(where: { $0.id == photo.id }) {
-//                self.reloadTriggers[index] = UUID()
-//                let serverURL = URL(string: VarCollectionFile.randomImageURL)!
-//                
-//                let task = URLSession.shared.dataTask(with: serverURL) { (data, response, error) in
-//                    if let error = error {
-//                        print("요청 중 오류 발생: \(error)")
-//                    } else if let data = data, let responseString = String(data: data, encoding: .utf8) {
-//                        if let data = responseString.data(using: .utf8) {
-//                            do {
-//                                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-//                                   if let id = json["id"] as? String,
-//                                      let imageFileName = json["image_link"] as? String,
-//                                      let pic = json["pic"] as? Int,
-//                                      let description = json["description"] as? String,
-//                                      let userNick = json["user_at"] as? String,
-//                                      let userProfileImage = json["profile_image"] as? String {
-//                                       let newSlideImage = SlideImage(id: id, link: imageFileName, pic: pic, description: description, user_nick: userNick, profile_image: userProfileImage)
-//                                       DispatchQueue.main.async {
-//                                           if self.slideImages.isEmpty {
-//                                               self.slideImages[index] = newSlideImage
-//                                           } else {
-//                                               withAnimation {
-//                                                   self.slideImages[index] = newSlideImage
-//                                               }
-//                                           }
-//                                       }
-//                                   }
-//                               }
-//                            } catch {
-//                                VarCollectionFile.myPrint(title: "HomePageViewModel - reloadImage() Error", content: error)
-//                            }
-//                        }
-//                    }
-//                }
-//                task.resume()
-//            }
-//        }
-//    }
-    
-//    func reqImage() {
-//        let serverURL = URL(string: VarCollectionFile.randomImageURL)!
-//        
-//        let task = URLSession.shared.dataTask(with: serverURL) { (data, response, error) in
-//            if let error = error {
-//                print("요청 중 오류 발생: \(error)")
-//            } else if let data = data, let responseString = String(data: data, encoding: .utf8) {
-//                if let data = responseString.data(using: .utf8) {
-//                    do {
-//                        if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-//                           if let id = json["id"] as? String,
-//                              let imageFileName = json["image_link"] as? String,
-//                              let pic = json["pic"] as? Int,
-//                              let description = json["description"] as? String,
-//                              let userNick = json["user_at"] as? String,
-//                              let userProfileImage = json["profile_image"] as? String {
-//                               let newSlideImage = SlideImage(id: id, link: imageFileName, pic: pic, description: description, user_nick: userNick, profile_image: userProfileImage)
-//                               DispatchQueue.main.async {
-//                                   if self.slideImages.isEmpty {
-//                                       self.selectedSlideImage = newSlideImage
-//                                       
-//                                       self.reloadTriggers.append(UUID())
-//                                       self.slideImages.append(newSlideImage)
-//                                   } else {
-//                                       withAnimation {
-//                                           self.reloadTriggers.append(UUID())
-//                                           self.slideImages.append(newSlideImage)
-//                                       }
-//                                   }
-//                               }
-//                           }
-//                       }
-//                    } catch {
-//                        VarCollectionFile.myPrint(title: "HomePageViewModel - reqImage() Error", content: error)
-//                    }
-//                }
-//            }
-//        }
-//        task.resume()
-//    }
-//}
-
-
-
-
-
 @available(iOS 17.0, *)
 struct HomePageView: View {
     @EnvironmentObject var appState: AppState
@@ -207,7 +85,6 @@ struct HomePageView: View {
                 HStack {
                     Spacer()
                     UploadImagePlusView()
-                        .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
                         .environmentObject(appState)
                         .onTapGesture {
                             withAnimation {
@@ -359,14 +236,6 @@ struct HomePageView: View {
         }
         task.resume()
     }
-    
-    
-    
-    
-    
-    
-    
-    
     
 }
 

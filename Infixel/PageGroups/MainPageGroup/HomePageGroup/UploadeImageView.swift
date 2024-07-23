@@ -15,7 +15,6 @@ struct UploadImageView: View {
     var body: some View {
         
         ZStack {
-            
             VStack {
                 HStack {
                     Spacer()
@@ -32,16 +31,7 @@ struct UploadImageView: View {
                 Spacer()
             }
             
-            
-            
-            
-            
-            
-        
-        
-        
         VStack(spacing: 0) {
-            
             
             Text("이미지 업로드")
                 .fontWeight(.bold)
@@ -74,7 +64,6 @@ struct UploadImageView: View {
                         RoundedRectangle(cornerRadius: 20)
                             .strokeBorder(Color.clear, lineWidth: 0) // 필요시 경계선 설정
                             .frame(width: 200, height: 200)
-                        //.background(Color(UIColor.systemFill))
                             .clipShape(RoundedRectangle(cornerRadius: 20))
                         
                         Text("Select an Image")
@@ -83,9 +72,7 @@ struct UploadImageView: View {
                     .onTapGesture {
                         isPickerPresented.toggle()
                     }
-                    
                 }
-                
             }
             
             VStack(spacing: 0) {
@@ -293,6 +280,7 @@ class UploadImageViewModel: ObservableObject {
 
 class ImageUploader {
     func uploadImage(_ image: UIImage, userId: String, description: String, tags:[String], to urlString: String, completion: @escaping (Result<UploadResponse, Error>) -> Void) {
+        
         guard let url = URL(string: urlString) else {
             completion(.failure(NSError(domain: "Invalid URL", code: 400, userInfo: nil)))
             return
