@@ -10,11 +10,6 @@ import SwiftUI
 struct SingleAlbumView: View {
     
     
-//    @State var thumbnailLink = "https://data.ygosu.com/upload_files/board_stars/178822/654c1837ab3fb.webp"
-//    @State var albumName = "test"
-//    @State var created_at = "2024/05/13"
-//    @State var count = 5
-    
     //Binding
     @Binding var albumId:String
     @Binding var slideImage:SlideImage
@@ -23,15 +18,15 @@ struct SingleAlbumView: View {
     @Binding var created_at:String
     @Binding var count:Int
     
+    @EnvironmentObject var appState: AppState
+    
     //State
     @State private var isTapped = false
     
     var body: some View {
         GeometryReader { geo in
-            
             HStack {
                 Spacer()
-                
                 ZStack {
                     AsyncImageView(imageURL:$thumbnailLink)
                     VStack {
@@ -81,8 +76,9 @@ struct SingleAlbumView: View {
             isTapped = true // 사용자가 탭하면 isTapped를 true로 설정
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 isTapped = false // 0.5초 후에 isTapped를 false로 설정하여 원래 색으로 돌아감
+                appState.addAlbumOffset = 1000
+                appState.albumsOpen = false
             }
-            VarCollectionFile.myPrint(title: "AddAlbum_singleAlbum_View", content: "id: \(albumId), image id : \(slideImage.id)")
             
             setAlbum_images(albumId: albumId, imageId: slideImage.id)
             
@@ -120,6 +116,7 @@ struct SingleAlbumView: View {
                         if let result = json["result"] as? Bool {
                             if result {
                                 count+=1
+                                
                             }
                         } else {
                             print("Failed to get liked value")

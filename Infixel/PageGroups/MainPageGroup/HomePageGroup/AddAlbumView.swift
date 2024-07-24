@@ -56,11 +56,8 @@ struct AddAlbumView: View {
     
     @StateObject private var viewModel = AddAlbumViewModel()
     
-//    @State var albumList:[Album] = []
     @State private var dragOffset: CGFloat = 0.0
     @Binding var slideImage:SlideImage
-    //@Binding var albumsOpen:Bool
-    //@Binding var addAlbumOffset : CGFloat
     
     @EnvironmentObject var appState: AppState
     

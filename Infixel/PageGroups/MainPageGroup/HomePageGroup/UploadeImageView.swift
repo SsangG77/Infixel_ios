@@ -73,7 +73,7 @@ struct UploadImageView: View {
                         isPickerPresented.toggle()
                     }
                 }
-            }
+            }//if
             
             VStack(spacing: 0) {
                 HStack {
@@ -88,7 +88,7 @@ struct UploadImageView: View {
                 
                 Divider()
                 
-            }
+            }//vstack
             .padding(.top, 5)
             .padding()
             
@@ -109,7 +109,7 @@ struct UploadImageView: View {
                     }
                 
                 Divider()
-            }
+            }//vtack
             .padding(.top, 15)
             .padding()
             
@@ -133,15 +133,15 @@ struct UploadImageView: View {
                         
                     }
                 }
-            }
+            }//
             .frame(height: 30)
             
             Spacer()
-                .frame(height: 100)
+//                .frame(height: 140)
             
             ///업로드 버튼
-            GeometryReader { geometry in
-                VStack {
+//            GeometryReader { geometry in
+//                VStack(alignment: .center) {
                     Button(action: {
                         if viewModel.selectedImage != nil {
                             viewModel.uploadImage(appState)
@@ -155,21 +155,23 @@ struct UploadImageView: View {
                     }
                     .disabled(viewModel.selectedImage == nil)
                     .padding()
-                    .frame(width: geometry.size.width * 0.8) // 버튼 너비를 전체 화면의 80%로 설정
+                    .padding([.leading, .trailing], 110)
+//                    .frame(width: geometry.size.width * 0.8) // 버튼 너비를 전체 화면의 80%로 설정
                     .background(viewModel.selectedImage != nil ? Color.blue : Color.gray)
                     .foregroundColor(.white)
                     .cornerRadius(15)
-                    .padding()
-                }
-                .frame(width: geometry.size.width, height: 100, alignment: .center)
-            }
-            .edgesIgnoringSafeArea(.all) // 전체 화면을 사용하도록 설정
+//                }
+//                .frame(height: 100, alignment: .center)
+//            }
+//            .edgesIgnoringSafeArea(.all) // 전체 화면을 사용하도록 설정
             
-            
+            Spacer()
+                .frame(height: 30)
             
             
         }//VStack
         .padding(.top, 40)
+        .frame(height: UIScreen.main.bounds.height * 0.9)
         .sheet(isPresented: $isPickerPresented) {
             ImagePicker(selectedImage: $viewModel.selectedImage)
         }

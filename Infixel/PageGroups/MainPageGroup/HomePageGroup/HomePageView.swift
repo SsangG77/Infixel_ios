@@ -122,6 +122,7 @@ struct HomePageView: View {
                     }
             }
             
+            
             if appState.uploadPlusBtnClicked {
                 GeometryReader { geo in
                     UploadImageView()
