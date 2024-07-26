@@ -12,6 +12,10 @@ class ProfilePageViewModel: ObservableObject {
     @Published var profileImage = VarCollectionFile.randomJpgURL
     @Published var user_at = "@user_01"
     @Published var user_id = "User 01"
+    @Published var pic = 12345
+    @Published var follow = 343
+    @Published var follower = 7510
+    @Published var description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
     
     
 }
@@ -28,6 +32,7 @@ struct ProfilePageView: View {
                 
                     VStack {
                         ProfilePageHeader()
+                            .shadow(color: Color.black.opacity(0.5), radius: 7, x: 0, y: 5)
                         Spacer()
                     }
                     
@@ -36,7 +41,7 @@ struct ProfilePageView: View {
                         HStack {
                             Spacer()
                             NavigationLink(destination: SettingPageView(isLoggedIn: $isLoggedIn)) {
-                                    Text("setting")
+                                    Text(". . .")
                                     .padding()
                                 
                             }//NavigationLink
@@ -54,7 +59,7 @@ struct ProfilePageHeader: View {
     
     var body: some View {
         HStack {
-            VStack {
+            VStack(alignment: .leading) {
                 GeometryReader { geo in
                     AsyncImage(url: URL(string:viewModel.profileImage)) { phase in
                         switch phase {
@@ -80,24 +85,73 @@ struct ProfilePageHeader: View {
                     }//--@AsyncImage
                     
                 }//--@GeometryReader
-                .frame(width: 80, height: 80)
+                .frame(width: 70, height: 70)
+                //--@프로필_이미지
+                
                 
                 Text(viewModel.user_at)
                     .foregroundColor(.white)
-                    .font(.system(size: 14))
+                    .font(.system(size: 12))
                     .fontWeight(.light)
+                //--@유저_아이디
+                
                 
                 Text(viewModel.user_id)
                     .foregroundColor(.white)
                     .fontWeight(.heavy)
+                //--@유저_닉네임
+                
                 
             }//--@VStack
-            .frame(height: 180)
+            .frame(width: UIScreen.main.bounds.width * 0.3, height: 180)
             
-            Spacer()
+            //--@유저프로필_닉네임_아이디
             
+//            Spacer()
+            VStack(spacing: 10) {
+                HStack(spacing: 20) {
+                    VStack {
+                        Image("pic!")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                        
+                        Text(String(viewModel.pic))
+                            .foregroundColor(.white)
+                            .fontWeight(.bold)
+                    }
+                    
+                    VStack {
+                        Text("Follow")
+                            .foregroundColor(.white)
+                        
+                        Text(String(viewModel.follow))
+                            .foregroundColor(.white)
+                    }
+                    
+                    VStack {
+                        Text("Follower")
+                            .foregroundColor(.white)
+                        
+                        Text(String(viewModel.follower))
+                            .foregroundColor(.white)
+                    }
+                }
+                
+                VStack {
+                    Text(viewModel.description)
+                        .foregroundColor(.white)
+                        .font(.system(size: 14))
+                }
+//                .frame(width: UIScreen.main.bounds.width * 0.7)
+            }//VStack
+            .frame(width: UIScreen.main.bounds.width * 0.7)
+            
+            
+            
+        
         }//--@HStack
         .padding()
+        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.2)
         .background(Color(.black))
         .clipShape(
             .rect(topLeadingRadius: 0, bottomLeadingRadius: 30, bottomTrailingRadius: 30, topTrailingRadius: 0)
