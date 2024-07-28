@@ -16,7 +16,46 @@ class ProfilePageViewModel: ObservableObject {
     @Published var follow = 343
     @Published var follower = 7510
     @Published var description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. da;sds;ldkmcsla"
+    @Published var showImageViewer = false
     
+    @Published var images:[SearchSingleImage] = []
+    
+    
+    func getMyImages() {
+        guard let url = URL(string: VarCollectionFile.myImageURL) else {
+            return
+        }
+        
+        let userId = UserDefaults.standard.string(forKey: "user_id")!
+        let body = ["user_id": userId]
+        let request = URLRequest.post(url: url, body: body)
+        
+        DispatchQueue.global(qos: .background).async {
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error : \(error)")
+                    return
+                }
+                
+                if let data = data {
+                    if let decodedResponse = try? JSONDecoder().decode([SearchSingleImage].self, from: data) {
+                        DispatchQueue.main.async {
+                            print(decodedResponse)
+                            self.images = decodedResponse
+                        }
+                    }
+                } else if let error = error {
+                    VarCollectionFile.myPrint(title: "ProfilePageView", content: error)
+                } else {
+                    print("Failed to send text to server")
+                }
+                
+                
+                
+            }.resume()
+        }
+        
+    }
     
     
     
@@ -26,42 +65,22 @@ class ProfilePageViewModel: ObservableObject {
 struct ProfilePageView: View {
     
     @Binding var isLoggedIn: Bool
-    @EnvironmentObject var appState: AppState
-    @State var showImageViewer = false
     
-    @State var images = [
-        SearchSingleImage(id: "1", image_name: VarCollectionFile.resjpgURL + "winter2.jpeg"),
-        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "haewon3.jpeg"),
-        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "chaewon.webp"),
-        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "winter4.jpeg"),
-        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "winter5.jpeg"),
-        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "chaewon1.jpeg"),
-        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "chaewon2.jpeg"),
-        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "1720980126019-957469642.jpg"),
-        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "1721216091689-620096316.jpg"),
-        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "chaewon1.jpeg"),
-    ]
+    
+    @EnvironmentObject var appState: AppState
+    @StateObject var viewModel = ProfilePageViewModel()
+    
     
     var body: some View {
             
             NavigationView {
                 ZStack {
-                    ScrollView {
-                        
-                        
-                        ImageGridView(images: $images) { imageId, imageName in
-                            appState.selectedImage = imageName
-                            appState.selectedImageId = imageId
-                            showImageViewer = true
-                        }
-                        
-                    }
-                    .padding(.top, UIScreen.main.bounds.height * 0.1)
-                    .contentMargins(.top, UIScreen.main.bounds.height * 0.13)
-                    .contentMargins(.bottom, 40)
+                    ProfilePageImageView(viewModel:viewModel)
+                        .environmentObject(appState)
+                    
                 
                     VStack {
-                        ProfilePageHeader()
+                        ProfilePageHeader(viewModel:viewModel)
                             .shadow(color: Color.black.opacity(0.5), radius: 7, x: 0, y: 5)
                         Spacer()
                         
@@ -84,7 +103,22 @@ struct ProfilePageView: View {
                             
                     }
                 }
-                .sheet(isPresented: $showImageViewer) {
+                .onAppear {
+//                    viewModel.images = [
+//                        SearchSingleImage(id: "1", image_name: VarCollectionFile.resjpgURL + "winter2.jpeg"),
+//                        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "haewon3.jpeg"),
+//                        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "chaewon.webp"),
+//                        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "winter4.jpeg"),
+//                        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "winter5.jpeg"),
+//                        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "chaewon1.jpeg"),
+//                        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "chaewon2.jpeg"),
+//                        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "1720980126019-957469642.jpg"),
+//                        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "1721216091689-620096316.jpg"),
+//                        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "chaewon1.jpeg"),
+//                    ]
+                    viewModel.getMyImages()
+                }
+                .sheet(isPresented: $viewModel.showImageViewer) {
                     if let selectedImage = appState.selectedImage, let selectedImageId = appState.selectedImageId {
                         ImageViewer(imageUrl: .constant(selectedImage), imageId: .constant(selectedImageId))
                     } else {
@@ -102,10 +136,24 @@ struct ProfilePageView: View {
 
 
 struct ProfilePageImageView: View {
+    @StateObject var viewModel:ProfilePageViewModel
+    
+    @EnvironmentObject var appState: AppState
+    
+    
+    
+    
     var body: some View {
         ScrollView {
-            
+            ImageGridView(images: $viewModel.images) { imageId, imageName in
+                appState.selectedImage = imageName
+                appState.selectedImageId = imageId
+                viewModel.showImageViewer = true
+            }
         }
+        .padding(.top, UIScreen.main.bounds.height * 0.1)
+        .contentMargins(.top, UIScreen.main.bounds.height * 0.13)
+        .contentMargins(.bottom, 40)
     }
 }
 
@@ -122,7 +170,7 @@ struct ProfilePageImageView: View {
 
 struct ProfilePageHeader: View {
     
-    var viewModel = ProfilePageViewModel()
+    @StateObject var viewModel:ProfilePageViewModel
     
     var body: some View {
         HStack {
