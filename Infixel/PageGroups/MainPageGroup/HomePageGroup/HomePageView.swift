@@ -51,8 +51,7 @@ struct HomePageView: View {
                                         VStack {
                                             Image(systemName: "photo")
                                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                            Text("Failed to load image, retrying...")
-                                                .foregroundColor(.white)
+                                         
                                         }
                                         .onAppear {
                                             reloadImage(photo: slideImages[index])

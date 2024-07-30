@@ -50,8 +50,6 @@ class ProfilePageViewModel: ObservableObject {
                     print("Failed to send text to server")
                 }
                 
-                
-                
             }.resume()
         }
         
@@ -86,9 +84,6 @@ struct ProfilePageView: View {
                         
                     }
                     
-                    
-                    
-                    
                     VStack {
                         HStack {
                             Spacer()
@@ -104,18 +99,6 @@ struct ProfilePageView: View {
                     }
                 }
                 .onAppear {
-//                    viewModel.images = [
-//                        SearchSingleImage(id: "1", image_name: VarCollectionFile.resjpgURL + "winter2.jpeg"),
-//                        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "haewon3.jpeg"),
-//                        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "chaewon.webp"),
-//                        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "winter4.jpeg"),
-//                        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "winter5.jpeg"),
-//                        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "chaewon1.jpeg"),
-//                        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "chaewon2.jpeg"),
-//                        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "1720980126019-957469642.jpg"),
-//                        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "1721216091689-620096316.jpg"),
-//                        SearchSingleImage(id: "2", image_name: VarCollectionFile.resjpgURL + "chaewon1.jpeg"),
-//                    ]
                     viewModel.getMyImages()
                 }
                 .sheet(isPresented: $viewModel.showImageViewer) {
