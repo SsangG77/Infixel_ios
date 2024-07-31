@@ -7,15 +7,29 @@
 
 import SwiftUI
 
+struct ProfileUser: Codable, Identifiable, Hashable {
+    var id: String
+    var user_at: String
+    var user_id: String
+    var pic: Int
+    var follow: Int
+    var follower: Int
+    var description: String
+}
 
 class ProfilePageViewModel: ObservableObject {
     @Published var profileImage = VarCollectionFile.randomJpgURL
+    
     @Published var user_at = "@user_01"
     @Published var user_id = "User 01"
     @Published var pic = 12345
     @Published var follow = 343
     @Published var follower = 7510
     @Published var description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. da;sds;ldkmcsla"
+    
+    @Published var profileUser:ProfileUser?
+    
+    
     @Published var showImageViewer = false
     
     @Published var images:[SearchSingleImage] = []
@@ -40,7 +54,6 @@ class ProfilePageViewModel: ObservableObject {
                 if let data = data {
                     if let decodedResponse = try? JSONDecoder().decode([SearchSingleImage].self, from: data) {
                         DispatchQueue.main.async {
-                            print(decodedResponse)
                             self.images = decodedResponse
                         }
                     }
@@ -53,6 +66,35 @@ class ProfilePageViewModel: ObservableObject {
             }.resume()
         }
         
+    }
+    
+    func getUserInfo(_ id: String) {
+        guard let url = URL(string: VarCollectionFile.userProfileURL) else {
+            return
+        }
+       
+        let request = URLRequest.post(url: url, body: ["user_id" : id])
+        
+        DispatchQueue.global(qos: .background).async {
+            URLSession.shared.dataTask(with: request) { data, res, error in
+                if let error = error {
+                    print("Error : \(error)")
+                    return
+                }
+                
+                if let data = data {
+                    do {
+                        if let decodeResponse = try? JSONDecoder().decode(ProfileUser.self, from: data) {
+                            DispatchQueue.main.async {
+                                self.profileUser = decodeResponse
+                            }
+                        }
+                    } catch {
+                        print("Decode Error : \(error)")
+                    }
+                }
+            }.resume()
+        }
     }
     
     
