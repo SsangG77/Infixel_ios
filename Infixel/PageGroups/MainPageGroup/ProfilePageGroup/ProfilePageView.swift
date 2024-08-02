@@ -15,18 +15,10 @@ struct ProfileUser: Codable, Identifiable, Hashable {
     var follow: Int
     var follower: Int
     var description: String
+    var profile_image: String
 }
 
 class ProfilePageViewModel: ObservableObject {
-    @Published var profileImage = VarCollectionFile.randomJpgURL
-    
-    @Published var user_at = "@user_01"
-    @Published var user_id = "User 01"
-    @Published var pic = 12345
-    @Published var follow = 343
-    @Published var follower = 7510
-    @Published var description = "Lorem Ipsum is simply dummy text of the printing and typesetting industry. da;sds;ldkmcsla"
-    
     @Published var profileUser:ProfileUser?
     
     
@@ -85,6 +77,7 @@ class ProfilePageViewModel: ObservableObject {
                 if let data = data {
                     do {
                         if let decodeResponse = try? JSONDecoder().decode(ProfileUser.self, from: data) {
+                            print(decodeResponse)
                             DispatchQueue.main.async {
                                 self.profileUser = decodeResponse
                             }
@@ -201,7 +194,7 @@ struct ProfilePageHeader: View {
         HStack {
             VStack(alignment: .leading) {
                 GeometryReader { geo in
-                    AsyncImage(url: URL(string:viewModel.profileImage)) { phase in
+                    AsyncImage(url: URL(string: viewModel.profileUser != nil ? viewModel.profileUser!.profile_image : "")) { phase in
                         switch phase {
                         case .empty:
                             ProgressView()
@@ -228,14 +221,14 @@ struct ProfilePageHeader: View {
                 //--@프로필_이미지
                 
                 
-                Text(viewModel.user_at)
+                Text(viewModel.profileUser != nil ? "@"+viewModel.profileUser!.user_at : "@")
                     .foregroundColor(.white)
                     .font(.system(size: 12))
                     .fontWeight(.light)
                 //--@유저_아이디
                 
                 
-                Text(viewModel.user_id)
+                Text(viewModel.profileUser != nil ? viewModel.profileUser!.user_id: "")
                     .foregroundColor(.white)
                     .fontWeight(.heavy)
                 //--@유저_닉네임
@@ -247,53 +240,56 @@ struct ProfilePageHeader: View {
             //--@유저프로필_닉네임_아이디
             
 //            Spacer()
-            VStack(spacing: 20) {
+            VStack(alignment: .leading, spacing: 20) {
                 
-                HStack(alignment: .bottom, spacing: 30) {
-                    VStack {
-                        Image("pic!")
-                            .resizable()
-                            .frame(width: 13, height: 13)
+                    HStack(alignment: .bottom, spacing: 20) {
+                            VStack {
+                                Image("pic!")
+                                    .resizable()
+                                    .frame(width: 13, height: 13)
+                                
+                                Text(String(viewModel.profileUser != nil ? viewModel.profileUser!.pic: 0))
+                                    .foregroundColor(.white)
+                                    .fontWeight(.bold)
+                            }
+                            .frame(width: 60)
                         
-                        Text(String(viewModel.pic))
-                            .foregroundColor(.white)
-                            .fontWeight(.bold)
-                    }
-                    
-                    VStack {
-                        Text("Follow")
-                            .foregroundColor(.white)
-                            .font(.system(size: 14))
                         
-                        Text(String(viewModel.follow))
-                            .foregroundColor(.white)
-                            .fontWeight(.bold)
-                    }
-                    
-                    VStack {
-                        Text("Follower")
-                            .foregroundColor(.white)
-                            .font(.system(size: 14))
                         
-                        Text(String(viewModel.follower))
-                            .foregroundColor(.white)
-                            .fontWeight(.bold)
+                            VStack {
+                                Text("Follow")
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 14))
+                                
+                                Text(String(viewModel.profileUser != nil ? viewModel.profileUser!.follow: 0))
+                                    .foregroundColor(.white)
+                                    .fontWeight(.bold)
+                            }
+                            .frame(width: 60)
+                       
+                            VStack {
+                                Text("Follower")
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 14))
+                                
+                                Text(String(viewModel.profileUser != nil ? viewModel.profileUser!.follower: 0))
+                                    .foregroundColor(.white)
+                                    .fontWeight(.bold)
+                            }
+                            .frame(width: 60)
                     }
-                }
-                .frame(height: 40)
+                    .frame(height: 40)
+//                }
                 
-                VStack {
-                    Text(viewModel.description)
+                VStack(alignment: .leading) {
+                    Text(viewModel.profileUser != nil ? viewModel.profileUser!.description: "")
                         .foregroundColor(.white)
                         .font(.system(size: 14))
                 }
                 .frame(width: UIScreen.main.bounds.width * 0.6, height: 40)
-            }//VStack
-            .frame(width: UIScreen.main.bounds.width * 0.7)
-            
-            
-            
-        
+            }//---@VStack
+            .frame(width: UIScreen.main.bounds.width * 0.6)
+            Spacer()
         }//--@HStack
         .padding()
         .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.2)
@@ -301,6 +297,9 @@ struct ProfilePageHeader: View {
         .clipShape(
             .rect(topLeadingRadius: 0, bottomLeadingRadius: 30, bottomTrailingRadius: 30, topTrailingRadius: 0)
         )
+        .onAppear {
+            viewModel.getUserInfo(UserDefaults.standard.string(forKey: "user_id")!)
+        }
         
     }
 }
@@ -327,6 +326,8 @@ struct SettingPageView: View {
 
 struct ProfilePageView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfilePageView(isLoggedIn: .constant(true))
+        var viewModel = ProfilePageViewModel()
+        
+          ProfilePageHeader(viewModel:viewModel)
     }
 }
