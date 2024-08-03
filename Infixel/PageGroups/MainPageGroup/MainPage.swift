@@ -45,7 +45,7 @@ struct MainView: View {
                 SavePageView()
                 
             case .profile:
-                ProfilePageView(isLoggedIn: $isLoggedIn)
+                ProfilePageView(isLoggedIn: $isLoggedIn, userId: UserDefaults.standard.string(forKey: "user_id")!)
 //                ProfilePageView()
             
             }//switch

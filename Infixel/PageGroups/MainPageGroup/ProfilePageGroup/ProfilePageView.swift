@@ -7,16 +7,22 @@
 
 import SwiftUI
 
+
+//--@dProfileUser--------------------------------------------------------------------------------------------------------
 struct ProfileUser: Codable, Identifiable, Hashable {
-    var id: String
-    var user_at: String
-    var user_id: String
-    var pic: Int
-    var follow: Int
-    var follower: Int
-    var description: String
-    var profile_image: String
+    var id: String = ""
+    var user_at: String = ""
+    var user_id: String = ""
+    var pic: Int = 0
+    var follow: Int = 0
+    var follower: Int = 0
+    var description: String = ""
+    var profile_image: String = ""
 }
+//--@--------------------------------------------------------------------------------------------------------------
+
+
+
 
 class ProfilePageViewModel: ObservableObject {
     @Published var profileUser:ProfileUser?
@@ -27,13 +33,12 @@ class ProfilePageViewModel: ObservableObject {
     @Published var images:[SearchSingleImage] = []
     
     
-    func getMyImages() {
+    func getMyImages(_ id:String) {
         guard let url = URL(string: VarCollectionFile.myImageURL) else {
             return
         }
         
-        let userId = UserDefaults.standard.string(forKey: "user_id")!
-        let body = ["user_id": userId]
+        let body = ["user_id": id]
         let request = URLRequest.post(url: url, body: body)
         
         DispatchQueue.global(qos: .background).async {
@@ -90,14 +95,14 @@ class ProfilePageViewModel: ObservableObject {
         }
     }
     
-    
-    
 }
+//--@-------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 struct ProfilePageView: View {
     
     @Binding var isLoggedIn: Bool
+    var userId:String
     
     
     @EnvironmentObject var appState: AppState
@@ -134,7 +139,8 @@ struct ProfilePageView: View {
                     }
                 }
                 .onAppear {
-                    viewModel.getMyImages()
+                    viewModel.getMyImages(userId)
+                    viewModel.getUserInfo(userId)
                 }
                 .sheet(isPresented: $viewModel.showImageViewer) {
                     if let selectedImage = appState.selectedImage, let selectedImageId = appState.selectedImageId {
@@ -146,7 +152,7 @@ struct ProfilePageView: View {
         }
     }
 }
-
+//--@---------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -174,7 +180,7 @@ struct ProfilePageImageView: View {
         .contentMargins(.bottom, 40)
     }
 }
-
+//--@-------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -240,9 +246,9 @@ struct ProfilePageHeader: View {
             //--@유저프로필_닉네임_아이디
             
 //            Spacer()
-            VStack(alignment: .leading, spacing: 20) {
+            VStack {
                 
-                    HStack(alignment: .bottom, spacing: 20) {
+                    HStack(alignment: .bottom) {
                             VStack {
                                 Image("pic!")
                                     .resizable()
@@ -255,7 +261,7 @@ struct ProfilePageHeader: View {
                             .frame(width: 60)
                         
                         
-                        
+                            Spacer()
                             VStack {
                                 Text("Follow")
                                     .foregroundColor(.white)
@@ -266,7 +272,7 @@ struct ProfilePageHeader: View {
                                     .fontWeight(.bold)
                             }
                             .frame(width: 60)
-                       
+                            Spacer()
                             VStack {
                                 Text("Follower")
                                     .foregroundColor(.white)
@@ -277,18 +283,20 @@ struct ProfilePageHeader: View {
                                     .fontWeight(.bold)
                             }
                             .frame(width: 60)
-                    }
-                    .frame(height: 40)
-//                }
+                    }//--@Hstack
+                    .frame(width: UIScreen.main.bounds.width * 0.55, height: 40)
+
                 
-                VStack(alignment: .leading) {
+                HStack(alignment: .top) {
                     Text(viewModel.profileUser != nil ? viewModel.profileUser!.description: "")
                         .foregroundColor(.white)
                         .font(.system(size: 14))
+                    Spacer()
                 }
-                .frame(width: UIScreen.main.bounds.width * 0.6, height: 40)
+                .frame(width: UIScreen.main.bounds.width * 0.55, height: 40)
             }//---@VStack
             .frame(width: UIScreen.main.bounds.width * 0.6)
+            .padding(.leading, 10)
             Spacer()
         }//--@HStack
         .padding()
@@ -297,31 +305,9 @@ struct ProfilePageHeader: View {
         .clipShape(
             .rect(topLeadingRadius: 0, bottomLeadingRadius: 30, bottomTrailingRadius: 30, topTrailingRadius: 0)
         )
-        .onAppear {
-            viewModel.getUserInfo(UserDefaults.standard.string(forKey: "user_id")!)
-        }
-        
     }
 }
-
-
-struct SettingPageView: View {
-    @Binding var isLoggedIn: Bool
-    
-    var body: some View {
-        VStack {
-            Text("Setting") 
-            Button("Log out") {
-                isLoggedIn = false
-           }
-            
-        }
-        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-        .background(Color.gray)
-    }
-}
-
-
+//--@-------------------------------------------------------------------------------------------------------------------------------------------
 
 
 struct ProfilePageView_Previews: PreviewProvider {
