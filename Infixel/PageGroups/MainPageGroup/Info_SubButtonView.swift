@@ -19,6 +19,7 @@ struct Info_SubButtonView: View {
    
     @EnvironmentObject var appState: AppState
     @Binding var slideImage: SlideImage
+    @Binding var isActive: Bool
     
     
     //info
@@ -157,6 +158,10 @@ struct Info_SubButtonView: View {
                                         .font(Font.custom("Bungee-Regular", size: 12))
                                         .foregroundColor(.white)
                                 }
+                            }
+                            .onTapGesture {
+                                isActive = true
+                                appState.profileUserId = slideImage.user_id
                             }
                         }//else
                         

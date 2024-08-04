@@ -33,9 +33,7 @@ struct AsyncImageView: View {
                 case .failure:
                     // 이미지 로드 실패 시 메시지
                     // Image("loading")
-                    Spacer()
-                    Text("load fail")
-                    Spacer()
+                    ProgressView()
                 @unknown default:
                     Text("Unknown state") // 알 수 없는 상태 처리
                 }

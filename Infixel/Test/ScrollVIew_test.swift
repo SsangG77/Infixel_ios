@@ -83,10 +83,10 @@ struct ScrollView_test: View {
                 VStack {
                     Spacer()
                     if slideImages.count > 0 {
-                        Info_SubButtonView(slideImage: $slideImage)
-                            .frame(width: UIScreen.main.bounds.width - 34, height: 300, alignment: .bottom)
-                            .padding([.leading, .trailing], 17)
-                            .environmentObject(appState)
+//                        Info_SubButtonView(slideImage: $slideImage)
+//                            .frame(width: UIScreen.main.bounds.width - 34, height: 300, alignment: .bottom)
+//                            .padding([.leading, .trailing], 17)
+//                            .environmentObject(appState)
                     }
                     Spacer().frame(height: UIScreen.main.bounds.height * 0.05 + UIScreen.main.bounds.height * 0.05)
                 }//VStack
@@ -171,8 +171,9 @@ struct ScrollView_test: View {
                                       let pic = json["pic"] as? Int,
                                       let description = json["description"] as? String,
                                       let userNick = json["user_at"] as? String,
+                                      let userId = json["user_id"] as? String,
                                       let userProfileImage = json["profile_image"] as? String {
-                                       let newSlideImage = SlideImage(id:id, link: imageFileName, pic: pic, description: description, user_nick: userNick, profile_image: userProfileImage)
+                                       let newSlideImage = SlideImage(id:id, link: imageFileName, pic: pic, description: description, user_nick: userNick, user_id: userId, profile_image: userProfileImage)
                                        DispatchQueue.main.async {
                                            slideImage = newSlideImage
                                            if slideImages.isEmpty {
@@ -212,8 +213,9 @@ struct ScrollView_test: View {
                               let pic = json["pic"] as? Int,
                               let description = json["description"] as? String,
                               let userNick = json["user_at"] as? String,
+                              let userId = json["user_id"] as? String,
                               let userProfileImage = json["profile_image"] as? String {
-                               let newSlideImage = SlideImage(id:id, link: imageFileName, pic: pic, description: description, user_nick: userNick, profile_image: userProfileImage)
+                               let newSlideImage = SlideImage(id:id, link: imageFileName, pic: pic, description: description, user_nick: userNick, user_id: userId, profile_image: userProfileImage)
                                DispatchQueue.main.async {
                                    if slideImages.isEmpty {
                                        slideImage = newSlideImage

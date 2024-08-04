@@ -13,6 +13,7 @@ class SlideImage: Identifiable, Hashable, ObservableObject, Decodable {
     var id: String            // 고유 아이디
     var link: String            // 이미지 링크
     var user_nick:String
+    var user_id:String
     var profile_image:String
     var pic: Int                //좋아요 갯수
     var description: String    //이미지 설명 글
@@ -24,17 +25,19 @@ class SlideImage: Identifiable, Hashable, ObservableObject, Decodable {
         self.pic = 0
         self.description = "init 슬라이드 이미지 객체"
         self.user_nick = "init"
+        self.user_id = "userid"
         self.profile_image = "http://localhost:3000/image/resjpg?filename=winter6.jpeg"
     }
     
 
     
-    init(id:String, link: String, pic:Int, description:String, user_nick:String, profile_image:String) {
+    init(id:String, link: String, pic:Int, description:String, user_nick:String, user_id:String, profile_image:String) {
         self.id = id
         self.link = link
         self.pic = pic
         self.description = description
         self.user_nick = user_nick
+        self.user_id = user_id
         self.profile_image = profile_image
     }
     

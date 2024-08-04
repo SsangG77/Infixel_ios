@@ -9,6 +9,16 @@ import SwiftUI
 
 struct NavigationChildView_test: View {
     @State private var isActive: Bool = false
+    
+    init() {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = .black
+            appearance.backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.white] // 뒤로가기 버튼 텍스트 색 설정
+            UINavigationBar.appearance().standardAppearance = appearance
+            UINavigationBar.appearance().compactAppearance = appearance
+            UINavigationBar.appearance().scrollEdgeAppearance = appearance
+        }
 
         var body: some View {
             NavigationView {
@@ -22,8 +32,10 @@ struct NavigationChildView_test: View {
                         }
                     )
                 }
-                .navigationTitle("Parent View")
+//                .navigationTitle("Parent View")
             }
+            .accentColor(.white)
+            
         }
 }
 
@@ -41,8 +53,11 @@ struct ChildView: View {
 
 
 struct NextView: View {
+    
+//    @Binding var userId:String
+    
     var body: some View {
-        Text("sssssssss")
+        Text("user id :")
     }
 }
 

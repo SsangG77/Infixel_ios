@@ -12,6 +12,7 @@ import Combine
 struct HomePageView: View {
     @EnvironmentObject var appState: AppState
     @Binding var slideImage: SlideImage
+    @State private var isActive: Bool = false
     
     
     //@StateObject private var viewModel: HomePageViewModel
@@ -21,116 +22,139 @@ struct HomePageView: View {
     @State var isLoadingMore = false
     
 
+    init(slideImage: Binding<SlideImage>) {
+        self._slideImage = slideImage
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .black
+        appearance.backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.white] // 뒤로가기 버튼 텍스트 색 설정
+        UINavigationBar.appearance().standardAppearance = appearance
+        UINavigationBar.appearance().compactAppearance = appearance
+        UINavigationBar.appearance().scrollEdgeAppearance = appearance
+    }
+    
     var body: some View {
-        ZStack {
-            ScrollView(.vertical, showsIndicators: false) {
-                LazyVStack(spacing: 0) {
-                    ForEach(slideImages.indices, id: \.self) { index in
-                        if let url = URL(string: slideImages[index].link) {
-                            GeometryReader { geo in
-                                AsyncImage(url: url, transaction: Transaction(animation: .default)) { phase in
-                                    switch phase {
-                                    case .empty:
-                                        ProgressView()
-                                    case .success(let image):
-                                        image
-                                            .resizable()
-                                            .scaledToFill()
-                                            .position(x: geo.size.width / 2, y: geo.size.height / 2)
-                                            .clipped()
-                                            .onAppear {
-                                                slideImage = slideImages[index]
-                                                
-                                                //마지막 이미지일때 동작
-                                                if slideImages[index].id == slideImages.last?.id {
-                                                    loadMorePhotosIfNeeded(currentPhoto: slideImages[index])
-                                                }
-                                            }
-                                            
-                                    case .failure:
-                                        VStack {
-                                            Image(systemName: "photo")
-                                                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                         
-                                        }
-                                        .onAppear {
-                                            reloadImage(photo: slideImages[index])
-                                        }
-                                    @unknown default:
-                                        EmptyView()
-                                    }//--@switch
-                                }//--@AsyncImage
-                                .id(reloadTriggers[index])
-                            }
-                            .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-                        }//--@if_let_url
-                    }//--@ForEach
-                    .onChange(of: slideImage) { _ in
-                        withAnimation {
-                            appState.infoBoxReset = false
-                        }
+        
+        NavigationView {
+            ZStack {
+                NavigationLink(
+                    destination: ProfilePageView(userId: slideImage.user_id, profile:false),
+                    isActive: $isActive,
+                    label: {
+                        EmptyView() // Label을 빈 뷰로 설정하여 숨김
                     }
-                }//--@LazyVStack
-            }//--@Scrollview
-            .scrollTargetBehavior(.paging)
-            .edgesIgnoringSafeArea(.all)
-            .onAppear {
-                if isInitialLoad {
-                    loadInitialPhotos()
-                }
-            }
+                )
             
-            VStack {
-                HStack {
+                ScrollView(.vertical, showsIndicators: false) {
+                    LazyVStack(spacing: 0) {
+                        ForEach(slideImages.indices, id: \.self) { index in
+                            if let url = URL(string: slideImages[index].link) {
+                                GeometryReader { geo in
+                                    AsyncImage(url: url, transaction: Transaction(animation: .default)) { phase in
+                                        switch phase {
+                                        case .empty:
+                                            ProgressView()
+                                        case .success(let image):
+                                            image
+                                                .resizable()
+                                                .scaledToFill()
+                                                .position(x: geo.size.width / 2, y: geo.size.height / 2)
+                                                .clipped()
+                                                .onAppear {
+                                                    slideImage = slideImages[index]
+                                                    
+                                                    //마지막 이미지일때 동작
+                                                    if slideImages[index].id == slideImages.last?.id {
+                                                        loadMorePhotosIfNeeded(currentPhoto: slideImages[index])
+                                                    }
+                                                }
+                                            
+                                        case .failure:
+                                            VStack {
+                                                Image(systemName: "photo")
+                                                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                                
+                                            }
+                                            .onAppear {
+                                                reloadImage(photo: slideImages[index])
+                                            }
+                                        @unknown default:
+                                            EmptyView()
+                                        }//--@switch
+                                    }//--@AsyncImage
+                                    .id(reloadTriggers[index])
+                                }
+                                .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
+                            }//--@if_let_url
+                        }//--@ForEach
+                        .onChange(of: slideImage) { _ in
+                            withAnimation {
+                                appState.infoBoxReset = false
+                            }
+                        }
+                    }//--@LazyVStack
+                }//--@Scrollview
+                .scrollTargetBehavior(.paging)
+                .edgesIgnoringSafeArea(.all)
+                .onAppear {
+                    if isInitialLoad {
+                        loadInitialPhotos()
+                    }
+                }
+                
+                VStack {
+                    HStack {
+                        Spacer()
+                        UploadImagePlusView()
+                            .environmentObject(appState)
+                            .onTapGesture {
+                                withAnimation {
+                                    appState.uploadPlusBtnClicked.toggle()
+                                }
+                            }
+                    }
+                    
                     Spacer()
-                    UploadImagePlusView()
-                        .environmentObject(appState)
+                    if slideImages.count > 0 {
+                        Info_SubButtonView(slideImage: $slideImage,isActive: $isActive)
+                            .frame(width: UIScreen.main.bounds.width - 34, height: 300, alignment: .bottom)
+                            .padding([.leading, .trailing], 17)
+                            .environmentObject(appState)
+                    }
+                    Spacer().frame(height: UIScreen.main.bounds.height * 0.05 + UIScreen.main.bounds.height * 0.05)
+                }//VStack
+                
+                if appState.albumsOpen || appState.commentsOpen || appState.threeDotsOpen {
+                    Rectangle()
+                        .foregroundColor(.secondary.opacity(0.1))
+                        .background(.ultraThinMaterial)
+                        .transition(.opacity)
+                        .opacity(appState.albumsOpen || appState.commentsOpen || appState.threeDotsOpen ? 1.0 : 0.0)
                         .onTapGesture {
                             withAnimation {
-                                appState.uploadPlusBtnClicked.toggle()
+                                appState.albumsOpen = false
+                                appState.commentsOpen = false
+                                appState.threeDotsOpen = false
+                                
+                                appState.addAlbumOffset = 1000
+                                appState.commentsOffset = 1000
+                                appState.threeDotsOffset = 1000
                             }
                         }
                 }
                 
-                Spacer()
-                if slideImages.count > 0 {
-                    Info_SubButtonView(slideImage: $slideImage)
-                        .frame(width: UIScreen.main.bounds.width - 34, height: 300, alignment: .bottom)
-                        .padding([.leading, .trailing], 17)
-                        .environmentObject(appState)
-                }
-                Spacer().frame(height: UIScreen.main.bounds.height * 0.05 + UIScreen.main.bounds.height * 0.05)
-            }//VStack
-            
-            if appState.albumsOpen || appState.commentsOpen || appState.threeDotsOpen {
-                Rectangle()
-                    .foregroundColor(.secondary.opacity(0.1))
-                    .background(.ultraThinMaterial)
-                    .transition(.opacity)
-                    .opacity(appState.albumsOpen || appState.commentsOpen || appState.threeDotsOpen ? 1.0 : 0.0)
-                    .onTapGesture {
-                        withAnimation {
-                            appState.albumsOpen = false
-                            appState.commentsOpen = false
-                            appState.threeDotsOpen = false
-                            
-                            appState.addAlbumOffset = 1000
-                            appState.commentsOffset = 1000
-                            appState.threeDotsOffset = 1000
-                        }
+                
+                if appState.uploadPlusBtnClicked {
+                    GeometryReader { geo in
+                        UploadImageView()
+                            .contentTransition(.symbolEffect)
+                            .frame(width: geo.size.width, height: geo.size.height)
+                            .background(Color.white)
                     }
-            }
-            
-            
-            if appState.uploadPlusBtnClicked {
-                GeometryReader { geo in
-                    UploadImageView()
-                        .contentTransition(.symbolEffect)
-                        .frame(width: geo.size.width, height: geo.size.height)
-                        .background(Color.white)
                 }
-            }
-        }//ZStack
+            }//ZStack
+        }
+        .accentColor(.white)
     }//body
     
     func loadMorePhotosIfNeeded(currentPhoto: SlideImage) {
@@ -164,8 +188,9 @@ struct HomePageView: View {
                                       let pic = json["pic"] as? Int,
                                       let description = json["description"] as? String,
                                       let userNick = json["user_at"] as? String,
+                                      let userId = json["user_id"] as? String,
                                       let userProfileImage = json["profile_image"] as? String {
-                                       let newSlideImage = SlideImage(id: id, link: imageFileName, pic: pic, description: description, user_nick: userNick, profile_image: userProfileImage)
+                                       let newSlideImage = SlideImage(id: id, link: imageFileName, pic: pic, description: description, user_nick: userNick, user_id: userId, profile_image: userProfileImage)
                                        DispatchQueue.main.async {
                                            if self.slideImages.isEmpty {
                                                self.slideImages[index] = newSlideImage
@@ -211,8 +236,9 @@ struct HomePageView: View {
                               let pic = json["pic"] as? Int,
                               let description = json["description"] as? String,
                               let userNick = json["user_at"] as? String,
+                              let userId = json["user_id"] as? String,
                               let userProfileImage = json["profile_image"] as? String {
-                               let newSlideImage = SlideImage(id: id, link: imageFileName, pic: pic, description: description, user_nick: userNick, profile_image: userProfileImage)
+                               let newSlideImage = SlideImage(id: id, link: imageFileName, pic: pic, description: description, user_nick: userNick, user_id: userId, profile_image: userProfileImage)
                                DispatchQueue.main.async {
                                    if self.slideImages.isEmpty {
                                        slideImage = newSlideImage

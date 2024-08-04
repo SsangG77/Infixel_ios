@@ -101,8 +101,15 @@ class ProfilePageViewModel: ObservableObject {
 
 struct ProfilePageView: View {
     
-    @Binding var isLoggedIn: Bool
+    @Binding var isLoggedIn: Bool?
     var userId:String
+    var profile:Bool
+    
+    init(isLoggedIn: Binding<Bool>? = nil, userId:String, profile:Bool) {
+            _isLoggedIn = isLoggedIn.map { .constant($0.wrappedValue) } ?? .constant(false)
+            self.userId = userId
+            self.profile = profile
+        }
     
     
     @EnvironmentObject var appState: AppState
@@ -110,32 +117,29 @@ struct ProfilePageView: View {
     
     
     var body: some View {
-            
             NavigationView {
                 ZStack {
                     ProfilePageImageView(viewModel:viewModel)
                         .environmentObject(appState)
-                    
-                
                     VStack {
                         ProfilePageHeader(viewModel:viewModel)
                             .shadow(color: Color.black.opacity(0.5), radius: 7, x: 0, y: 5)
                         Spacer()
-                        
                     }
+                    .frame(maxWidth: .infinity)
                     
-                    VStack {
-                        HStack {
-                            Spacer()
-                            NavigationLink(destination: SettingPageView(isLoggedIn: $isLoggedIn)) {
+                    if profile {
+                        VStack {
+                            HStack {
+                                Spacer()
+                                NavigationLink(destination: SettingPageView(isLoggedIn: $isLoggedIn)) {
                                     Image("three dots")
-                                    .foregroundColor(.white)
+                                        .foregroundColor(.white)
                                         .padding()
-                                
-                            }//NavigationLink
+                                }//NavigationLink
+                            }
+                            Spacer()
                         }
-                        Spacer()
-                            
                     }
                 }
                 .onAppear {
@@ -150,6 +154,7 @@ struct ProfilePageView: View {
                     }
                 }
         }
+        .ignoresSafeArea()
     }
 }
 //--@---------------------------------------------------------------------------------------------------------------------------------------------
@@ -197,7 +202,7 @@ struct ProfilePageHeader: View {
     @StateObject var viewModel:ProfilePageViewModel
     
     var body: some View {
-        HStack {
+        HStack(alignment: .top) {
             VStack(alignment: .leading) {
                 GeometryReader { geo in
                     AsyncImage(url: URL(string: viewModel.profileUser != nil ? viewModel.profileUser!.profile_image : "")) { phase in
@@ -295,12 +300,12 @@ struct ProfilePageHeader: View {
                 }
                 .frame(width: UIScreen.main.bounds.width * 0.55, height: 40)
             }//---@VStack
-            .frame(width: UIScreen.main.bounds.width * 0.6)
+            .frame(width: UIScreen.main.bounds.width * 0.6, height: 180)
             .padding(.leading, 10)
             Spacer()
         }//--@HStack
-        .padding()
-        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height * 0.2)
+        .padding([.leading, .trailing])
+        .frame(width: UIScreen.main.bounds.width, height: 170)
         .background(Color(.black))
         .clipShape(
             .rect(topLeadingRadius: 0, bottomLeadingRadius: 30, bottomTrailingRadius: 30, topTrailingRadius: 0)

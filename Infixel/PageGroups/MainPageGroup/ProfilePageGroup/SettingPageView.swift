@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SettingPageView: View {
-    @Binding var isLoggedIn: Bool
+    @Binding var isLoggedIn: Bool?
     
     var body: some View {
         VStack {
