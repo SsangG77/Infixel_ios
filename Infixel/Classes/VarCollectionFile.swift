@@ -28,6 +28,9 @@ struct VarCollectionFile {
     static let signupURL                = host + "/user/signup"
     static let userSearchURL            = host + "/user/search"
     static let userProfileURL           = host + "/user/profile"
+    static let followURL                = host + "/user/follow"
+    static let unfollowURL              = host + "/user/unfollow"
+    static let followOrNotURL           = host + "/user/followornot"
     
     static let picOrNotURL              = host + "/pic/ornot"
     static let picUpURL                 = host + "/pic/up"

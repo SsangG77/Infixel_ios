@@ -26,12 +26,10 @@ struct ProfileUser: Codable, Identifiable, Hashable {
 
 class ProfilePageViewModel: ObservableObject {
     @Published var profileUser:ProfileUser?
-    
-    
-    @Published var showImageViewer = false
-    
     @Published var images:[SearchSingleImage] = []
-    
+    @Published var showImageViewer = false
+    @Published var followBtn:Bool = false
+    @Published var myProfileOrNot = false
     
     func getMyImages(_ id:String) {
         guard let url = URL(string: VarCollectionFile.myImageURL) else {
@@ -72,19 +70,23 @@ class ProfilePageViewModel: ObservableObject {
        
         let request = URLRequest.post(url: url, body: ["user_id" : id])
         
-        DispatchQueue.global(qos: .background).async {
+        DispatchQueue.global(qos: .background).async { [weak self] in
             URLSession.shared.dataTask(with: request) { data, res, error in
+                guard let self = self else { return }
                 if let error = error {
                     print("Error : \(error)")
                     return
                 }
-                
                 if let data = data {
                     do {
                         if let decodeResponse = try? JSONDecoder().decode(ProfileUser.self, from: data) {
                             print(decodeResponse)
                             DispatchQueue.main.async {
                                 self.profileUser = decodeResponse
+                                if let userId = UserDefaults.standard.string(forKey: "user_id"), self.profileUser!.id == userId {
+                                    self.myProfileOrNot = true
+                                    self.followOrNot(self.profileUser!.id)
+                                }
                             }
                         }
                     } catch {
@@ -94,6 +96,92 @@ class ProfilePageViewModel: ObservableObject {
             }.resume()
         }
     }
+    
+    func follow(_ follow_user_id:String) {
+        let user_id = UserDefaults.standard.string(forKey: "user_id")!
+        
+        guard let url = URL(string: VarCollectionFile.followURL) else {
+            return
+        }
+        
+        let json:[String: String] = [
+            "user_id":user_id,
+            "follow_user_id":follow_user_id
+        ]
+        
+        let request = URLRequest.post(url: url, body: json)
+        
+        DispatchQueue.global(qos: .background).async {
+            URLSession.shared.dataTask(with: request) {data, res, error in
+                if let error = error {
+                    return
+                }
+                if let resData = data, let resString = String(data: resData, encoding: .utf8) {
+                    VarCollectionFile.myPrint(title: "follow()", content: resString)
+                }
+                
+            }.resume()
+        }
+    }
+    
+    func unfollow(_ unfollow_user_id:String) {
+        let user_id = UserDefaults.standard.string(forKey: "user_id")!
+        
+        guard let url = URL(string: VarCollectionFile.unfollowURL) else {
+            return
+        }
+        
+        let json:[String: String] = [
+            "user_id":user_id,
+            "unfollow_user_id":unfollow_user_id
+        ]
+        
+        let request = URLRequest.post(url: url, body: json)
+        
+        DispatchQueue.global(qos: .background).async {
+            URLSession.shared.dataTask(with: request) {data, res, error in
+                if let error = error {
+                    return
+                }
+                if let resData = data, let resString = String(data: resData, encoding: .utf8) {
+                    VarCollectionFile.myPrint(title: "unfollow()", content: resString)
+                }
+                
+            }.resume()
+        }
+    }
+    
+    func followOrNot(_ follow_user_id:String) {
+        VarCollectionFile.myPrint(title: "followOrNot()", content: follow_user_id)
+        let user_id = UserDefaults.standard.string(forKey: "user_id")!
+        
+        guard let url = URL(string: VarCollectionFile.followOrNotURL) else {
+            return
+        }
+        
+        let json:[String:String] = [
+            "user_id": user_id,
+            "follow_user_id": follow_user_id
+        ]
+        
+        let request = URLRequest.post(url: url, body: json)
+        
+        DispatchQueue.global(qos: .background).async {
+            URLSession.shared.dataTask(with: request) {data, res, error in
+                if let error = error {
+                    return
+                }
+                if let resData = data, let resString = String(data:resData,encoding: .utf8), let result = try? JSONDecoder().decode(Bool.self, from: resData) {
+//                    VarCollectionFile.myPrint(title: "followOrNot()", content: result)
+                    self.followBtn = result
+                }
+            }
+        }
+        
+        
+        
+    }
+    
     
 }
 //--@-------------------------------------------------------------------------------------------------------------------------------------------------
@@ -251,54 +339,92 @@ struct ProfilePageHeader: View {
             //--@유저프로필_닉네임_아이디
             
 //            Spacer()
-            VStack {
-                
-                    HStack(alignment: .bottom) {
-                            VStack {
-                                Image("pic!")
-                                    .resizable()
-                                    .frame(width: 13, height: 13)
-                                
-                                Text(String(viewModel.profileUser != nil ? viewModel.profileUser!.pic: 0))
-                                    .foregroundColor(.white)
-                                    .fontWeight(.bold)
-                            }
-                            .frame(width: 60)
-                        
-                        
-                            Spacer()
-                            VStack {
-                                Text("Follow")
-                                    .foregroundColor(.white)
-                                    .font(.system(size: 14))
-                                
-                                Text(String(viewModel.profileUser != nil ? viewModel.profileUser!.follow: 0))
-                                    .foregroundColor(.white)
-                                    .fontWeight(.bold)
-                            }
-                            .frame(width: 60)
-                            Spacer()
-                            VStack {
-                                Text("Follower")
-                                    .foregroundColor(.white)
-                                    .font(.system(size: 14))
-                                
-                                Text(String(viewModel.profileUser != nil ? viewModel.profileUser!.follower: 0))
-                                    .foregroundColor(.white)
-                                    .fontWeight(.bold)
-                            }
-                            .frame(width: 60)
-                    }//--@Hstack
-                    .frame(width: UIScreen.main.bounds.width * 0.55, height: 40)
+            VStack(spacing: 20) {
+                HStack(alignment: .bottom) {
+                        VStack {
+                            Image("pic!")
+                                .resizable()
+                                .frame(width: 13, height: 13)
+                            
+                            Text(String(viewModel.profileUser != nil ? viewModel.profileUser!.pic: 0))
+                                .foregroundColor(.white)
+                                .fontWeight(.bold)
+                        }
+                        .frame(width: 60)
+                    
+                    
+                        Spacer()
+                        VStack {
+                            Text("Follow")
+                                .foregroundColor(.white)
+                                .font(.system(size: 14))
+                            
+                            Text(String(viewModel.profileUser != nil ? viewModel.profileUser!.follow: 0))
+                                .foregroundColor(.white)
+                                .fontWeight(.bold)
+                        }
+                        .frame(width: 60)
+                        Spacer()
+                        VStack {
+                            Text("Follower")
+                                .foregroundColor(.white)
+                                .font(.system(size: 14))
+                            
+                            Text(String(viewModel.profileUser != nil ? viewModel.profileUser!.follower: 0))
+                                .foregroundColor(.white)
+                                .fontWeight(.bold)
+                        }
+                        .frame(width: 60)
+                }//--@Hstack
+                .frame(width: UIScreen.main.bounds.width * 0.55, height: 40)
+//                .background(.red)
 
                 
                 HStack(alignment: .top) {
-                    Text(viewModel.profileUser != nil ? viewModel.profileUser!.description: "")
-                        .foregroundColor(.white)
-                        .font(.system(size: 14))
-                    Spacer()
+                    HStack(alignment: .top) {
+                        Text(viewModel.profileUser != nil ? viewModel.profileUser!.description: "")
+                            .foregroundColor(.white)
+                            .font(.system(size: 14))
+                        Spacer()
+                    }
+                    .frame(width: UIScreen.main.bounds.width * 0.55/2)
+                    
+                    if viewModel.myProfileOrNot == true { //내 프로필
+                        Spacer()
+                            .frame(width: UIScreen.main.bounds.width * 0.5/2, height: 20, alignment: .center)
+                    } else { //다른 프로필
+                        
+                        Button(action: {
+                            VarCollectionFile.myPrint(title: "ProfilePageView - follow btn", content: "팔로우 클릭됨")
+                            
+                            if viewModel.followBtn == false { //unfollow 되어있을때
+                                viewModel.followBtn = true
+                                viewModel.follow(viewModel.profileUser!.id)
+                            } else { //follow 일때
+                                viewModel.followBtn = false
+                                viewModel.unfollow(viewModel.profileUser!.id)
+                            }
+                            
+                        }, label: {
+                            HStack {
+                                Text(viewModel.followBtn ? "Unfollow" : "Follow")
+                            }
+                            .frame(width: UIScreen.main.bounds.width * 0.5/2, height: 20, alignment: .center)
+                            .contentShape(Rectangle())
+                        })
+                        .buttonStyle(.borderedProminent)
+                        .tint(Color(hexString: viewModel.followBtn ? "ABB2F2" : "4657F3"))
+                        .onAppear {
+                            viewModel.followOrNot(viewModel.profileUser!.id)
+                        }
+                        
+                    }
+                    
                 }
                 .frame(width: UIScreen.main.bounds.width * 0.55, height: 40)
+                
+//                .background(.blue)
+                
             }//---@VStack
             .frame(width: UIScreen.main.bounds.width * 0.6, height: 180)
             .padding(.leading, 10)
