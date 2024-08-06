@@ -85,6 +85,7 @@ class ProfilePageViewModel: ObservableObject {
                                 self.profileUser = decodeResponse
                                 if let userId = UserDefaults.standard.string(forKey: "user_id"), self.profileUser!.id == userId {
                                     self.myProfileOrNot = true
+                                } else {
                                     self.followOrNot(self.profileUser!.id)
                                 }
                             }
@@ -139,7 +140,7 @@ class ProfilePageViewModel: ObservableObject {
         let request = URLRequest.post(url: url, body: json)
         
         DispatchQueue.global(qos: .background).async {
-            URLSession.shared.dataTask(with: request) {data, res, error in
+            URLSession.shared.dataTask(with: request) { data, res, error in
                 if let error = error {
                     return
                 }
@@ -169,21 +170,24 @@ class ProfilePageViewModel: ObservableObject {
         DispatchQueue.global(qos: .background).async {
             URLSession.shared.dataTask(with: request) {data, res, error in
                 if let error = error {
+                    VarCollectionFile.myPrint(title: "followOrNot() - error", content: error)
                     return
                 }
-                if let resData = data, let resString = String(data:resData,encoding: .utf8), let result = try? JSONDecoder().decode(Bool.self, from: resData) {
-//                    VarCollectionFile.myPrint(title: "followOrNot()", content: result)
-                    self.followBtn = result
+                if let data = data,
+                    let resString = String(data:data,encoding: .utf8),
+                   let resData = resString.data(using: .utf8),
+                   let resValue = try? JSONDecoder().decode(Bool.self, from: resData)
+                {
+                    VarCollectionFile.myPrint(title: "followOrNot() - result", content: resValue)
+                    DispatchQueue.main.async {
+                        self.followBtn = resValue
+                    }
                 }
-            }
+            }.resume()
         }
-        
-        
-        
     }
-    
-    
 }
+
 //--@-------------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -245,6 +249,7 @@ struct ProfilePageView: View {
         .ignoresSafeArea()
     }
 }
+
 //--@---------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -273,6 +278,7 @@ struct ProfilePageImageView: View {
         .contentMargins(.bottom, 40)
     }
 }
+
 //--@-------------------------------------------------------------------------------------------------------------------------------------------
 
 
@@ -395,7 +401,6 @@ struct ProfilePageHeader: View {
                     } else { //다른 프로필
                         
                         Button(action: {
-                            VarCollectionFile.myPrint(title: "ProfilePageView - follow btn", content: "팔로우 클릭됨")
                             
                             if viewModel.followBtn == false { //unfollow 되어있을때
                                 viewModel.followBtn = true
@@ -414,9 +419,7 @@ struct ProfilePageHeader: View {
                         })
                         .buttonStyle(.borderedProminent)
                         .tint(Color(hexString: viewModel.followBtn ? "ABB2F2" : "4657F3"))
-                        .onAppear {
-                            viewModel.followOrNot(viewModel.profileUser!.id)
-                        }
+                       
                         
                     }
                     

@@ -21,11 +21,8 @@ struct SearchPageView: View {
     @State private var albums: [Album] = []
     @State private var selectedImage: String?
     @State private var selectedImageId: String?
-    
     @State var searchPageUserOnAppear = true
     @State var searchPageAlbumOnAppear = true
-    
-    
     @State private var showImageViewer: Bool = false
     
 
@@ -63,7 +60,6 @@ struct SearchPageView: View {
     var body: some View {
         
             VStack {
-                
                 VStack {
                     TextField(placeHolder, text:$searchValue, onCommit: {
                         if searchValue != "" {
@@ -87,10 +83,6 @@ struct SearchPageView: View {
                     
                 }
                 .padding([.leading, .trailing], 10)
-                
-                
-                
-                
                 
                 Tabbar(.gray)
                     .overlay {
@@ -139,6 +131,7 @@ struct SearchPageView: View {
                             }
                             Spacer()
                     }
+                    .ignoresSafeArea(.keyboard)
                     
                     VStack {
                         //검색된 유저가 나옴
@@ -190,12 +183,14 @@ struct SearchPageView: View {
                     
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
+                .ignoresSafeArea(.keyboard)
                 //검색된 태그 이미지 나오는 부분
                 
                 //==============================================================
                 
                 
             }//vstack
+            .ignoresSafeArea(.keyboard)
             .frame(width: UIScreen.main.bounds.width)
             .sheet(isPresented: $showImageViewer) {
                 if let selectedImage = appState.selectedImage, let selectedImageId = appState.selectedImageId {

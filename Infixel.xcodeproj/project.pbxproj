@@ -11,7 +11,6 @@
 		910801592BCF968400BC9137 /* SingleCommentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 910801582BCF968400BC9137 /* SingleCommentView.swift */; };
 		911A925B2C1A0067006B2A16 /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911A925A2C1A0067006B2A16 /* ImageViewer.swift */; };
 		911B48AA2C456E280075F784 /* ThreeDotsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 911B48A92C456E280075F784 /* ThreeDotsView.swift */; };
-		9125C4602C39939000431998 /* MasonryGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9125C45F2C39939000431998 /* MasonryGridView.swift */; };
 		9125C4622C3A885700431998 /* SignUpViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9125C4612C3A885700431998 /* SignUpViewModel.swift */; };
 		9125C4642C3A8D5E00431998 /* ImageGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9125C4632C3A8D5E00431998 /* ImageGridView.swift */; };
 		9125C4662C3AA7D100431998 /* LoginButtonViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9125C4652C3AA7D100431998 /* LoginButtonViewModel.swift */; };
@@ -71,7 +70,6 @@
 		910801582BCF968400BC9137 /* SingleCommentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleCommentView.swift; sourceTree = "<group>"; };
 		911A925A2C1A0067006B2A16 /* ImageViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewer.swift; sourceTree = "<group>"; };
 		911B48A92C456E280075F784 /* ThreeDotsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreeDotsView.swift; sourceTree = "<group>"; };
-		9125C45F2C39939000431998 /* MasonryGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasonryGridView.swift; sourceTree = "<group>"; };
 		9125C4612C3A885700431998 /* SignUpViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpViewModel.swift; sourceTree = "<group>"; };
 		9125C4632C3A8D5E00431998 /* ImageGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageGridView.swift; sourceTree = "<group>"; };
 		9125C4652C3AA7D100431998 /* LoginButtonViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginButtonViewModel.swift; sourceTree = "<group>"; };
@@ -334,7 +332,6 @@
 				917B43632AC3EB010029609B /* TabViewForSlideImageView_test.swift */,
 				91309F252AF0F3F3006E852F /* horizentalScrollView.swift */,
 				91DA58892C2AFB0E007609F5 /* ScrollVIew_test.swift */,
-				9125C45F2C39939000431998 /* MasonryGridView.swift */,
 				915C5BEA2C5EA0480002357B /* NavigationChildView_test.swift */,
 			);
 			path = Test;
@@ -426,7 +423,6 @@
 				917B43642AC3EB010029609B /* TabViewForSlideImageView_test.swift in Sources */,
 				919C23832B46B6C9003182C5 /* AddAlbumView.swift in Sources */,
 				911A925B2C1A0067006B2A16 /* ImageViewer.swift in Sources */,
-				9125C4602C39939000431998 /* MasonryGridView.swift in Sources */,
 				912B68BE2AB81F2F00505677 /* SavePageView.swift in Sources */,
 				9192B10A2ABBE4D6007F7ED9 /* SignUpView.swift in Sources */,
 				91309F262AF0F3F3006E852F /* horizentalScrollView.swift in Sources */,
