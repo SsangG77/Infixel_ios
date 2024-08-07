@@ -105,7 +105,12 @@ struct HomePageView: View {
                 VStack {
                     HStack {
                         Spacer()
+                        bellButtonView()
+                            .padding(.trailing, 5)
+                        
                         UploadImagePlusView()
+                            .contentTransition(.symbolEffect)
+//                            .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
                             .environmentObject(appState)
                             .onTapGesture {
                                 withAnimation {
@@ -148,7 +153,7 @@ struct HomePageView: View {
                     GeometryReader { geo in
                         UploadImageView()
                             .contentTransition(.symbolEffect)
-                            .frame(width: geo.size.width, height: geo.size.height)
+//                            .frame(width: geo.size.width, height: geo.size.height)
                             .background(Color.white)
                     }
                 }

@@ -12,7 +12,7 @@ struct UploadImagePlusView: View {
     
     @EnvironmentObject var appState: AppState
     
-    var size = 50.0
+    var size = 40.0
     
     var body: some View {
         // 플러스 모양 커스텀 이미지 버튼
@@ -29,9 +29,31 @@ struct UploadImagePlusView: View {
                 .frame(width: size * 0.4, height: size  * 0.4)
                 .clipShape(Circle())
         }
-        .padding()
+        .padding([.bottom, .trailing])
         .rotationEffect(appState.uploadPlusBtnClicked ? .degrees(45) : .degrees(0))
         .animation(.easeInOut, value: appState.uploadPlusBtnClicked)
+    }
+}
+
+
+struct bellButtonView: View {
+    var size = 40.0
+    
+    var body: some View {
+        ZStack {
+            Rectangle()
+                .background(.ultraThinMaterial)
+                .foregroundColor(.secondary.opacity(0.1))
+                .clipShape(Circle())
+                .frame(width: size, height: size)
+                .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
+            
+            
+            Image("bell")
+                .resizable()
+                .frame(width: size * 0.4, height: size  * 0.4)
+        }
+        .padding([.bottom])
     }
 }
 

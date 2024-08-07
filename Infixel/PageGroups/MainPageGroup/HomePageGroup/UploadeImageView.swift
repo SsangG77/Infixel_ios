@@ -15,12 +15,135 @@ struct UploadImageView: View {
     var body: some View {
         
         ZStack {
+            ScrollView {
+                Text("새 이미지")
+                    .fontWeight(.bold)
+                    .font(Font.custom("Bungee-Regular", size: 25))
+                    .padding(.bottom, 20)
+                    .padding(.top, 20)
+                
+    //--@-이미지선택하는부분------------------------------------------------------------------------------
+                if let selectedImage = viewModel.selectedImage {
+                    Image(uiImage: selectedImage)
+                        .resizable()
+                        .scaledToFit()
+                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 15)
+                                .strokeBorder(Color(hexString: "4657F3"), lineWidth: 3) // 필요시 경계선 설정
+                        )
+                        .onTapGesture {
+                            isPickerPresented.toggle()
+                        }
+                        .padding(.bottom, 30)
+    //                    .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
+                    
+                } else {
+                    VStack {
+                        ZStack {
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(Color(hexString: "F0F0F0"))
+                                .strokeBorder(Color(hexString: "4657F3"), lineWidth: 3) // 필요시 경계선 설정
+                                .clipShape(RoundedRectangle(cornerRadius: 20))
+                                .frame(height: 400)
+                            
+                            Text("이미지 선택")
+                                .foregroundColor(Color(hexString: "4657F3"))
+                        }
+                        .onTapGesture {
+                            isPickerPresented.toggle()
+                        }
+                    }
+                    .padding(.bottom, 30)
+                }
+    //--@--------------------------------------------------------------------------------------------
+                
+                VStack(spacing: 0) {
+                    TextField("문구를 작성해주세요.", text: $viewModel.description)
+                        .textFieldStyle(PlainTextFieldStyle())
+                        .padding(.bottom, 7)
+                    
+                    Divider()
+                        .background(Color(hexString: "4657F3"))
+                    
+                }//vstack
+                .padding(.bottom, 60)
+                
+                ///Tag 선택 부분
+                VStack(spacing: 0) {
+                    TextField("띄어쓰기로 태그를 구분합니다.", text: $viewModel.tagText)
+                        .textFieldStyle(PlainTextFieldStyle())
+                        .padding(.bottom, 7)
+                        .onChange(of: viewModel.tagText) { newValue in
+                            viewModel.checkForSpace(newValue)
+                        }
+                    
+                    Divider()
+                        .background(Color(hexString: "4657F3"))
+                }//vtack
+            
+                ScrollView(.horizontal) {
+                    HStack(spacing: 0) {
+                        ForEach(viewModel.tags, id: \.self) { tag in
+                            HStack(spacing: 2) {
+                                Text("#"+tag)
+                                Image(systemName: "xmark.circle.fill")   // << base !!
+                                    .resizable()
+                                    .frame(width: 15, height: 15)
+                            }
+                            .padding()
+                            .foregroundColor(.blue)
+                            .onTapGesture {
+                                viewModel.removeTag(tag)
+                            }
+                            
+                        }
+                    }
+                }
+                .frame(height: 50)
+                .padding(.bottom, 30)
+                
+                Spacer()
+                
+                        Button(action: {
+                            if viewModel.selectedImage != nil {
+                                viewModel.uploadImage(appState)
+                            }
+                        }) {
+                            if viewModel.uploadStatus == "" {
+                                HStack {
+                                    Text("Upload")
+                                }
+                                
+
+                            } else {
+                                HStack {
+                                    Text(viewModel.uploadStatus)
+                                }
+                            }
+                        }
+                        .frame(width: 100, height: 45)
+                        .disabled(viewModel.selectedImage == nil)
+                        .padding([.leading, .trailing], 110)
+                        .background(viewModel.selectedImage != nil ? Color.blue : Color.gray)
+                        .foregroundColor(.white)
+                        .cornerRadius(16)
+                
+                
+                
+            }//VStack
+            .frame(width: UIScreen.main.bounds.width * 0.9)
+            .sheet(isPresented: $isPickerPresented) {
+                ImagePicker(selectedImage: $viewModel.selectedImage)
+            }
+            
+            //--@-페이지_닫기_버튼-------------------------------------------------------------------------------------------
             VStack {
                 HStack {
                     Spacer()
                     UploadImagePlusView()
                         .contentTransition(.symbolEffect)
-                        .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
+//                        .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
                         .environmentObject(appState)
                         .onTapGesture {
                             withAnimation {
@@ -30,152 +153,10 @@ struct UploadImageView: View {
                 }//HStak
                 Spacer()
             }
-            
-        VStack(spacing: 0) {
-            
-            Text("이미지 업로드")
-                .fontWeight(.bold)
-                .font(Font.custom("Bungee-Regular", size: 20))
-                .padding(.bottom, 20)
-            
-            /// 이미지 선택하는 부분
-            if let selectedImage = viewModel.selectedImage {
-                Image(uiImage: selectedImage)
-                    .resizable()
-                    .scaledToFit()
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                    .onTapGesture {
-                        isPickerPresented.toggle()
-                    }
-                    .padding()
-                    .frame(height: 200)
-                    .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
-                
-            } else {
-                VStack {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 15)
-                            .fill(Color(hexString: "e8e8e8"))
-                            .frame(width: 200, height: 200)
-                            .background(Color(UIColor.systemFill))
-                            .clipShape(RoundedRectangle(cornerRadius: 20))
-                            .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
-                        
-                        RoundedRectangle(cornerRadius: 20)
-                            .strokeBorder(Color.clear, lineWidth: 0) // 필요시 경계선 설정
-                            .frame(width: 200, height: 200)
-                            .clipShape(RoundedRectangle(cornerRadius: 20))
-                        
-                        Text("Select an Image")
-                    }
-                    
-                    .onTapGesture {
-                        isPickerPresented.toggle()
-                    }
-                }
-            }//if
-            
-            VStack(spacing: 0) {
-                HStack {
-                    Text("게시글 작성")
-                        .fontDesign(.rounded)
-                    Spacer()
-                }
-                
-                TextField("문구를 작성해주세요.", text: $viewModel.description)
-                    .padding(5)
-                    .textFieldStyle(PlainTextFieldStyle())
-                
-                Divider()
-                
-            }//vstack
-            .padding(.top, 5)
-            .padding()
-            
-            ///Tag 선택 부분
-            VStack(spacing: 0) {
-                
-                HStack {
-                    
-                    Text("태그 작성")
-                    Spacer()
-                }
-                
-                TextField("띄어쓰기로 태그를 구분합니다.", text: $viewModel.tagText)
-                    .padding(5)
-                    .textFieldStyle(PlainTextFieldStyle())
-                    .onChange(of: viewModel.tagText) { newValue in
-                        viewModel.checkForSpace(newValue)
-                    }
-                
-                Divider()
-            }//vtack
-            .padding(.top, 15)
-            .padding()
-            
-            
-            ScrollView(.horizontal) {
-                HStack(spacing: 0) {
-                    ForEach(viewModel.tags, id: \.self) { tag in
-                        HStack(spacing: 2) {
-                            Text("#"+tag)
-                            
-                            Image(systemName: "xmark.circle.fill")   // << base !!
-                                .resizable()
-                                .frame(width: 15, height: 15)
-                            
-                        }
-                            .padding()
-                            .foregroundColor(.blue)
-                            .onTapGesture {
-                                viewModel.removeTag(tag)
-                            }
-                        
-                    }
-                }
-            }//
-            .frame(height: 30)
-            
-            Spacer()
-//                .frame(height: 140)
-            
-            ///업로드 버튼
-//            GeometryReader { geometry in
-//                VStack(alignment: .center) {
-                    Button(action: {
-                        if viewModel.selectedImage != nil {
-                            viewModel.uploadImage(appState)
-                        }
-                    }) {
-                        if viewModel.uploadStatus == "" {
-                            Text("Upload")
-                        } else {
-                            Text(viewModel.uploadStatus)
-                        }
-                    }
-                    .disabled(viewModel.selectedImage == nil)
-                    .padding()
-                    .padding([.leading, .trailing], 110)
-//                    .frame(width: geometry.size.width * 0.8) // 버튼 너비를 전체 화면의 80%로 설정
-                    .background(viewModel.selectedImage != nil ? Color.blue : Color.gray)
-                    .foregroundColor(.white)
-                    .cornerRadius(15)
-//                }
-//                .frame(height: 100, alignment: .center)
-//            }
-//            .edgesIgnoringSafeArea(.all) // 전체 화면을 사용하도록 설정
-            
-            Spacer()
-                .frame(height: 30)
-            
-            
-        }//VStack
-        .padding(.top, 40)
-        .frame(height: UIScreen.main.bounds.height * 0.9)
-        .sheet(isPresented: $isPickerPresented) {
-            ImagePicker(selectedImage: $viewModel.selectedImage)
+            //-@--------------------------------------------------------------------------------------------------------
+
         }
-    }
+        
         
     }
     
@@ -355,7 +336,10 @@ struct UploadResponse: Codable {
 
 
 
-
+#Preview {
+    UploadImageView()
+        .environmentObject(AppState())
+}
 
 
 
