@@ -34,10 +34,8 @@ struct MainView: View {
             case .search:
                 SearchPageView(animationNamespace: animationNamespace)
                     .environmentObject(appState)
-                    .ignoresSafeArea(.keyboard)
                 
             case .chart:
-                //Text("실시간 이미지, 유저 pic 순위 나타내기")
                 RankingView()
                     .ignoresSafeArea()
                 
@@ -47,7 +45,6 @@ struct MainView: View {
                 
             case .profile:
                 ProfilePageView(isLoggedIn: $isLoggedIn, userId: UserDefaults.standard.string(forKey: "user_id")!, profile: true)
-//                ProfilePageView()
             
             }//switch
 
@@ -68,10 +65,10 @@ struct MainView: View {
                 .animation(.easeInOut)
             
             
-            ThreeDotsView(slideImage: $slideImage)
-                .environmentObject(appState)
-                .offset(y: appState.threeDotsOffset)
-                .animation(.easeInOut)
+//            ThreeDotsView(slideImage: $slideImage)
+//                .environmentObject(appState)
+//                .offset(y: appState.threeDotsOffset)
+//                .animation(.easeInOut)
             
             
         }//zstack

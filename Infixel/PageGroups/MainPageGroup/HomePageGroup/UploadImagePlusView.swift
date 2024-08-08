@@ -29,7 +29,7 @@ struct UploadImagePlusView: View {
                 .frame(width: size * 0.4, height: size  * 0.4)
                 .clipShape(Circle())
         }
-        .padding([.bottom, .trailing])
+        .padding()
         .rotationEffect(appState.uploadPlusBtnClicked ? .degrees(45) : .degrees(0))
         .animation(.easeInOut, value: appState.uploadPlusBtnClicked)
     }
@@ -53,7 +53,8 @@ struct bellButtonView: View {
                 .resizable()
                 .frame(width: size * 0.4, height: size  * 0.4)
         }
-        .padding([.bottom])
+        .padding()
+        .padding(.trailing, -30)
     }
 }
 

@@ -152,8 +152,8 @@ struct HomePageView: View {
                 if appState.uploadPlusBtnClicked {
                     GeometryReader { geo in
                         UploadImageView()
+                            .frame(width: geo.size.width, height: geo.size.height)
                             .contentTransition(.symbolEffect)
-//                            .frame(width: geo.size.width, height: geo.size.height)
                             .background(Color.white)
                     }
                 }

@@ -60,6 +60,7 @@ struct SearchPageView: View {
     var body: some View {
         
             VStack {
+                
                 VStack {
                     TextField(placeHolder, text:$searchValue, onCommit: {
                         if searchValue != "" {
@@ -113,6 +114,7 @@ struct SearchPageView: View {
                     .shadow(color: .black.opacity(0.05), radius: 5, x: -5, y: -5)
                     .frame(width: UIScreen.main.bounds.width * 0.7)
                 
+                
                 TabView(selection: $activeTab) {
                     
                     VStack {
@@ -131,7 +133,6 @@ struct SearchPageView: View {
                             }
                             Spacer()
                     }
-                    .ignoresSafeArea(.keyboard)
                     
                     VStack {
                         //검색된 유저가 나옴
@@ -183,14 +184,12 @@ struct SearchPageView: View {
                     
                 }
                 .tabViewStyle(.page(indexDisplayMode: .never))
-                .ignoresSafeArea(.keyboard)
                 //검색된 태그 이미지 나오는 부분
                 
                 //==============================================================
                 
                 
             }//vstack
-            .ignoresSafeArea(.keyboard)
             .frame(width: UIScreen.main.bounds.width)
             .sheet(isPresented: $showImageViewer) {
                 if let selectedImage = appState.selectedImage, let selectedImageId = appState.selectedImageId {

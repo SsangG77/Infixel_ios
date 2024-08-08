@@ -48,7 +48,6 @@ struct ThreeDotsView: View {
                         .padding(3)
                         .fontWeight(.bold)
                         .font(.system(size: 24))
-                    
                     Spacer()
                 }
                 .padding(7)
@@ -237,8 +236,8 @@ class ThreeDotsViewModel: ObservableObject {
 
 #Preview {
     ZStack {
-        Color(.black).edgesIgnoringSafeArea(.all)
-        //ThreeDotsView(slideImage: .constant(SlideImage()))
+//        Color(.black).edgesIgnoringSafeArea(.all)
+        ThreeDotsView(slideImage: .constant(SlideImage()))
     }
     
 }

@@ -132,7 +132,7 @@ struct UploadImageView: View {
                 
                 
             }//VStack
-            .frame(width: UIScreen.main.bounds.width * 0.9)
+            .frame(width: UIScreen.main.bounds.width * 0.8)
             .sheet(isPresented: $isPickerPresented) {
                 ImagePicker(selectedImage: $viewModel.selectedImage)
             }
@@ -153,6 +153,7 @@ struct UploadImageView: View {
                 }//HStak
                 Spacer()
             }
+            
             //-@--------------------------------------------------------------------------------------------------------
 
         }
