@@ -28,106 +28,113 @@ struct ThreeDotsView: View {
     
     
     var body: some View {
-        VStack(spacing: 0) {
-            
-            VStack {
-                Rectangle() //상단 핸들 모양
-                    .frame(width: 40.0, height: 10)
-                    .foregroundColor(Color(hexString: "F4F2F2"))
-                    .cornerRadius(20)
-                    .padding([.top, .bottom], 20)
-                    
-            }//VStack
-            .frame(width: UIScreen.main.bounds.width, height: 50)
-            .background(.white)
-            
-            VStack {
+        GeometryReader { geo in
+            VStack(spacing: 0) {
+                VStack {
+                    Rectangle() //상단 핸들 모양
+                        .frame(width: 40.0, height: 10)
+                        .foregroundColor(Color(hexString: "F4F2F2"))
+                        .cornerRadius(20)
+                        .padding([.top, .bottom], 20)
+                        .gesture(
+                            DragGesture()
+                           .onChanged { value in
+                               if appState.imageViewerOrNot {
+                                   appState.threedotsOffset_imageViewer = value.translation.height + 200
+                               } else {
+                                   appState.threeDotsOffset = value.translation.height + 200
+                               }
+                               
+                           }
+                            .onEnded { value in
+                                if appState.imageViewerOrNot {
+                                    if appState.threedotsOffset_imageViewer > 250 {
+                                        appState.threedotsOffset_imageViewer = 1000
+                                        appState.threedotsOpen_imageViewer = false
+                                    } else if appState.threedotsOffset_imageViewer < 270 {
+                                        appState.threedotsOffset_imageViewer = 200
+                                        appState.threedotsOpen_imageViewer = true
+                                    }
+                                } else {
+                                    if appState.threeDotsOffset > 250 {
+                                        appState.threeDotsOffset = 1000
+                                        appState.threeDotsOpen = false
+                                    } else if appState.threeDotsOffset < 270 {
+                                        appState.threeDotsOffset = 200
+                                        appState.threeDotsOpen = true
+                                    }
+                                }
+                            }//onEnded
+                       )//gesture
+                }//VSttack
+                .frame(width: UIScreen.main.bounds.width, height: 50)
+                .background(.white)
                 
-                HStack {
-                    Text("이미지 다운로드")
-                        .padding(3)
-                        .fontWeight(.bold)
-                        .font(.system(size: 24))
-                    Spacer()
-                }
-                .padding(7)
-                .background(isDownloadTapped ? .black.opacity(0.4) : .clear)
-                .cornerRadius(5)
-                .onTapGesture {
-                    withAnimation {
-                        isDownloadTapped = true
+                
+                VStack {
+                    
+                    HStack {
+                        Text("이미지 다운로드")
+                            .padding(3)
+                            .fontWeight(.bold)
+                            .font(.system(size: 24))
+                        Spacer()
                     }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    .padding(7)
+                    .background(isDownloadTapped ? .black.opacity(0.4) : .clear)
+                    .cornerRadius(5)
+                    .onTapGesture {
                         withAnimation {
-                           isDownloadTapped = false
-                            viewModel.imageDownload(from: slideImage.link) {
-                                    appState.threeDotsOpen = false
-                                    appState.threeDotsOffset = 1000
+                            isDownloadTapped = true
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            withAnimation {
+                               isDownloadTapped = false
+                                viewModel.imageDownload(from: slideImage.link) {
+                                        appState.threeDotsOpen = false
+                                        appState.threeDotsOffset = 1000
+                                }
                             }
                         }
                     }
-                }
-                
-                HStack {
                     
-                    Text("이미지 신고")
-                        .fontWeight(.bold)
-                        .font(.system(size: 24))
+                    HStack {
+                        
+                        Text("이미지 신고")
+                            .fontWeight(.bold)
+                            .font(.system(size: 24))
+                        
+                        Spacer()
+                    }
+                    .padding(7)
+                    .background(isReportTapped ? .black.opacity(0.4) : .clear)
+                    .cornerRadius(5)
+                    .onTapGesture {
+                        withAnimation {
+                            isReportTapped = true
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                            withAnimation {
+                                isReportTapped = false
+                                viewModel.reportImage(imageId: slideImage.id)
+                            }
+                        }
+                    }
                     
                     Spacer()
                 }
+                .frame(height: UIScreen.main.bounds.height)
                 .padding(7)
-                .background(isReportTapped ? .black.opacity(0.4) : .clear)
-                .cornerRadius(5)
-                .onTapGesture {
-                    withAnimation {
-                        isReportTapped = true
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                        withAnimation {
-                            isReportTapped = false
-                            viewModel.reportImage(imageId: slideImage.id)
-                        }
-                    }
-                }
+                .background(.white)
                 
-                Spacer()
-            }
-            .frame(height: UIScreen.main.bounds.height * 0.7)
-            .padding(7)
-            .background(.white)
-        }
-        .cornerRadius(20)
-        .gesture(
-            DragGesture()
-           .onChanged { value in
-               if appState.imageViewerOrNot {
-                   appState.threedotsOffset_imageViewer = value.translation.height + 300
-               } else {
-                   appState.threeDotsOffset = value.translation.height + 300
-               }
-               
-           }
-            .onEnded { value in
-                if appState.imageViewerOrNot {
-                    if appState.threedotsOffset_imageViewer > 250 {
-                        appState.threedotsOffset_imageViewer = 1000
-                        appState.threedotsOpen_imageViewer = false
-                    } else if appState.threedotsOffset_imageViewer < 270 {
-                        appState.threedotsOffset_imageViewer = 300
-                        appState.threedotsOpen_imageViewer = true
-                    }
-                } else {
-                    if appState.threeDotsOffset > 250 {
-                        appState.threeDotsOffset = 1000
-                        appState.threeDotsOpen = false
-                    } else if appState.threeDotsOffset < 270 {
-                        appState.threeDotsOffset = 300
-                        appState.threeDotsOpen = true
-                    }
-                }
-            }
-       )
+            }//Vstack
+            .cornerRadius(40)
+            
+        }//Geo
+        
+        
+        
+        
     }
 }
 
@@ -236,7 +243,7 @@ class ThreeDotsViewModel: ObservableObject {
 
 #Preview {
     ZStack {
-//        Color(.black).edgesIgnoringSafeArea(.all)
+        Color(.black).edgesIgnoringSafeArea(.all)
         ThreeDotsView(slideImage: .constant(SlideImage()))
     }
     

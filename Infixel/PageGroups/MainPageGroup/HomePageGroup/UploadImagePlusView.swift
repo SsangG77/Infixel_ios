@@ -52,12 +52,20 @@ struct bellButtonView: View {
             Image("bell")
                 .resizable()
                 .frame(width: size * 0.4, height: size  * 0.4)
+            
+            
+            Circle()
+                .frame(width: 8)
+                .foregroundColor(.red)
+                .offset(CGSize(width: 5.0, height: -8.0))
+            
         }
         .padding()
         .padding(.trailing, -30)
+        
     }
 }
 
-//#Preview {
-//    UploadImagePlusView()
-//}
+#Preview {
+    bellButtonView()
+}

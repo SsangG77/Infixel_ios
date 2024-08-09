@@ -105,8 +105,13 @@ struct HomePageView: View {
                 VStack {
                     HStack {
                         Spacer()
-                        bellButtonView()
-                            .padding(.trailing, 5)
+                        NavigationLink(destination: AlarmView()) {
+                            bellButtonView()
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        
+//                        bellButtonView()
+//                            .padding(.trailing, 5)
                         
                         UploadImagePlusView()
                             .contentTransition(.symbolEffect)
@@ -143,7 +148,7 @@ struct HomePageView: View {
                                 
                                 appState.addAlbumOffset = 1000
                                 appState.commentsOffset = 1000
-                                appState.threeDotsOffset = 1000
+                                appState.threeDotsOffset = 2000
                             }
                         }
                 }

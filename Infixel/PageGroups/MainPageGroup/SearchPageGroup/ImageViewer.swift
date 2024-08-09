@@ -65,18 +65,21 @@ struct ImageViewer: View {
                         .frame(width: UIScreen.main.bounds.width - 26, height: 300, alignment: .bottom)
                 }//VStack
                 
-                if appState.albumsOpen_imageViewer || appState.commentOpen_imageViewer {
+                if appState.albumsOpen_imageViewer || appState.commentOpen_imageViewer || appState.threedotsOpen_imageViewer {
                     Rectangle()
                         .foregroundColor(.secondary.opacity(0.1))
                         .background(.ultraThinMaterial)
                         .transition(.opacity)
-                        .opacity(appState.albumsOpen_imageViewer || appState.commentOpen_imageViewer ? 1.0 : 0.0)
+                        .opacity(appState.albumsOpen_imageViewer || appState.commentOpen_imageViewer || appState.threedotsOpen_imageViewer ? 1.0 : 0.0)
                         .onTapGesture {
                             withAnimation {
                                 appState.albumsOpen_imageViewer = false
                                 appState.commentOpen_imageViewer = false
+                                appState.threedotsOpen_imageViewer = false
+                                
                                 appState.addAlbumOffset_imageViewer = 1000
                                 appState.commentOffset_imageViewer = 1000
+                                appState.threedotsOffset_imageViewer = 1000
                             }
                         }
                 }
@@ -104,7 +107,6 @@ struct ImageViewer: View {
         }
         .accentColor(.white)
         .onAppear {
-            VarCollectionFile.myPrint(title: "image viewer", content: imageId)
             appState.imageViewerOrNot = true
             getImageFromId(imageId: imageId)
             
@@ -116,13 +118,19 @@ struct ImageViewer: View {
             
             appState.commentsOpen = false
             appState.albumsOpen = false
+            appState.threeDotsOpen = false
+            
             appState.commentsOffset = 1000
             appState.addAlbumOffset = 1000
+            appState.threeDotsOffset = 1000
             
             appState.commentOpen_imageViewer = false
-            appState.commentOffset_imageViewer = 1000
             appState.albumsOpen_imageViewer = false
+            appState.threedotsOpen_imageViewer = false
+            
+            appState.commentOffset_imageViewer = 1000
             appState.addAlbumOffset_imageViewer = 1000
+            appState.threedotsOffset_imageViewer = 1000
         }
         
     }//body

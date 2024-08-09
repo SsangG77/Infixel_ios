@@ -384,10 +384,10 @@ struct Info_SubButtonView: View {
                                 withAnimation {
                                     if appState.imageViewerOrNot {
                                         appState.threedotsOpen_imageViewer = true
-                                        appState.threedotsOffset_imageViewer = 300
+                                        appState.threedotsOffset_imageViewer = 200
                                     } else {
                                         appState.threeDotsOpen = true
-                                        appState.threeDotsOffset = 300
+                                        appState.threeDotsOffset = 200
                                     }
                                 }
                             }

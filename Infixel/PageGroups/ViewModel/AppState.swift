@@ -30,8 +30,11 @@ class AppState : ObservableObject {
     @Published var infoBoxReset                     : Bool       = false
     @Published var albumsOpen                       : Bool       = false
     @Published var commentsOpen                     : Bool       = false
+    @Published var threeDotsOpen                    : Bool       = false
+    
     @Published var addAlbumOffset                   : CGFloat    = 1000
     @Published var commentsOffset                   : CGFloat    = 1000
+    @Published var threeDotsOffset                  : CGFloat    = 1000
     
     //slideImage
     @Published var slideImage : SlideImage = SlideImage()
@@ -79,8 +82,8 @@ class AppState : ObservableObject {
     @Published var uploadPlusBtnClicked = false
     
     //점 세개 버튼 눌렀을때 뷰 offset
-    @Published var threeDotsOffset :CGFloat = 1000
-    @Published var threeDotsOpen = false
+    
+    
     
     @Published var profileUserId = ""
   
