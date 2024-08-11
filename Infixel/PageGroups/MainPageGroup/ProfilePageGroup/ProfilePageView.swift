@@ -80,7 +80,7 @@ class ProfilePageViewModel: ObservableObject {
                 if let data = data {
                     do {
                         if let decodeResponse = try? JSONDecoder().decode(ProfileUser.self, from: data) {
-                            print(decodeResponse)
+//                            print(decodeResponse)
                             DispatchQueue.main.async {
                                 self.profileUser = decodeResponse
                                 if let userId = UserDefaults.standard.string(forKey: "user_id"), self.profileUser!.id == userId {
@@ -193,15 +193,15 @@ class ProfilePageViewModel: ObservableObject {
 
 struct ProfilePageView: View {
     
-    @Binding var isLoggedIn: Bool?
-    var userId:String
-    var profile:Bool
+    @Binding var isLoggedIn: Bool
+    @Binding var userId:String
+    @Binding var profile:Bool
     
-    init(isLoggedIn: Binding<Bool>? = nil, userId:String, profile:Bool) {
-            _isLoggedIn = isLoggedIn.map { .constant($0.wrappedValue) } ?? .constant(false)
-            self.userId = userId
-            self.profile = profile
-        }
+//    init(isLoggedIn: Binding<Bool>? = nil, userId:String, profile:Bool) {
+//            _isLoggedIn = isLoggedIn.map { .constant($0.wrappedValue) } ?? .constant(false)
+//            self.userId = userId
+//            self.profile = profile
+//        }
     
     
     @EnvironmentObject var appState: AppState
@@ -220,7 +220,7 @@ struct ProfilePageView: View {
                     }
                     .frame(maxWidth: .infinity)
                     
-                    if profile {
+                    if profile == true {
                         VStack {
                             HStack {
                                 Spacer()

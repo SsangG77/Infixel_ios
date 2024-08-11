@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 @available(iOS 17.0, *)
 struct ContentView: View {
@@ -18,6 +19,7 @@ struct ContentView: View {
     @ObservedObject var loginViewModel = LoginButtonViewModel()
     @ObservedObject var signupViewModel = SignUpViewModel()
 
+    var appDelegate = AppDelegate()
     
     var body: some View {
         
@@ -41,3 +43,4 @@ struct ContentView: View {
 //        ContentView(isLoggedIn: $isLoggedIn)
 //    }
 //}
+

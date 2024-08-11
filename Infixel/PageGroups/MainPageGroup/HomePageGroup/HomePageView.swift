@@ -21,6 +21,9 @@ struct HomePageView: View {
     @State var isInitialLoad = true
     @State var isLoadingMore = false
     
+    @State var profile = false
+    @State var isLoggedIn = true
+    
 
     init(slideImage: Binding<SlideImage>) {
         self._slideImage = slideImage
@@ -38,7 +41,7 @@ struct HomePageView: View {
         NavigationView {
             ZStack {
                 NavigationLink(
-                    destination: ProfilePageView(userId: slideImage.user_id, profile:false),
+                    destination: ProfilePageView(isLoggedIn: $isLoggedIn, userId: $slideImage.user_id, profile: $profile),
                     isActive: $isActive,
                     label: {
                         EmptyView() // Label을 빈 뷰로 설정하여 숨김

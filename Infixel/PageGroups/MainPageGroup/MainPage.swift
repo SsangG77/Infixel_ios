@@ -15,6 +15,8 @@ struct MainView: View {
     @EnvironmentObject var appState: AppState
     @State var slideImage: SlideImage = SlideImage()
     
+    @State var userId = UserDefaults.standard.string(forKey: "user_id")!
+    @State var profile = true
     
     //-------
     @State private var showImageViewer: Bool = false
@@ -44,7 +46,7 @@ struct MainView: View {
                 SavePageView()
                 
             case .profile:
-                ProfilePageView(isLoggedIn: $isLoggedIn, userId: UserDefaults.standard.string(forKey: "user_id")!, profile: true)
+                ProfilePageView(isLoggedIn: $isLoggedIn, userId: $userId, profile: $profile)
             
             }//switch
 

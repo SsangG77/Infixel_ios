@@ -16,6 +16,9 @@ struct ImageViewer: View {
     
     @State var slideImage: SlideImage = SlideImage()
     
+    @State var profile = false
+    @State var isLoggedIn = true
+    
     @EnvironmentObject var appState: AppState
     @State private var isActive: Bool = false
     
@@ -23,7 +26,7 @@ struct ImageViewer: View {
         NavigationView {
             ZStack {
                 NavigationLink(
-                    destination: ProfilePageView(userId: slideImage.user_id, profile:false),
+                    destination:ProfilePageView(isLoggedIn: $isLoggedIn, userId: $slideImage.user_id, profile: $profile),
                     isActive: $isActive,
                     label: {
                         EmptyView() // Label을 빈 뷰로 설정하여 숨김

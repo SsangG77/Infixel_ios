@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct SettingPageView: View {
-    @Binding var isLoggedIn: Bool?
+    @Binding var isLoggedIn: Bool
     
     var body: some View {
         VStack {
             Text("Setting")
             Button("Log out") {
                 isLoggedIn = false
+                print("로그 아웃")
            }
             
         }
@@ -23,6 +24,6 @@ struct SettingPageView: View {
     }
 }
 
-#Preview {
-    SettingPageView(isLoggedIn: .constant(true))
-}
+//#Preview {
+//    SettingPageView(isLoggedIn: .constant(true))
+//}
