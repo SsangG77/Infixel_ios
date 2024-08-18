@@ -103,6 +103,7 @@
 		91309F212AF0A8FB006E852F /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 		91309F232AF0DF7E006E852F /* IconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconView.swift; sourceTree = "<group>"; };
 		91309F252AF0F3F3006E852F /* horizentalScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = horizentalScrollView.swift; sourceTree = "<group>"; };
+		9143E9842C6A597A00C6B82C /* InfixelDebug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = InfixelDebug.entitlements; sourceTree = "<group>"; };
 		914B4F172AB99E6200643262 /* TabViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewModel.swift; sourceTree = "<group>"; };
 		914EB7ED2C2EF4EC002D1B96 /* SearchPageView_tag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageView_tag.swift; sourceTree = "<group>"; };
 		914EB7EF2C2EF7C9002D1B96 /* SearchPageView_user.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPageView_user.swift; sourceTree = "<group>"; };
@@ -169,6 +170,7 @@
 		912B68852AB088BF00505677 /* Infixel */ = {
 			isa = PBXGroup;
 			children = (
+				9143E9842C6A597A00C6B82C /* InfixelDebug.entitlements */,
 				9192B1192AC3C67D007F7ED9 /* Test */,
 				912B689D2AB47B0300505677 /* modules */,
 				917B43672AC539470029609B /* Classes */,
@@ -590,6 +592,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Infixel/InfixelDebug.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Infixel/Preview Content\"";

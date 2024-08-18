@@ -8,9 +8,35 @@
 import SwiftUI
 
 struct AlarmView: View {
+    
+    @EnvironmentObject var notificationService: NotificationService
+    
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        NavigationView {
+            List(notificationService.notifications) { notification in
+                VStack(alignment: .leading) {
+                    Text(notification.message)
+                        .font(.headline)
+                        
+                    
+                    Text("\(notification.receivedAt, formatter: dateFormatter)")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+            }
+//            .navigationTitle("Notifications")
+            
+        }
     }
+    
+    
+    private var dateFormatter: DateFormatter {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .short
+            formatter.timeStyle = .short
+            return formatter
+        }
 }
 
 #Preview {

@@ -8,12 +8,15 @@
 import SwiftUI
 import UIKit
 import UserNotifications
+import Foundation
+import Combine
 
 @available(iOS 17.0, *)
 @main
 struct InfixelApp: App {
     
     @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    @StateObject var notificationService = NotificationService()
     
     @AppStorage("isLoggedIn") var isLoggedIn = false
     
@@ -21,6 +24,10 @@ struct InfixelApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView(isLoggedIn: $isLoggedIn)
+                .environmentObject(notificationService)
+                .onAppear {
+                    appDelegate.notificationService = notificationService
+                }
                
         }
         
@@ -34,34 +41,30 @@ struct InfixelApp: App {
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     var window: UIWindow?
+    var notificationService: NotificationService?
 
+    
     func application( _ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        // UNUserNotificationCenter 대리자 설정
-        let notificationCenter = UNUserNotificationCenter.current()
-        notificationCenter.delegate = self
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+            print("Permission granted: \(granted)")
+        }
         
-        // 푸시 알림 등록
+        UNUserNotificationCenter.current().delegate = self
         application.registerForRemoteNotifications()
         
-//        let notificationCenter = UNUserNotificationCenter.current()
-        notificationCenter.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-            if let error = error {
-                print("Error requesting authorization for notifications: \(error)")
-            }
-            
-            if granted {
-                DispatchQueue.main.async {
-                    application.registerForRemoteNotifications()
-                }
-            } else {
-                print("Notification permission denied")
-            }
+//        if let app = UIApplication.shared.delegate as? AppDelegate {
+//            self.notificationService = app.notificationService
+//        }
+        
+        if notificationService == nil {
+            print("Failed to initialize NotificationService")
         }
         
         return true
     }
 
+    
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         // 디바이스 토큰을 서버로 전송
         let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
@@ -72,6 +75,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         sendDeviceTokenToServer(token)
     }
     
+    
     func sendDeviceTokenToServer(_ token: String) {
         // 서버로 디바이스 토큰을 전송하는 로직
         guard let url = URL(string: "http://192.168.31.200:3000/user/device-token") else { return }
@@ -80,7 +84,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let parameters: [String: Any] = ["device_token": token, "user_id": "12345"]
+        let parameters: [String: Any] = ["device_token": token, "user_id": UserDefaults.standard.string(forKey: "user_id")]
         
         request.httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: [])
         
@@ -101,21 +105,67 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         task.resume()
     }
     
-    //앱이 foreground일때 푸시 알림이 왔을때
+    
+    // 푸시 알림 수신 (앱이 포그라운드에 있을 때)
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-            // 알림을 화면에 표시할 때 사용할 옵션 (배너, 소리 등)
-            completionHandler([.banner, .sound])
-        
-        let userInfo = notification.request.content.userInfo
-        VarCollectionFile.myPrint(title: "notification user info", content: userInfo)
+        completionHandler([.banner, .sound])
     }
 
-    // 사용자가 알림을 클릭했을 때 처리하는 메서드
+    // 푸시 알림 수신 (앱이 백그라운드에 있을 때 또는 사용자가 알림을 클릭했을 때)
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        // 알림 클릭에 대한 처리 로직
-        print("User interacted with notification: \(response.notification.request.content.userInfo)")
-
+        handleNotification(response.notification)
         completionHandler()
     }
+
+        // 푸시 알림 데이터 처리
+        private func handleNotification(_ notification: UNNotification) {
+            let userInfo = notification.request.content.userInfo
+            
+
+            if let messageAny = userInfo["message"], let message = messageAny as? String {
+                let notificationItem = NotificationItem(message: message, receivedAt: Date())
+                notificationService?.saveNotification(notificationItem)
+            } else {
+                print("Message not found or not a string")
+            }
+        }
 }
+
+
+class NotificationService: ObservableObject {
+    @Published var notifications: [NotificationItem] = []
+    
+    private let notificationsKey = "notifications"
+    
+    init() {
+        notifications = fetchNotifications()
+        
+    }
+
+    func saveNotification(_ notification: NotificationItem) {
+            notifications.append(notification)
+            saveNotifications()
+        }
+
+    private func saveNotifications() {
+        if let data = try? JSONEncoder().encode(notifications) {
+            UserDefaults.standard.set(data, forKey: notificationsKey)
+        }
+    }
+
+    func fetchNotifications() -> [NotificationItem] {
+        if let data = UserDefaults.standard.data(forKey: notificationsKey),
+           let notifications = try? JSONDecoder().decode([NotificationItem].self, from: data) {
+            return notifications
+        }
+        return []
+    }
+}
+
+struct NotificationItem: Identifiable, Codable {
+    var id = UUID()
+    var message: String
+    var receivedAt: Date
+}
+
 
