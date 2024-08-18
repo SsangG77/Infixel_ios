@@ -38,6 +38,7 @@ struct UploadImagePlusView: View {
 
 struct bellButtonView: View {
     var size = 40.0
+    @EnvironmentObject var notificationService: NotificationService
     
     var body: some View {
         ZStack {
@@ -54,9 +55,10 @@ struct bellButtonView: View {
                 .frame(width: size * 0.4, height: size  * 0.4)
             
             
+            
             Circle()
                 .frame(width: 8)
-                .foregroundColor(.red)
+                .foregroundColor(notificationService.notification_flag ? .red : .clear)
                 .offset(CGSize(width: 5.0, height: -8.0))
             
         }

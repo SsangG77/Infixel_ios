@@ -42,20 +42,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     var window: UIWindow?
     var notificationService: NotificationService?
+    
+    private var processedNotifications = Set<String>()
 
     
     func application( _ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
-            print("Permission granted: \(granted)")
-        }
+//        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
+//            print("Permission granted: \(granted)")
+//        }
         
         UNUserNotificationCenter.current().delegate = self
         application.registerForRemoteNotifications()
+       
         
-//        if let app = UIApplication.shared.delegate as? AppDelegate {
-//            self.notificationService = app.notificationService
-//        }
         
         if notificationService == nil {
             print("Failed to initialize NotificationService")
@@ -63,13 +63,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         return true
     }
-
-    
+  
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         // 디바이스 토큰을 서버로 전송
         let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
         let token = tokenParts.joined()
-        print("Device Token: \(token)")
         
         // 토큰을 서버로 전송하는 함수 호출
         sendDeviceTokenToServer(token)
@@ -107,39 +105,67 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     
     // 푸시 알림 수신 (앱이 포그라운드에 있을 때)
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([.banner, .sound])
-    }
+        func userNotificationCenter(
+            _ center: UNUserNotificationCenter,
+            willPresent notification: UNNotification,
+            withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+            handleNotification(notification)
+            completionHandler([.banner, .sound])
+        }
 
-    // 푸시 알림 수신 (앱이 백그라운드에 있을 때 또는 사용자가 알림을 클릭했을 때)
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        handleNotification(response.notification)
-        completionHandler()
-    }
+        // 푸시 알림 수신 (사용자가 알림을 클릭했을 때)
+        func userNotificationCenter(
+            _ center: UNUserNotificationCenter,
+            didReceive response: UNNotificationResponse,
+            withCompletionHandler completionHandler: @escaping () -> Void) {
+                
+            handleNotification(response.notification)
+            completionHandler()
+                
+        }
 
         // 푸시 알림 데이터 처리
         private func handleNotification(_ notification: UNNotification) {
+            
             let userInfo = notification.request.content.userInfo
             
-
+            let identifier = notification.request.identifier
+               
+           // 이미 처리된 알림인지 확인
+           guard !processedNotifications.contains(identifier) else {
+               return  // 이미 처리된 경우 무시
+           }
+            processedNotifications.insert(identifier)
+            
+            //새로운 알림이 오면 불리언값 기기에 저장
+            UserDefaults.standard.set(true, forKey: "new_notification")
+            notificationService?.notification_flag = true
+            VarCollectionFile.myPrint(title: "handleNotification()", content: notificationService?.notification_flag)
+            
             if let messageAny = userInfo["message"], let message = messageAny as? String {
                 let notificationItem = NotificationItem(message: message, receivedAt: Date())
                 notificationService?.saveNotification(notificationItem)
             } else {
                 print("Message not found or not a string")
             }
+            
         }
 }
 
 
+
+
+
+//--@--------------------------------------------------------------------------------------------
+
 class NotificationService: ObservableObject {
     @Published var notifications: [NotificationItem] = []
+    @Published var notification_flag: Bool = UserDefaults.standard.bool(forKey: "new_notification")
     
     private let notificationsKey = "notifications"
     
     init() {
         notifications = fetchNotifications()
-        
     }
 
     func saveNotification(_ notification: NotificationItem) {
