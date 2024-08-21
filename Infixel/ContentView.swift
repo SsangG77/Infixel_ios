@@ -26,6 +26,9 @@ struct ContentView: View {
         if isLoggedIn {
             MainView(isLoggedIn: $isLoggedIn)
                 .environmentObject(appState)
+                .onAppear {
+                    print()
+                }
         } else {
             
             LoginPage(isLoggedIn: $isLoggedIn, loginViewModel: loginViewModel, signupViewModel: signupViewModel)

@@ -107,14 +107,14 @@ struct SignUpView: View {
 }
 
 
-struct SignUpInputView: View {
-    
-    var body: some View {
-        HStack {
-            
-        }
-    }
-}
+//struct SignUpInputView: View {
+//    
+//    var body: some View {
+//        HStack {
+//            
+//        }
+//    }
+//}
 
 
 

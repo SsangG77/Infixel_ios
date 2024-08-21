@@ -100,6 +100,7 @@ struct HomePageView: View {
                 .scrollTargetBehavior(.paging)
                 .edgesIgnoringSafeArea(.all)
                 .onAppear {
+                    
                     if isInitialLoad {
                         loadInitialPhotos()
                     }

@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import UIKit
 
 class SignUpViewModel: ObservableObject {
     @Published var userEmail: String = ""
@@ -20,13 +21,18 @@ class SignUpViewModel: ObservableObject {
     @Published var isSignup: Bool = false
     
     
+    
+    
     func sendTextToServer() {
+        
+        
         let userDict: [String: Any] = [
             "userEmail": self.userEmail,
             "userPW": self.userPW,
             "confirmPW": self.confirmPW,
             "userName": self.userName,
-            "userId": self.userId
+            "userId": self.userId,
+            "deviceToken": UserDefaults.standard.string(forKey: "device_token")
         ]
         
         do {
@@ -70,6 +76,8 @@ class SignUpViewModel: ObservableObject {
             print("Error encoding JSON: \(error.localizedDescription)")
         }
     }
+    
+    
     
     func isValidEmail(_ email: String) -> Bool {
         let emailPattern = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}"

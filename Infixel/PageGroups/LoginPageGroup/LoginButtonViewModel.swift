@@ -19,8 +19,23 @@ class LoginButtonViewModel: ObservableObject {
     
     
     
+    
+    
+    
+    
     func sendTextToServer(_ isLoggedIn: Binding<Bool>) {
-        let userDict: [String: Any] = ["userId": userId, "userPW": userPW]
+        
+//        guard let token = deviceToken else {
+//            print("token 할당되지 않음", deviceToken)
+//            return
+//        }
+       
+        
+        let userDict: [String: Any] = [
+            "userId": userId,
+            "userPW": userPW,
+            "deviceToken": UserDefaults.standard.string(forKey: "device_token")
+        ]
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: userDict, options: [])
             if let jsonString = String(data: jsonData, encoding: .utf8) {

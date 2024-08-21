@@ -197,6 +197,8 @@ struct ProfilePageView: View {
     @Binding var userId:String
     @Binding var profile:Bool
     
+    @Environment(\.colorScheme) var colorScheme
+    
 //    init(isLoggedIn: Binding<Bool>? = nil, userId:String, profile:Bool) {
 //            _isLoggedIn = isLoggedIn.map { .constant($0.wrappedValue) } ?? .constant(false)
 //            self.userId = userId
@@ -215,7 +217,7 @@ struct ProfilePageView: View {
                         .environmentObject(appState)
                     VStack {
                         ProfilePageHeader(viewModel:viewModel)
-                            .shadow(color: Color.black.opacity(0.5), radius: 7, x: 0, y: 5)
+                            .shadow(color: colorScheme == .dark ? Color.white.opacity(0.5) : Color.black.opacity(0.5), radius: 7, x: 0, y: 5)
                         Spacer()
                     }
                     .frame(maxWidth: .infinity)
@@ -294,6 +296,8 @@ struct ProfilePageImageView: View {
 struct ProfilePageHeader: View {
     
     @StateObject var viewModel:ProfilePageViewModel
+    
+    @Environment(\.colorScheme) var colorScheme
     
     var body: some View {
         HStack(alignment: .top) {
@@ -435,7 +439,7 @@ struct ProfilePageHeader: View {
         }//--@HStack
         .padding([.leading, .trailing])
         .frame(width: UIScreen.main.bounds.width, height: 170)
-        .background(Color(.black))
+        .background( Color(.black))
         .clipShape(
             .rect(topLeadingRadius: 0, bottomLeadingRadius: 30, bottomTrailingRadius: 30, topTrailingRadius: 0)
         )

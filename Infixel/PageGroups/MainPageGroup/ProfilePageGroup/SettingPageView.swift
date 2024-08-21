@@ -10,10 +10,14 @@ import SwiftUI
 struct SettingPageView: View {
     @Binding var isLoggedIn: Bool
     
+    @EnvironmentObject var notificationService: NotificationService
+    
     var body: some View {
         VStack {
             Text("Setting")
             Button("Log out") {
+                UserDefaults.standard.removeObject(forKey: "notifications")
+                notificationService.notifications = []
                 isLoggedIn = false
                 print("로그 아웃")
            }

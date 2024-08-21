@@ -118,6 +118,7 @@
 		917B43682AC5397A0029609B /* SlideImage_class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideImage_class.swift; sourceTree = "<group>"; };
 		917B436A2AC541180029609B /* User_class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User_class.swift; sourceTree = "<group>"; };
 		917B436C2AC541A80029609B /* Comment_class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment_class.swift; sourceTree = "<group>"; };
+		9188F7852C7367C600464743 /* InfixelRelease.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = InfixelRelease.entitlements; sourceTree = "<group>"; };
 		918D890B2C6672A6002FB64D /* AlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmView.swift; sourceTree = "<group>"; };
 		9192B1092ABBE4D6007F7ED9 /* SignUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignUpView.swift; sourceTree = "<group>"; };
 		9192B10D2ABC065B007F7ED9 /* InputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputView.swift; sourceTree = "<group>"; };
@@ -170,6 +171,7 @@
 		912B68852AB088BF00505677 /* Infixel */ = {
 			isa = PBXGroup;
 			children = (
+				9188F7852C7367C600464743 /* InfixelRelease.entitlements */,
 				9143E9842C6A597A00C6B82C /* InfixelDebug.entitlements */,
 				9192B1192AC3C67D007F7ED9 /* Test */,
 				912B689D2AB47B0300505677 /* modules */,
@@ -625,6 +627,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Infixel/InfixelRelease.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Infixel/Preview Content\"";

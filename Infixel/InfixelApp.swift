@@ -39,8 +39,11 @@ struct InfixelApp: App {
 
 //@UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+    
 
     var window: UIWindow?
+    var deviceTokenString: String?
+    
     var notificationService: NotificationService?
     
     private var processedNotifications = Set<String>()
@@ -57,9 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
        
         
         
-        if notificationService == nil {
-            print("Failed to initialize NotificationService")
-        }
+        
         
         return true
     }
@@ -68,9 +69,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         // 디바이스 토큰을 서버로 전송
         let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
         let token = tokenParts.joined()
+        deviceTokenString = token
+        VarCollectionFile.myPrint(title: "application", content: token)
+        UserDefaults.standard.set(token, forKey: "device_token")
         
         // 토큰을 서버로 전송하는 함수 호출
-        sendDeviceTokenToServer(token)
+//        sendDeviceTokenToServer(token)
     }
     
     
@@ -123,6 +127,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             completionHandler()
                 
         }
+    
+    
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        // Handle the notification payload here
+        handleNotification(userInfo)
+        completionHandler(.newData)
+    }
+    
+    private func handleNotification(_ userInfo: [AnyHashable: Any]) {
+        // Your notification handling logic here
+        UserDefaults.standard.set(true, forKey: "new_notification")
+        notificationService?.notification_flag = true
+        
+        if let messageAny = userInfo["message"], let message = messageAny as? String {
+            let notificationItem = NotificationItem(message: message, receivedAt: Date())
+            notificationService?.saveNotification(notificationItem)
+        } else {
+            print("Message not found or not a string")
+        }
+    }
+    
+
+    
+    
+    
 
         // 푸시 알림 데이터 처리
         private func handleNotification(_ notification: UNNotification) {
@@ -152,6 +182,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
 }
 
+extension Notification.Name {
+    static let didReceiveDeviceToken = Notification.Name("didReceiveDeviceToken")
+}
 
 
 

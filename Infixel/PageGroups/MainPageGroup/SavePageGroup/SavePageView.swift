@@ -178,6 +178,7 @@ struct SavePageView: View {
 //--@SavePageView-----------------------------------------------------------------------------------------------------------------------------
 struct SavePageAddAlbumView: View {
     @EnvironmentObject var viewModel: SavePageViewModel
+    
     var body: some View {
         VStack{
             VStack(spacing: 3) {
@@ -205,59 +206,53 @@ struct SavePageAddAlbumView: View {
                         .resizable()
                         .scaledToFit()
                         .clipShape(RoundedRectangle(cornerRadius: 15))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 15)
+                                .strokeBorder(Color(hexString: "4657F3"), lineWidth: 3) // 필요시 경계선 설정
+                        )
                         .onTapGesture {
                             viewModel.isPickerPresented.toggle()
                         }
-                        .padding()
-                        .frame(height: 200)
-                        .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
+                        .padding(.bottom, 30)
                     
                 } else {
                     VStack {
                         ZStack {
-                            RoundedRectangle(cornerRadius: 15)
-                                .fill(Color(hexString: "ABB2F2"))
-                                .frame(width: 200, height: 200)
-                                .background(Color(UIColor.systemFill))
-                                .clipShape(RoundedRectangle(cornerRadius: 20))
-                                .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
-                            
                             RoundedRectangle(cornerRadius: 20)
-                                .strokeBorder(Color.clear, lineWidth: 0) // 필요시 경계선 설정
-                                .frame(width: 200, height: 200)
+                                .fill(Color(hexString: "F0F0F0"))
+                                .strokeBorder(Color(hexString: "4657F3"), lineWidth: 3) // 필요시 경계선 설정
                                 .clipShape(RoundedRectangle(cornerRadius: 20))
+                                .frame(height: 400)
                             
-                            Text("Select an Image")
-                                .foregroundColor(.white)
+                            Text("프로필 이미지 선택")
+                                .foregroundColor(Color(hexString: "4657F3"))
                         }
                         .onTapGesture {
                             viewModel.isPickerPresented.toggle()
                         }
                     }
+                    .padding([.leading, .trailing], 20)
                 }
             }
+            .padding([.leading, .trailing],30)
             
-            VStack(spacing: 5) {
-                HStack {
-                    Text("Album name")
-                        .font(Font.custom("Bungee-Regular", size: 20))
-                        .fontWeight(.bold)
-                        .foregroundColor(Color(hexString: "4657F3"))
-                    Spacer()
-                }
-                
+            VStack(spacing: 0) {
                 TextField("앨범 이름을 작성해주세요.", text: $viewModel.albumName)
-                    .padding(5)
                     .textFieldStyle(PlainTextFieldStyle())
+                    .padding(.bottom, 7)
                 
                 Divider()
+                    .background(Color(hexString: "4657F3"))
                 
-            }
-            .padding(.top, 5)
-            .padding()
+            }//vstack
+//            .padding(.bottom, 60)
+            .padding(30)
+            
+            
+           
             
             Spacer()
-                .frame(height: 200)
+//                .frame(height: 200)
             
             ///업로드 버튼
             GeometryReader { geometry in
@@ -313,7 +308,6 @@ struct SavePageViewHeader: View {
                     .font(.system(size: 30))
                     .foregroundColor(Color(hexString: "4657F3"))
                     .onTapGesture {
-                        print("앨범 추가 버튼")
                         viewModel.albumPlusClicked = true
                     }
             }
