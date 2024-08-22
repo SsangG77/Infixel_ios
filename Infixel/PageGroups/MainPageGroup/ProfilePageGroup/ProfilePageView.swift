@@ -297,7 +297,7 @@ struct ProfilePageHeader: View {
     
     @StateObject var viewModel:ProfilePageViewModel
     
-    @Environment(\.colorScheme) var colorScheme
+    
     
     var body: some View {
         HStack(alignment: .top) {

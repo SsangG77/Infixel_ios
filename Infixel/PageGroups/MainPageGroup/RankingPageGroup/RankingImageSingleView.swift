@@ -23,6 +23,8 @@ struct RankingImageSingleView: View {
     var width_ = UIScreen.main.bounds.width * 0.9
     var corner: CGFloat = 27
     
+    @Environment(\.colorScheme) var colorScheme
+    
     var body: some View {
         
         
@@ -138,7 +140,7 @@ struct RankingImageSingleView: View {
         }//ZStack
         .frame(width: width_, height: 450)
         .cornerRadius(corner)
-        .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 4)
+        .shadow(color: colorScheme == .dark ? Color.white.opacity(0.5) : Color.black.opacity(0.5), radius: 5, x: 2, y: 7)
         .padding()
         
     }

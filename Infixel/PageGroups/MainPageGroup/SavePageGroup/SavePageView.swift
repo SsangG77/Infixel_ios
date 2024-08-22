@@ -343,6 +343,9 @@ struct SavePageAlbumView: View {
     
     @StateObject var albumDetailViewModel = AlbumDetailViewModel()
     
+    @Environment(\.colorScheme) var colorScheme
+    
+    @State var isShowAlert: Bool = false
     
     var body: some View {
         VStack(spacing:0) {
@@ -395,9 +398,21 @@ struct SavePageAlbumView: View {
                                         EmptyView()
                                     }//--@switch
                                 }//--@AsyncImage
+                                .onLongPressGesture(minimumDuration: 0.4) {
+                                    let generator = UIImpactFeedbackGenerator(style: .heavy)
+                                    generator.impactOccurred()
+                                    isShowAlert = true
+                                    
+                                }
+                                .alert(isPresented: $isShowAlert) {
+                                    let defaultButton = Alert.Button.default(Text("삭제"))
+                                    let cancelButton = Alert.Button.cancel(Text("취소"))
+                                    
+                                    return Alert(title: Text("이미지 삭제") , message: Text("삭제하시겠습니까?"), primaryButton: defaultButton, secondaryButton: cancelButton)
+                                }
                         }//--@geo
                         .frame(width: 120, height: 170)
-                        .shadow(color: Color.black.opacity(0.5), radius: 5, x: 7, y: 5)
+                        .shadow(color: colorScheme == .dark ? Color.white.opacity(0.5) : Color.black.opacity(0.5), radius: 5, x: 4, y: 3)
                         .containerRelativeFrame(.horizontal, count: 3, spacing: 5)
                         
                     }//--@ForEach
