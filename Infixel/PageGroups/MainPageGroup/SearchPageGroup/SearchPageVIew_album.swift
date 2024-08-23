@@ -85,9 +85,6 @@ class AlbumDetailViewModel: ObservableObject {
 
 
 struct AlbumDetailView: View {
-    //preview용 변수
-//    @State var album = Album()
-//    @Namespace private var animationNamespace
     
     //원래 변수
         @Binding var album:Album!
@@ -96,7 +93,6 @@ struct AlbumDetailView: View {
 
     
     @EnvironmentObject var appState: AppState
-//    @State private var images: [SearchSingleImage] = []
     @State private var showImageViewer: Bool = false
     @State private var imageHeights: [String: CGFloat] = [:]
 
@@ -262,38 +258,6 @@ struct AlbumDetailView: View {
     //=============================================================
     
 
-//    func searchAlbumImage(albumId: String) {
-//        guard let url = URL(string: VarCollectionFile.searchAlbumImageURL) else {
-//            return
-//        }
-//        
-//        let body: [String: String] = ["album_id": albumId]
-//        let request = URLRequest.post(url: url, body: body)
-//        
-//        DispatchQueue.global(qos: .background).async {
-//            URLSession.shared.dataTask(with: request) { data, response, error in
-//                if let error = error {
-//                    print("Error: \(error)")
-//                    return
-//                }
-//            
-//            
-//                if let data = data {
-//                    if let decodedResponse = try? JSONDecoder().decode([SearchSingleImage].self, from: data) {
-//                        DispatchQueue.main.async {
-//                            self.images = decodedResponse
-//                        }
-//                    }
-//                } else if let error = error {
-//                    VarCollectionFile.myPrint(title: "SearchPageView_album", content: error)
-//                } else {
-//                    print("Failed to send text to server")
-//                }
-//                
-//            }.resume()
-//        }
-//    }
-    
     
     
 }//AlbumDetailView

@@ -225,7 +225,7 @@ struct Info_SubButtonView: View {
                                                     pic_result = false
                                                 }
                                             } else { //응답된 값이 false 일때
-                                                VarCollectionFile.myPrint(title: "info_SubButtonView, 188", content: "에러 발생")
+                                                VarCollectionFile.myPrint(title: "info_SubButtonView", content: "에러 발생")
                                             }
                                         }
                                         
@@ -242,7 +242,7 @@ struct Info_SubButtonView: View {
                                                     pic_result = true
                                                 }
                                             } else { //응답된 값이 false 일때
-                                                VarCollectionFile.myPrint(title: "info_SubButtonView, 203", content: "에러 발생")
+                                                VarCollectionFile.myPrint(title: "info_SubButtonView", content: "에러 발생")
                                             }
                                         }
                                     }

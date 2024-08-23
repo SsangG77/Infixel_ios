@@ -144,34 +144,76 @@ struct SavePageView: View {
     @StateObject private var viewModel = SavePageViewModel()
     @StateObject private var addAlbumViewModel = AddAlbumViewModel()
     
+    @State var isActive = false
+    @State var albumId = ""
+    
     var body: some View {
-        VStack {
-            SavePageViewHeader()
-                .environmentObject(viewModel)
-            
-            ScrollView {
-                ForEach($addAlbumViewModel.albumList) { album in
-                    SavePageAlbumView()
+        
+        NavigationView {
+            ZStack {
+                NavigationLink(
+                    destination: AlbumSettingView(id: $albumId),
+                    isActive: $isActive,
+                    label: {
+                        EmptyView()
+                    }
+                )
+                
+                VStack {
+                    SavePageViewHeader()
                         .environmentObject(viewModel)
-                        .environmentObject(SavePageAlbumViewModel(albumId: album.id, albumName: album.album_name.wrappedValue))
+                    
+                    ScrollView {
+                        ForEach($addAlbumViewModel.albumList) { album in
+                            SavePageAlbumView(isActive : $isActive, albumId: $albumId)
+                                .environmentObject(viewModel)
+                                .environmentObject(SavePageAlbumViewModel(albumId: album.id, albumName: album.album_name.wrappedValue, createdAt: album.created_at.wrappedValue))
+                        }
+                    }
+                    .contentMargins(.bottom, 40)
+                    
+                    
+                    Spacer()
                 }
+                .onAppear {
+                    addAlbumViewModel.getAlbums()
+                }
+                .sheet(isPresented: $viewModel.albumPlusClicked) {
+                    SavePageAddAlbumView()
+                        .environmentObject(viewModel)
+                }
+                
             }
-            .contentMargins(.bottom, 40)
             
-            
-            Spacer()
         }
-        .onAppear {
-            addAlbumViewModel.getAlbums()
-        }
-        .sheet(isPresented: $viewModel.albumPlusClicked) {
-            SavePageAddAlbumView()
-                .environmentObject(viewModel)
-        }
+        
         
     }
     
 }
+
+//--@AlbumSettingView-----------------------------------------------------------------------------------------------------------------------------
+struct AlbumSettingView: View {
+    
+    @Binding var id:String
+    
+    var body: some View {
+        VStack {
+            
+            Text("헤더 이미지")
+            Divider()
+            
+            Text("앨범 이름")
+            Divider()
+            
+            
+            
+        }
+        
+    }
+}
+
+
 
 
 
@@ -245,14 +287,12 @@ struct SavePageAddAlbumView: View {
                     .background(Color(hexString: "4657F3"))
                 
             }//vstack
-//            .padding(.bottom, 60)
             .padding(30)
             
             
            
             
             Spacer()
-//                .frame(height: 200)
             
             ///업로드 버튼
             GeometryReader { geometry in
@@ -326,10 +366,12 @@ struct SavePageViewHeader: View {
 class SavePageAlbumViewModel: ObservableObject {
     @Published var albumId:String
     @Published var albumName: String
+    @Published var created_at: String
     
-    init(albumId: String, albumName: String) {
+    init(albumId: String, albumName: String, createdAt: String) {
         self.albumId = albumId
         self.albumName = albumName
+        self.created_at = createdAt
     }
     
     
@@ -347,12 +389,35 @@ struct SavePageAlbumView: View {
     
     @State var isShowAlert: Bool = false
     
+    @Binding var isActive: Bool
+    @Binding var albumId:String
+    
     var body: some View {
         VStack(spacing:0) {
             HStack {
-                Text(savePageAlbumViewModel.albumName)
-                    .font(Font.custom("Bungee-Regular", size: 20))
+                VStack(alignment: .leading) {
+                    Text(savePageAlbumViewModel.albumName)
+                        .font(Font.custom("Bungee-Regular", size: 20))
+                    
+                    Spacer().frame(height: 4)
+                    
+                    Text(savePageAlbumViewModel.created_at)
+                        .opacity(0.5)
+                        .fontWeight(.light)
+                        .font(.system(size: 13))
+                }
+                
+                
                 Spacer()
+                Image(systemName: "chevron.right")
+                    .fontWeight(.heavy)
+                    .frame(width: 30, height: 30)
+                    .padding(.trailing, 20)
+                    .onTapGesture {
+                        albumId = savePageAlbumViewModel.albumId
+                        isActive = true
+                    }
+                
             }
             .padding(.leading)
 
@@ -386,8 +451,6 @@ struct SavePageAlbumView: View {
                                     case .failure:
                                         VStack {
                                             ProgressView()
-                                                .progressViewStyle(CircularProgressViewStyle(tint: .orange))
-                                                .scaleEffect(2)
                                         }
                                         .frame(width: 100, height: 150)
                                         .onAppear {
@@ -450,6 +513,6 @@ struct SavePageAlbumView: View {
 
 struct SavePageView_Previews: PreviewProvider {
     static var previews: some View {
-        SavePageView()
+        AlbumSettingView(id: .constant("albumid1") )
     }
 }

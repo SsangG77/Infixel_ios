@@ -276,7 +276,6 @@ struct HomePageView: View {
         }
         task.resume()
     }
-    
 }
 
 
