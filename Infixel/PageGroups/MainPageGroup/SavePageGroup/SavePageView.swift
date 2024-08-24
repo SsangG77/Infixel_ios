@@ -11,16 +11,18 @@ import SwiftUI
 
 class SavePageViewModel: ObservableObject {
     
-    @Published var albumPlusClicked = false
-    @Published var imageClicked = false
-    @Published var albumIds = []
-    @Published var imageId:String? = nil
-    @Published var imageURL: String? = nil
-    @Published var isPickerPresented = false
-    @Published var selectedImage: UIImage? = nil
-    @Published var albumName:String = ""
-    @Published var uploadStatus: String = ""
-    @Published var uploadBtnClicked = false
+    @Published var albumPlusClicked     : Bool     = false
+    @Published var imageClicked         : Bool     = false
+    @Published var uploadBtnClicked     : Bool     = false
+    @Published var isPickerPresented    : Bool     = false
+    @Published var imageId              : String?  = nil
+    @Published var imageURL             : String?  = nil
+    @Published var selectedImage        : UIImage? = nil
+    @Published var albumName            : String   = ""
+    @Published var uploadStatus         : String   = ""
+    @Published var albumIds                        = []
+    
+    
     
     
     private var retryCount: [String: Int] = [:]
@@ -126,12 +128,15 @@ class SavePageViewModel: ObservableObject {
                 completion(.failure(error))
             }
         }
-        
         task.resume()
-        
-        
-    }
+    } //uploadImage
     
+    
+    func getAlbumInfo(albumId: String) { //프로필 이미지, 앨범 이름을 서버에서 가져와서 변수에 입력
+        
+        
+        
+    } //getAlbumInfo
     
     
 }
@@ -195,23 +200,84 @@ struct SavePageView: View {
 //--@AlbumSettingView-----------------------------------------------------------------------------------------------------------------------------
 struct AlbumSettingView: View {
     
+    @State private var isPickerPresented = false
+    
     @Binding var id:String
+    @StateObject private var viewModel = SavePageViewModel()
+    
     
     var body: some View {
         VStack {
             
-            Text("헤더 이미지")
-            Divider()
+            HStack {
+                Text("프로필 이미지")
+                
+                Spacer()
+            }
+            .padding(.bottom, 5)
+            if let selectedImage = viewModel.selectedImage {
+                Image(uiImage: selectedImage)
+                    .resizable()
+                    .scaledToFill()
+                    .frame(height: 200)
+                    .clipShape(RoundedRectangle(cornerRadius: 15))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 15)
+                            .strokeBorder(Color(hexString: "4657F3"), lineWidth: 3)
+                    )
+                    .onTapGesture {
+                        isPickerPresented.toggle()
+                    }
+                    .padding(.bottom, 30)
+                
+            } else {
+                VStack {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 20)
+                            .fill(Color(hexString: "F0F0F0"))
+                            .strokeBorder(Color(hexString: "4657F3"), lineWidth: 3) // 필요시 경계선 설정
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                            .frame(height: 200)
+                        
+                        Text("이미지 선택")
+                            .foregroundColor(Color(hexString: "4657F3"))
+                    }
+                    .onTapGesture {
+                        isPickerPresented.toggle()
+                    }
+                }//VStack
+                .padding(.bottom, 30)
+            } //else
             
-            Text("앨범 이름")
-            Divider()
+            HStack {
+                Text("앨범 이름")
+                Spacer()
+            }
+            
+            VStack(spacing: 0) {
+                TextField(viewModel.albumName, text: $viewModel.albumName)
+                    .textFieldStyle(PlainTextFieldStyle())
+                    .padding(.bottom, 7)
+                
+                Divider()
+                    .background(Color(hexString: "4657F3"))
+                
+            }//vstack
             
             
             
+            
+            
+        }//VStack
+        .padding([.trailing, .leading], 20)
+        .sheet(isPresented: $isPickerPresented) {
+            ImagePicker(selectedImage: $viewModel.selectedImage)
         }
         
-    }
+    } //body
 }
+
+
 
 
 
