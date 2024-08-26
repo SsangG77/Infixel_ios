@@ -133,7 +133,17 @@ class SavePageViewModel: ObservableObject {
     
     
     func getAlbumInfo(albumId: String) { //프로필 이미지, 앨범 이름을 서버에서 가져와서 변수에 입력
+        guard let url = URL(string: VarCollectionFile.getAlbumURL) else {
+            return
+        }
         
+        let request = URLRequest.post(url: url, body: ["album_id" : albumId])
+        
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            URLSession.shared.dataTask(with: request) { data, res, error in
+                
+            }
+        }
         
         
     } //getAlbumInfo
