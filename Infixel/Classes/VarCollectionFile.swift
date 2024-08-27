@@ -46,6 +46,7 @@ struct VarCollectionFile {
     static let searchAlbumImageURL      = host + "/imagealbums/images"
     static let addAlbumURL              = host + "/imagealbums/add"
     static let getAlbumURL              = host + "/imagealbums/getinfo"
+    static let updateAlbumURL           = host + "/imagealbums/update"
     
     static let tagsGetURL               = host + "/tags/get"
     static let tagsSearchURL            = host + "/tags/search"

@@ -62,6 +62,6 @@ struct AlarmView: View {
     }
 }
 
-#Preview {
-    AlarmView()
-}
+//#Preview {
+//    AlarmView()
+//}

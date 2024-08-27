@@ -55,7 +55,7 @@ class SavePageViewModel: ObservableObject {
     
     
     
-    func uploadAlbum() {
+    func uploadAlbum(type:Int, album_id:String) {
         
         guard let selectedImage = selectedImage else {
             uploadStatus = "No image selected"
@@ -64,7 +64,7 @@ class SavePageViewModel: ObservableObject {
         
         uploadStatus = "Uploading..."
         
-        self.uploadImage(selectedImage) { [weak self] result in
+        self.uploadImage(type: type, album_id: album_id, selectedImage) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let response):
@@ -82,10 +82,18 @@ class SavePageViewModel: ObservableObject {
         
     }
     
-    func uploadImage(_ selectedImage: UIImage, completion: @escaping (Result<UploadResponse, Error>) -> Void) {
+    func uploadImage(type:Int , album_id:String, _ selectedImage: UIImage, completion: @escaping (Result<UploadResponse, Error>) -> Void) {
         let userId = UserDefaults.standard.string(forKey: "user_id")!
         
-        guard let url = URL(string: VarCollectionFile.addAlbumURL) else {
+        var serverURL = ""
+        
+        if type == 1 {
+            serverURL = VarCollectionFile.addAlbumURL
+        } else if type == 2 {
+            serverURL = VarCollectionFile.updateAlbumURL
+        }
+        
+        guard let url = URL(string: serverURL) else {
             completion(.failure(NSError(domain: "Invalid URL", code: 400, userInfo: nil)))
             return
         }
@@ -102,8 +110,15 @@ class SavePageViewModel: ObservableObject {
         data.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
         data.append(selectedImage.jpegData(compressionQuality: 0.8)!)
         data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
-        data.append("Content-Disposition: form-data; name=\"user_id\"\r\n\r\n".data(using: .utf8)!)
-        data.append("\(userId)\r\n".data(using: .utf8)!)
+        
+        if type == 1 {
+            data.append("Content-Disposition: form-data; name=\"user_id\"\r\n\r\n".data(using: .utf8)!)
+            data.append("\(userId)\r\n".data(using: .utf8)!)
+        } else if type == 2 {
+            data.append("Content-Disposition: form-data; name=\"album_id\"\r\n\r\n".data(using: .utf8)!)
+            data.append("\(album_id)\r\n".data(using: .utf8)!)
+        }
+        
         data.append("--\(boundary)\r\n".data(using: .utf8)!)
         data.append("Content-Disposition: form-data; name=\"album_name\"\r\n\r\n".data(using: .utf8)!)
         data.append("\(albumName)\r\n".data(using: .utf8)!)
@@ -141,12 +156,39 @@ class SavePageViewModel: ObservableObject {
         
         DispatchQueue.global(qos: .background).async { [weak self] in
             URLSession.shared.dataTask(with: request) { data, res, error in
-                
-            }
+                guard let self = self else { return }
+                if let error = error {
+                    print("Error : \(error)")
+                    return
+                }
+                if let data = data {
+                    do {
+                        if let decodeRes = try? JSONDecoder().decode(albumInfoResponse.self, from: data) {
+                            
+                            if let imageData = Data(base64Encoded: decodeRes.image) {
+                                let image = UIImage(data: imageData)
+                                
+                                self.selectedImage = image
+                                self.albumName = decodeRes.album_name
+                                print(decodeRes.album_name)
+                            }
+                        }
+                    }
+                }
+            }.resume()
         }
-        
-        
     } //getAlbumInfo
+    
+    struct albumInfoResponse: Decodable {
+        let image: String
+        let album_name: String
+    }
+    
+    
+    
+    
+    
+    
     
     
 }
@@ -217,7 +259,13 @@ struct AlbumSettingView: View {
     
     
     var body: some View {
-        VStack {
+        VStack(alignment: .center) {
+            
+            Text("앨범 수정")
+                .font(Font.custom("Bungee-Regular", size: 20))
+                .fontWeight(.bold)
+                .padding(.bottom, 40)
+                .padding(.top, 20)
             
             HStack {
                 Text("프로필 이미지")
@@ -226,19 +274,28 @@ struct AlbumSettingView: View {
             }
             .padding(.bottom, 5)
             if let selectedImage = viewModel.selectedImage {
-                Image(uiImage: selectedImage)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(height: 200)
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 15)
-                            .strokeBorder(Color(hexString: "4657F3"), lineWidth: 3)
-                    )
-                    .onTapGesture {
-                        isPickerPresented.toggle()
-                    }
-                    .padding(.bottom, 30)
+                
+                ZStack {
+                    Image(uiImage: selectedImage)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 200)
+                        .clipShape(RoundedRectangle(cornerRadius: 15))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 15)
+                                .fill(Color(.black.opacity(0.5)))
+                                .strokeBorder(Color(hexString: "4657F3"), lineWidth: 3)
+                        )
+                        .onTapGesture {
+                            isPickerPresented.toggle()
+                        }
+                        .padding(.bottom, 30)
+                    
+                    
+                    
+                    Text("이미지 선택")
+                        .foregroundColor(.white)
+                }
                 
             } else {
                 VStack {
@@ -249,7 +306,7 @@ struct AlbumSettingView: View {
                             .clipShape(RoundedRectangle(cornerRadius: 20))
                             .frame(height: 200)
                         
-                        Text("이미지 선택")
+                        Text("Loading...")
                             .foregroundColor(Color(hexString: "4657F3"))
                     }
                     .onTapGesture {
@@ -272,6 +329,23 @@ struct AlbumSettingView: View {
                 Divider()
                     .background(Color(hexString: "4657F3"))
                 
+                Spacer()
+                
+                Button(action: {
+                    viewModel.uploadAlbum(type: 2, album_id: id)
+                   
+                    
+                }, label: {
+                    HStack {
+                        Text("완료")
+                    }
+                    .contentShape(RoundedRectangle(cornerSize: CGSize(width: 60, height: 20)))
+                    .frame(width: UIScreen.main.bounds.width * 0.5, height: 30, alignment: .center)
+                })
+                .buttonStyle(.borderedProminent)
+                .tint(Color(hexString: "4657F3"))
+                .padding(.bottom, UIScreen.main.bounds.height * 0.05 + 50)
+                
             }//vstack
             
             
@@ -282,6 +356,9 @@ struct AlbumSettingView: View {
         .padding([.trailing, .leading], 20)
         .sheet(isPresented: $isPickerPresented) {
             ImagePicker(selectedImage: $viewModel.selectedImage)
+        }
+        .onAppear {
+            viewModel.getAlbumInfo(albumId: id)
         }
         
     } //body
@@ -375,7 +452,7 @@ struct SavePageAddAlbumView: View {
                 VStack {
                     Button(action: {
                         if viewModel.selectedImage != nil && viewModel.albumName != "" {
-                            viewModel.uploadAlbum()
+                            viewModel.uploadAlbum(type: 1, album_id: "")
                         }
                     }) {
                         if viewModel.uploadStatus == "" {
