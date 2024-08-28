@@ -15,6 +15,7 @@ class SavePageViewModel: ObservableObject {
     @Published var imageClicked         : Bool     = false
     @Published var uploadBtnClicked     : Bool     = false
     @Published var isPickerPresented    : Bool     = false
+    @Published var viewDissmiss         : Bool     = false
     @Published var imageId              : String?  = nil
     @Published var imageURL             : String?  = nil
     @Published var selectedImage        : UIImage? = nil
@@ -22,11 +23,9 @@ class SavePageViewModel: ObservableObject {
     @Published var uploadStatus         : String   = ""
     @Published var albumIds                        = []
     
-    
-    
-    
     private var retryCount: [String: Int] = [:]
     
+    @Environment(\.dismiss) var dismiss
     
     func calculateScale(geometry: GeometryProxy) -> CGFloat {
         let midX = geometry.frame(in: .global).midX
@@ -71,11 +70,13 @@ class SavePageViewModel: ObservableObject {
                     self?.uploadStatus = response.message
                     withAnimation {
                         self!.albumPlusClicked = false
+                        self!.viewDissmiss = true
                     }
                     
                 case .failure(let error):
                     self?.uploadStatus = "업로드 실패"
                     self!.albumPlusClicked = false
+                    self!.viewDissmiss = true
                 }
             }
         }
@@ -168,9 +169,10 @@ class SavePageViewModel: ObservableObject {
                             if let imageData = Data(base64Encoded: decodeRes.image) {
                                 let image = UIImage(data: imageData)
                                 
-                                self.selectedImage = image
-                                self.albumName = decodeRes.album_name
-                                print(decodeRes.album_name)
+                                DispatchQueue.main.async {
+                                    self.selectedImage = image
+                                    self.albumName = decodeRes.album_name
+                                }
                             }
                         }
                     }
@@ -209,12 +211,17 @@ struct SavePageView: View {
         NavigationView {
             ZStack {
                 NavigationLink(
-                    destination: AlbumSettingView(id: $albumId),
+                    destination: AlbumSettingView(id: $albumId).environmentObject(viewModel),
                     isActive: $isActive,
                     label: {
                         EmptyView()
                     }
                 )
+                .onChange(of: viewModel.viewDissmiss) { newValue in
+                    if newValue {
+                        isActive = false
+                    }
+                }
                 
                 VStack {
                     SavePageViewHeader()
@@ -227,7 +234,7 @@ struct SavePageView: View {
                                 .environmentObject(SavePageAlbumViewModel(albumId: album.id, albumName: album.album_name.wrappedValue, createdAt: album.created_at.wrappedValue))
                         }
                     }
-                    .contentMargins(.bottom, 40)
+                    .contentMargins(.bottom, 50)
                     
                     
                     Spacer()
@@ -255,7 +262,9 @@ struct AlbumSettingView: View {
     @State private var isPickerPresented = false
     
     @Binding var id:String
-    @StateObject private var viewModel = SavePageViewModel()
+    
+//    @StateObject private var viewModel = SavePageViewModel()
+    @EnvironmentObject var viewModel: SavePageViewModel
     
     
     var body: some View {
@@ -273,6 +282,7 @@ struct AlbumSettingView: View {
                 Spacer()
             }
             .padding(.bottom, 5)
+            
             if let selectedImage = viewModel.selectedImage {
                 
                 ZStack {
@@ -332,16 +342,24 @@ struct AlbumSettingView: View {
                 Spacer()
                 
                 Button(action: {
-                    viewModel.uploadAlbum(type: 2, album_id: id)
-                   
+                    
+                    if viewModel.selectedImage != nil && viewModel.albumName != "" {
+                        viewModel.uploadAlbum(type: 2, album_id: id)
+                    }
+                    
                     
                 }, label: {
                     HStack {
-                        Text("완료")
+                        if viewModel.uploadStatus == "" {
+                            Text("완료")
+                        } else {
+                            Text(viewModel.uploadStatus)
+                        }
                     }
                     .contentShape(RoundedRectangle(cornerSize: CGSize(width: 60, height: 20)))
                     .frame(width: UIScreen.main.bounds.width * 0.5, height: 30, alignment: .center)
                 })
+                .disabled(viewModel.selectedImage == nil && viewModel.albumName == "")
                 .buttonStyle(.borderedProminent)
                 .tint(Color(hexString: "4657F3"))
                 .padding(.bottom, UIScreen.main.bounds.height * 0.05 + 50)
@@ -397,18 +415,27 @@ struct SavePageAddAlbumView: View {
             VStack {
                 /// 이미지 선택하는 부분
                 if let selectedImage = viewModel.selectedImage {
-                    Image(uiImage: selectedImage)
-                        .resizable()
-                        .scaledToFit()
-                        .clipShape(RoundedRectangle(cornerRadius: 15))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 15)
-                                .strokeBorder(Color(hexString: "4657F3"), lineWidth: 3) // 필요시 경계선 설정
-                        )
-                        .onTapGesture {
-                            viewModel.isPickerPresented.toggle()
-                        }
-                        .padding(.bottom, 30)
+                    ZStack {
+                        Image(uiImage: selectedImage)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(height: 200)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 15)
+                                    .fill(Color(.black.opacity(0.5)))
+                                    .strokeBorder(Color(hexString: "4657F3"), lineWidth: 3)
+                            )
+                            .onTapGesture {
+                                viewModel.isPickerPresented.toggle()
+                            }
+                            .padding(.bottom, 30)
+                        
+                        
+                        
+                        Text("이미지 선택")
+                            .foregroundColor(.white)
+                    }
                     
                 } else {
                     VStack {
@@ -417,7 +444,7 @@ struct SavePageAddAlbumView: View {
                                 .fill(Color(hexString: "F0F0F0"))
                                 .strokeBorder(Color(hexString: "4657F3"), lineWidth: 3) // 필요시 경계선 설정
                                 .clipShape(RoundedRectangle(cornerRadius: 20))
-                                .frame(height: 400)
+                                .frame(height: 200)
                             
                             Text("프로필 이미지 선택")
                                 .foregroundColor(Color(hexString: "4657F3"))
@@ -426,7 +453,7 @@ struct SavePageAddAlbumView: View {
                             viewModel.isPickerPresented.toggle()
                         }
                     }
-                    .padding([.leading, .trailing], 20)
+//                    .padding([.leading, .trailing], 20)
                 }
             }
             .padding([.leading, .trailing],30)

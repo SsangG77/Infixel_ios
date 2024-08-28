@@ -8,6 +8,7 @@
 import SwiftUI
 
 
+@MainActor
 class AddAlbumViewModel: ObservableObject {
     @Published var albumList:[Album] = []
     
@@ -35,19 +36,20 @@ class AddAlbumViewModel: ObservableObject {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = jsonData
         
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let data = data {
-                if let decodedResponse = try? JSONDecoder().decode([Album].self, from: data) {
-                    DispatchQueue.main.async {
-                        self.albumList = decodedResponse
+        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+                    guard let self = self else { return }
+                    if let data = data {
+                        if let decodedResponse = try? JSONDecoder().decode([Album].self, from: data) {
+                            DispatchQueue.main.async {
+                                self.albumList = decodedResponse
+                            }
+                        } else {
+                            print("JSON Decoding failed")
+                        }
+                    } else if let error = error {
+                        print("HTTP Request Failed \(error)")
                     }
-                } else {
-                    print("JSON Decoding failed")
-                }
-            } else if let error = error {
-                print("HTTP Request Failed \(error)")
-            }
-            }.resume()
+                }.resume()
     }
     
 }
@@ -108,7 +110,6 @@ struct AddAlbumView: View {
                 .background(.white)
                 
                 ScrollView() {
-                    
                     ForEach($viewModel.albumList) { album in
                         SingleAlbumView(
                             albumId:album.id,
@@ -121,6 +122,7 @@ struct AddAlbumView: View {
                         .frame(width: geo.size.width, height: 190)
                     }
                 }
+                .contentMargins(.bottom, 200)
                 
             }//VStack
             .background(Color.white) // VStack에 배경색 설정
@@ -128,8 +130,13 @@ struct AddAlbumView: View {
             .edgesIgnoringSafeArea(.all)
             .onAppear {
                 viewModel.getAlbums()
-                
             }
+            .onChange(of: appState.albumsOpen || appState.albumsOpen_imageViewer) { albumOpen in
+                if albumOpen {
+                    viewModel.getAlbums()
+                }
+            }
+            
             
             
         }//GeometryReader

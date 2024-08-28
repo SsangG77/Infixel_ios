@@ -144,6 +144,7 @@ struct CommentsView: View {
                 .background(Color.white) // VStack에 배경색 설정
                 .cornerRadius(40)
                 .edgesIgnoringSafeArea(.all)
+                
         }//GeometryReader
     }//body
     
