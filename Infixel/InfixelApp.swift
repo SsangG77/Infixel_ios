@@ -70,7 +70,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
         let token = tokenParts.joined()
         deviceTokenString = token
-        VarCollectionFile.myPrint(title: "application", content: token)
         UserDefaults.standard.set(token, forKey: "device_token")
         
         // 토큰을 서버로 전송하는 함수 호출

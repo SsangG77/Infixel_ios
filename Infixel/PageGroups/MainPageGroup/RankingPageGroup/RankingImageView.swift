@@ -147,7 +147,6 @@ struct RankingImageView: View {
             print(webSocketManager.type)
         }
         .onDisappear {
-            VarCollectionFile.myPrint(title: "RankingImageView - disconnect()", content: "웹소켓 종료됨")
             webSocketManager.disconnect()
             appState.selectImageReset()
         }

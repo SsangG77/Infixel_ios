@@ -107,7 +107,6 @@ struct RankingView: View {
 //        }
         .onDisappear {
             showImageViewer = false
-            print("랭킹 뷰 종료됨. ", showImageViewer)
         }
         
         

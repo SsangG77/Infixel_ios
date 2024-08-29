@@ -73,7 +73,49 @@ class AlbumDetailViewModel: ObservableObject {
                 
             }.resume()
         }
-    }
+    }//searchAlbumImage
+    
+    
+    func deleteImage(_ id: String, _ albumId: String) {
+        
+        
+        if let index = images.firstIndex(where: {$0.id == id}) {
+            images.remove(at: index)
+        }
+        
+        
+        guard let url = URL(string: VarCollectionFile.deleteImageFromAlbumURL) else {
+            return
+        }
+        
+        let request = URLRequest.post(url: url, body: ["image_id": id, "album_id": albumId])
+        
+        DispatchQueue.global(qos: .background).async {
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("Error \(error)")
+                    return
+                }
+                
+                if let data = data {
+                    do {
+                        if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                            if let result = json["result"] as? Bool {
+                                print(result)
+                            }
+                        }
+                    } catch {
+                        print("Error decoding JSON:", error)
+                    }
+                }
+                
+                
+            }.resume()
+        }
+        
+        
+        
+    }//deleteImage
     
 }
 

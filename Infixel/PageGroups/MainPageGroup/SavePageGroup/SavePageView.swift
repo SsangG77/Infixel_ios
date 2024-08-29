@@ -148,6 +148,7 @@ class SavePageViewModel: ObservableObject {
     } //uploadImage
     
     
+    
     func getAlbumInfo(albumId: String) { //프로필 이미지, 앨범 이름을 서버에서 가져와서 변수에 입력
         guard let url = URL(string: VarCollectionFile.getAlbumURL) else {
             return
@@ -185,6 +186,9 @@ class SavePageViewModel: ObservableObject {
         let image: String
         let album_name: String
     }
+    
+    
+    
     
     
     
@@ -567,6 +571,7 @@ struct SavePageAlbumView: View {
     
     @Environment(\.colorScheme) var colorScheme
     
+    @State var selectedImageId:String?
     @State var isShowAlert: Bool = false
     
     @Binding var isActive: Bool
@@ -640,15 +645,18 @@ struct SavePageAlbumView: View {
                                     @unknown default:
                                         EmptyView()
                                     }//--@switch
-                                }//--@AsyncImage
+                                } //--@AsyncImage
                                 .onLongPressGesture(minimumDuration: 0.4) {
                                     let generator = UIImpactFeedbackGenerator(style: .heavy)
                                     generator.impactOccurred()
+                                    selectedImageId = image_.id
                                     isShowAlert = true
                                     
                                 }
                                 .alert(isPresented: $isShowAlert) {
-                                    let defaultButton = Alert.Button.default(Text("삭제"))
+                                    let defaultButton = Alert.Button.default(Text("삭제"), action: {
+                                        albumDetailViewModel.deleteImage(selectedImageId!, savePageAlbumViewModel.albumId)
+                                    })
                                     let cancelButton = Alert.Button.cancel(Text("취소"))
                                     
                                     return Alert(title: Text("이미지 삭제") , message: Text("삭제하시겠습니까?"), primaryButton: defaultButton, secondaryButton: cancelButton)
