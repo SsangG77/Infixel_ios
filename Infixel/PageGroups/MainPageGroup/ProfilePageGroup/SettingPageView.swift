@@ -13,19 +13,51 @@ struct SettingPageView: View {
     @EnvironmentObject var notificationService: NotificationService
     
     var body: some View {
+        
+        List {
+            Section("계정 관리") {
+                NavigationLink(destination: ProfileEditView()) {
+                    Text("프로필 편집")
+                }
+                NavigationLink(destination: ImageEditView()) {
+                    Text("이미지 관리")
+                }
+            }
+            
+            Section("로그인") {
+                Button("로그아웃") {
+                    UserDefaults.standard.removeObject(forKey: "notifications")
+                    notificationService.notifications = []
+                    isLoggedIn = false
+                }
+                .foregroundColor(.red)
+            }
+        }
+    }
+}
+
+
+
+struct ProfileEditView:View {
+    var body: some View {
         VStack {
-            Text("Setting")
-            Button("Log out") {
-                UserDefaults.standard.removeObject(forKey: "notifications")
-                notificationService.notifications = []
-                isLoggedIn = false
-                print("로그 아웃")
-           }
             
         }
-        .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
-        .background(Color.gray)
     }
+}
+
+struct ImageEditView: View {
+    var body: some View {
+        VStack {
+            
+        }
+    }
+}
+
+
+
+class SettingViewModel: ObservableObject {
+    
 }
 
 //#Preview {
