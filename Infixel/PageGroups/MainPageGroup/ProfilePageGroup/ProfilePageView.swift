@@ -25,7 +25,7 @@ struct ProfileUser: Codable, Identifiable, Hashable {
 
 
 class ProfilePageViewModel: ObservableObject {
-    @Published var profileUser:ProfileUser?
+    @Published var profileUser:ProfileUser = ProfileUser()
     @Published var images:[SearchSingleImage] = []
     @Published var showImageViewer = false
     @Published var followBtn:Bool = false
@@ -83,10 +83,10 @@ class ProfilePageViewModel: ObservableObject {
 //                            print(decodeResponse)
                             DispatchQueue.main.async {
                                 self.profileUser = decodeResponse
-                                if let userId = UserDefaults.standard.string(forKey: "user_id"), self.profileUser!.id == userId {
+                                if let userId = UserDefaults.standard.string(forKey: "user_id"), self.profileUser.id == userId {
                                     self.myProfileOrNot = true
                                 } else {
-                                    self.followOrNot(self.profileUser!.id)
+                                    self.followOrNot(self.profileUser.id)
                                 }
                             }
                         }
@@ -199,13 +199,6 @@ struct ProfilePageView: View {
     
     @Environment(\.colorScheme) var colorScheme
     
-//    init(isLoggedIn: Binding<Bool>? = nil, userId:String, profile:Bool) {
-//            _isLoggedIn = isLoggedIn.map { .constant($0.wrappedValue) } ?? .constant(false)
-//            self.userId = userId
-//            self.profile = profile
-//        }
-    
-    
     @EnvironmentObject var appState: AppState
     @StateObject var viewModel = ProfilePageViewModel()
     
@@ -303,7 +296,7 @@ struct ProfilePageHeader: View {
         HStack(alignment: .top) {
             VStack(alignment: .leading) {
                 GeometryReader { geo in
-                    AsyncImage(url: URL(string: viewModel.profileUser != nil ? viewModel.profileUser!.profile_image : "")) { phase in
+                    AsyncImage(url: URL(string: viewModel.profileUser != nil ? viewModel.profileUser.profile_image : "")) { phase in
                         switch phase {
                         case .empty:
                             ProgressView()
@@ -330,14 +323,14 @@ struct ProfilePageHeader: View {
                 //--@프로필_이미지
                 
                 
-                Text(viewModel.profileUser != nil ? "@"+viewModel.profileUser!.user_at : "@")
+                Text(viewModel.profileUser != nil ? "@"+viewModel.profileUser.user_at : "@")
                     .foregroundColor(.white)
                     .font(.system(size: 12))
                     .fontWeight(.light)
                 //--@유저_아이디
                 
                 
-                Text(viewModel.profileUser != nil ? viewModel.profileUser!.user_id: "")
+                Text(viewModel.profileUser != nil ? viewModel.profileUser.user_id: "")
                     .foregroundColor(.white)
                     .fontWeight(.heavy)
                 //--@유저_닉네임
@@ -356,7 +349,7 @@ struct ProfilePageHeader: View {
                                 .resizable()
                                 .frame(width: 13, height: 13)
                             
-                            Text(String(viewModel.profileUser != nil ? viewModel.profileUser!.pic: 0))
+                            Text(String(viewModel.profileUser != nil ? viewModel.profileUser.pic: 0))
                                 .foregroundColor(.white)
                                 .fontWeight(.bold)
                         }
@@ -369,7 +362,7 @@ struct ProfilePageHeader: View {
                                 .foregroundColor(.white)
                                 .font(.system(size: 14))
                             
-                            Text(String(viewModel.profileUser != nil ? viewModel.profileUser!.follow: 0))
+                            Text(String(viewModel.profileUser != nil ? viewModel.profileUser.follow: 0))
                                 .foregroundColor(.white)
                                 .fontWeight(.bold)
                         }
@@ -380,19 +373,18 @@ struct ProfilePageHeader: View {
                                 .foregroundColor(.white)
                                 .font(.system(size: 14))
                             
-                            Text(String(viewModel.profileUser != nil ? viewModel.profileUser!.follower: 0))
+                            Text(String(viewModel.profileUser != nil ? viewModel.profileUser.follower: 0))
                                 .foregroundColor(.white)
                                 .fontWeight(.bold)
                         }
                         .frame(width: 60)
                 }//--@Hstack
                 .frame(width: UIScreen.main.bounds.width * 0.55, height: 40)
-//                .background(.red)
 
                 
                 HStack(alignment: .top) {
                     HStack(alignment: .top) {
-                        Text(viewModel.profileUser != nil ? viewModel.profileUser!.description: "")
+                        Text(viewModel.profileUser != nil ? viewModel.profileUser.description: "")
                             .foregroundColor(.white)
                             .font(.system(size: 14))
                         Spacer()
@@ -408,10 +400,10 @@ struct ProfilePageHeader: View {
                             
                             if viewModel.followBtn == false { //unfollow 되어있을때
                                 viewModel.followBtn = true
-                                viewModel.follow(viewModel.profileUser!.id)
+                                viewModel.follow(viewModel.profileUser.id)
                             } else { //follow 일때
                                 viewModel.followBtn = false
-                                viewModel.unfollow(viewModel.profileUser!.id)
+                                viewModel.unfollow(viewModel.profileUser.id)
                             }
                             
                         }, label: {

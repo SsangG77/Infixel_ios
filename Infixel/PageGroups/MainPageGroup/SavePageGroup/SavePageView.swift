@@ -267,7 +267,6 @@ struct AlbumSettingView: View {
     
     @Binding var id:String
     
-//    @StateObject private var viewModel = SavePageViewModel()
     @EnvironmentObject var viewModel: SavePageViewModel
     
     
