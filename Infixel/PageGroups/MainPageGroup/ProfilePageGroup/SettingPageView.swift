@@ -9,6 +9,7 @@ import SwiftUI
 
 struct SettingPageView: View {
     @Binding var isLoggedIn: Bool
+    @State var isActive = false
     
     @EnvironmentObject var notificationService: NotificationService
     
@@ -18,9 +19,19 @@ struct SettingPageView: View {
         
         List {
             Section("계정 관리") {
-                NavigationLink(destination: ProfileEditView().environmentObject(viewModel)) {
+                NavigationLink(
+                    destination: ProfileEditView().environmentObject(viewModel),
+                    isActive: $isActive
+                
+                ) {
                     Text("프로필 편집")
                 }
+                .onChange(of: viewModel.viewDissmiss) { newValue in
+                    if newValue {
+                        isActive = false
+                    }
+                }
+                
                 NavigationLink(destination: ImageEditView()) {
                     Text("이미지 관리")
                 }
@@ -151,20 +162,27 @@ struct ProfileEditView:View {
                 
                 Button(action: {
                     
-                    VarCollectionFile.myPrint(title: "Setting page view", content:
-                                                "\(profilePageViewModel.profileUser.user_id) \(profilePageViewModel.profileUser.user_at) \(profilePageViewModel.profileUser.description)"
-                    )
                     
-                    if viewModel.selectedImage != nil && viewModel.nickName != "" && viewModel.userId != "" {
+                    if viewModel.selectedImage != nil &&
+                        profilePageViewModel.profileUser.user_id != "" &&
+                        profilePageViewModel.profileUser.user_at != "" {
                         
                         
+                        VarCollectionFile.myPrint(title: "Setting page view", content:
+                                                    "\(profilePageViewModel.profileUser.user_id) \(profilePageViewModel.profileUser.user_at) \(profilePageViewModel.profileUser.description)"
+                        )
                         
-//                        viewModel.uploadAlbum(type: 2, album_id: id)
+                        
+                        viewModel.updateProfile()
                     }
                     
                 }, label: {
                     HStack {
-                       Text("완료")
+                        if viewModel.uploadStatus == "" {
+                            Text("완료")
+                        } else {
+                            Text(viewModel.uploadStatus)
+                        }
                         
                     }
                     .contentShape(RoundedRectangle(cornerSize: CGSize(width: 60, height: 20)))
@@ -211,6 +229,9 @@ class SettingViewModel: ObservableObject {
     @Published var userId               : String   = ""
     @Published var description          : String   = ""
     
+    @Published var uploadStatus         : String   = ""
+    @Published var viewDissmiss         : Bool     = false
+    
     
     func getProfileImage() {
         guard let url = URL(string: VarCollectionFile.getProfileImageURL) else {
@@ -248,9 +269,78 @@ class SettingViewModel: ObservableObject {
 
             }.resume()
         }
+    }// getProfileImage()
+    
+    func updateProfile() {
+        guard let selectedImage = selectedImage else {
+            uploadStatus = "No image selected"
+            return
+        }
+        
+        uploadStatus = "Uploading..."
+        
+        guard let url = URL(string: VarCollectionFile.updateProfileURL) else {
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        let boundary = UUID().uuidString
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        
+        var data = Data()
+        data.append("--\(boundary)\r\n".data(using: .utf8)!)
+        data.append("Content-Disposition: form-data; name=\"file\"; filename=\"image.jpg\"\r\n".data(using: .utf8)!)
+        data.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+        data.append(selectedImage.jpegData(compressionQuality: 0.8)!)
+        
+        data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
+        
+        data.append("Content-Disposition: form-data; name=\"nick_name\"\r\n\r\n".data(using: .utf8)!)
+        data.append("\(nickName)\r\n".data(using: .utf8)!)
+        
+        data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
+        
+        data.append("Content-Disposition: form-data; name=\"user_id\"\r\n\r\n".data(using: .utf8)!)
+        data.append("\(userId)\r\n".data(using: .utf8)!)
+        
+        data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
+        
+        data.append("Content-Disposition: form-data; name=\"description\"\r\n\r\n".data(using: .utf8)!)
+        data.append("\(description)\r\n".data(using: .utf8)!)
+        
+        data.append("--\(boundary)--\r\n".data(using: .utf8)!)
+        
+        URLSession.shared.uploadTask(with: request, from: data) { responseData, response, error in
+            if let error = error {
+                self.viewDissmiss = true
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode),
+                  let responseData = responseData else {
+                self.viewDissmiss = true
+                return
+            }
+            
+            do {
+                let uploadResponse = try JSONDecoder().decode(UploadResponse.self, from: responseData)
+//                completion(.success(uploadResponse))
+                self.uploadStatus = uploadResponse.message
+                self.viewDissmiss = true
+            } catch {
+//                completion(.failure(error))
+                print(error)
+                self.viewDissmiss = true
+            }
+            
+            
+        }.resume()
         
         
-    }
+        
+    }//updateProfile
     
     
 }

@@ -80,7 +80,6 @@ class SavePageViewModel: ObservableObject {
                 }
             }
         }
-        
     }
     
     func uploadImage(type:Int , album_id:String, _ selectedImage: UIImage, completion: @escaping (Result<UploadResponse, Error>) -> Void) {

@@ -32,6 +32,7 @@ struct VarCollectionFile {
     static let unfollowURL              = host + "/user/unfollow"
     static let followOrNotURL           = host + "/user/followornot"
     static let getProfileImageURL       = host + "/user/profile-image"
+    static let updateProfileURL         = host + "/user/update"
     
     static let picOrNotURL              = host + "/pic/ornot"
     static let picUpURL                 = host + "/pic/up"
@@ -49,6 +50,7 @@ struct VarCollectionFile {
     static let getAlbumURL              = host + "/imagealbums/getinfo"
     static let updateAlbumURL           = host + "/imagealbums/update"
     static let deleteImageFromAlbumURL  = host + "/imagealbums/delete-image"
+    
     
     static let tagsGetURL               = host + "/tags/get"
     static let tagsSearchURL            = host + "/tags/search"
