@@ -21,15 +21,17 @@ struct SettingPageView: View {
             Section("계정 관리") {
                 NavigationLink(
                     destination: ProfileEditView().environmentObject(viewModel),
-                    isActive: $isActive
-                
-                ) {
-                    Text("프로필 편집")
-                }
-                .onChange(of: viewModel.viewDissmiss) { newValue in
-                    if newValue {
-                        isActive = false
+                    isActive: $isActive,
+                    label: {
+                        Text("프로필 편집")
                     }
+                
+                )
+                .onChange(of: viewModel.viewDissmiss) { newValue in
+                    print("viewDissmiss changed: \(newValue)") // 상태 변경 시 콘솔 로그 출력
+//                    if newValue {
+                        isActive = false
+//                    }
                 }
                 
                 NavigationLink(destination: ImageEditView()) {
@@ -173,7 +175,7 @@ struct ProfileEditView:View {
                         )
                         
                         
-                        viewModel.updateProfile()
+                        viewModel.update_profile()
                     }
                     
                 }, label: {
@@ -271,7 +273,7 @@ class SettingViewModel: ObservableObject {
         }
     }// getProfileImage()
     
-    func updateProfile() {
+    func updateProfile(completion: @escaping (Result<UploadResponse, Error>) -> Void) {
         guard let selectedImage = selectedImage else {
             uploadStatus = "No image selected"
             return
@@ -280,6 +282,7 @@ class SettingViewModel: ObservableObject {
         uploadStatus = "Uploading..."
         
         guard let url = URL(string: VarCollectionFile.updateProfileURL) else {
+            completion(.failure(NSError(domain: "Invalid URL", code: 400, userInfo: nil)))
             return
         }
         
@@ -312,35 +315,56 @@ class SettingViewModel: ObservableObject {
         
         data.append("--\(boundary)--\r\n".data(using: .utf8)!)
         
-        URLSession.shared.uploadTask(with: request, from: data) { responseData, response, error in
+        let task = URLSession.shared.uploadTask(with: request, from: data) { responseData, response, error in
             if let error = error {
-                self.viewDissmiss = true
+                completion(.failure(error))
                 return
             }
             
             guard let httpResponse = response as? HTTPURLResponse, (200...299).contains(httpResponse.statusCode),
                   let responseData = responseData else {
-                self.viewDissmiss = true
+                completion(.failure(NSError(domain: "Invalid response", code: 500, userInfo: nil)))
                 return
             }
             
             do {
                 let uploadResponse = try JSONDecoder().decode(UploadResponse.self, from: responseData)
-//                completion(.success(uploadResponse))
-                self.uploadStatus = uploadResponse.message
-                self.viewDissmiss = true
+                completion(.success(uploadResponse))
             } catch {
-//                completion(.failure(error))
-                print(error)
-                self.viewDissmiss = true
+                completion(.failure(error))
             }
-            
-            
-        }.resume()
-        
-        
+        }
+        task.resume()
         
     }//updateProfile
+    
+    func update_profile() {
+        
+        guard let selectedImage = selectedImage else {
+            uploadStatus = "No image selected"
+            return
+        }
+        
+        uploadStatus = "Uploading..."
+        
+        self.updateProfile() { [weak self] result in
+            DispatchQueue.main.async {
+                switch result {
+                    case.success(let response):
+                        self?.uploadStatus = response.message
+                        withAnimation {
+                            self!.viewDissmiss = true
+                        }
+                    
+                    case .failure(let error):
+                    self?.uploadStatus = "업로드 실패"
+                    withAnimation {
+                        self!.viewDissmiss = true
+                    }
+                }
+            }
+        }
+    }//update_profile
     
     
 }
