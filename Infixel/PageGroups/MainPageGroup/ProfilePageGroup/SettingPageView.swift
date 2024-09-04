@@ -14,6 +14,7 @@ struct SettingPageView: View {
     @EnvironmentObject var notificationService: NotificationService
     
     @StateObject var viewModel = SettingViewModel()
+    @StateObject var profilePageViewModel = ProfilePageViewModel()
     
     var body: some View {
         
@@ -25,7 +26,6 @@ struct SettingPageView: View {
                     label: {
                         Text("프로필 편집")
                     }
-                
                 )
                 .onChange(of: viewModel.viewDissmiss) { newValue in
                     print("viewDissmiss changed: \(newValue)") // 상태 변경 시 콘솔 로그 출력
@@ -34,7 +34,7 @@ struct SettingPageView: View {
 //                    }
                 }
                 
-                NavigationLink(destination: ImageEditView()) {
+                NavigationLink(destination: ImageEditView(images: profilePageViewModel.images)) {
                     Text("이미지 관리")
                 }
             }
@@ -47,6 +47,9 @@ struct SettingPageView: View {
                 }
                 .foregroundColor(.red)
             }
+        }
+        .onAppear {
+            profilePageViewModel.getMyImages(UserDefaults.standard.string(forKey: "user_id")!)
         }
     }
 }
@@ -164,7 +167,6 @@ struct ProfileEditView:View {
                 
                 Button(action: {
                     
-                    
                     if viewModel.selectedImage != nil &&
                         profilePageViewModel.profileUser.user_id != "" &&
                         profilePageViewModel.profileUser.user_at != "" {
@@ -197,11 +199,7 @@ struct ProfileEditView:View {
                 
             }//vstack
             
-            
-            
-            
-            
-            
+             
         }//VStack
         .padding([.trailing, .leading], 20)
         .sheet(isPresented: $isPickerPresented) {
@@ -215,10 +213,32 @@ struct ProfileEditView:View {
 }
 
 struct ImageEditView: View {
+    @State var images: [SearchSingleImage]
+    var onTap: (String, String) -> Void = { _, _ in }
+    
     var body: some View {
-        VStack {
+        HStack(alignment: .top, spacing: 10) {
+            LazyVStack(spacing: 10) {
+                ForEach(0..<((images.count + 1) / 2), id: \.self) { index in
+                    if index * 2 < images.count {
+                        AsyncImageView2(url: URL(string: images[index * 2].image_name)!) {
+                            onTap(images[index * 2].id, images[index * 2].image_name)
+                       }
+                    }
+                }
+            }
             
+            LazyVStack(spacing: 10) {
+                ForEach(0..<((images.count + 1) / 2), id: \.self) { index in
+                    if index * 2 + 1 < images.count {
+                        AsyncImageView2(url: URL(string: images[index * 2 + 1].image_name)!) {
+                            onTap(images[index * 2 + 1].id, images[index * 2 + 1].image_name)
+                       }
+                    }
+                }
+            }
         }
+        .padding(.horizontal, 10)
     }
 }
 
@@ -340,6 +360,8 @@ class SettingViewModel: ObservableObject {
     
     func update_profile() {
         
+        print("update_profile 1 \(self.viewDissmiss)")
+        
         guard let selectedImage = selectedImage else {
             uploadStatus = "No image selected"
             return
@@ -361,8 +383,10 @@ class SettingViewModel: ObservableObject {
                     withAnimation {
                         self!.viewDissmiss = true
                     }
+                    print("update_profile 2 \(self!.viewDissmiss)")
                 }
             }
+            
         }
     }//update_profile
     

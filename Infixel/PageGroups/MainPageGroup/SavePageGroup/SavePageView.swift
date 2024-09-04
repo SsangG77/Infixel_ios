@@ -221,6 +221,7 @@ struct SavePageView: View {
                     }
                 )
                 .onChange(of: viewModel.viewDissmiss) { newValue in
+                    print("save viewDissmiss changed: \(newValue)")
                     if newValue {
                         isActive = false
                     }

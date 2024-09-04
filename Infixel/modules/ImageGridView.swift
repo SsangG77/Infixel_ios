@@ -146,12 +146,6 @@ struct ImageGridView: View {
                 LazyVStack(spacing: 10) {
                     ForEach(0..<((images.count + 1) / 2), id: \.self) { index in
                         if index * 2 < images.count {
-//                            ImageGridItemView(
-//                                imageURL: images[index * 2].image_name,
-//                                onTap: {
-//                                    onTap(images[index * 2].id, images[index * 2].image_name)
-//                                }
-//                            )
                             AsyncImageView2(url: URL(string: images[index * 2].image_name)!) {
                                 onTap(images[index * 2].id, images[index * 2].image_name)
                            }
@@ -162,12 +156,6 @@ struct ImageGridView: View {
                 LazyVStack(spacing: 10) {
                     ForEach(0..<((images.count + 1) / 2), id: \.self) { index in
                         if index * 2 + 1 < images.count {
-//                            ImageGridItemView(
-//                                imageURL: images[index * 2 + 1].image_name,
-//                                onTap: {
-//                                    onTap(images[index * 2 + 1].id, images[index * 2 + 1].image_name)
-//                                }
-//                            )
                             AsyncImageView2(url: URL(string: images[index * 2 + 1].image_name)!) {
                                 onTap(images[index * 2 + 1].id, images[index * 2 + 1].image_name)
                            }

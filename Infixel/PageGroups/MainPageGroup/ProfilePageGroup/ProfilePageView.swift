@@ -257,9 +257,6 @@ struct ProfilePageImageView: View {
     
     @EnvironmentObject var appState: AppState
     
-    
-    
-    
     var body: some View {
         ScrollView {
             ImageGridView(images: $viewModel.images) { imageId, imageName in
