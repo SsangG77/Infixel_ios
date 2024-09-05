@@ -23,6 +23,7 @@ struct VarCollectionFile {
     static let imageUploadURL           = host + "/image/upload"
     static let reportImageURL           = host + "/image/report"
     static let myImageURL               = host + "/image/myimage"
+    static let deleteImageURL           = host + "/image/delete"
     
     static let loginURL                 = host + "/user/login"
     static let signupURL                = host + "/user/signup"

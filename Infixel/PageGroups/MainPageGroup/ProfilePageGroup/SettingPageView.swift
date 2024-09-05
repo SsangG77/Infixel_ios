@@ -64,7 +64,7 @@ struct ProfileEditView:View {
     @State private var isPickerPresented = false
     
     var body: some View {
-        ScrollView() {
+        ScrollView {
             
             Text("프로필 수정")
                 .font(Font.custom("Bungee-Regular", size: 20))
@@ -214,31 +214,38 @@ struct ProfileEditView:View {
 
 struct ImageEditView: View {
     @State var images: [SearchSingleImage]
-    var onTap: (String, String) -> Void = { _, _ in }
+    @StateObject var profilePageViewModel = ProfilePageViewModel()
+    @StateObject var viewModel = SettingViewModel()
+    
+    @State var selectedImageId:String = ""
+    @State var isShowAlert: Bool = false
     
     var body: some View {
-        HStack(alignment: .top, spacing: 10) {
-            LazyVStack(spacing: 10) {
-                ForEach(0..<((images.count + 1) / 2), id: \.self) { index in
-                    if index * 2 < images.count {
-                        AsyncImageView2(url: URL(string: images[index * 2].image_name)!) {
-                            onTap(images[index * 2].id, images[index * 2].image_name)
-                       }
-                    }
-                }
+        ScrollView {
+            ImageGridView(images: $images) { imageId, imageName in
+                VarCollectionFile.myPrint(title: "ImageEditView", content: imageName)
+                
+                selectedImageId = imageId
+                isShowAlert = true
             }
-            
-            LazyVStack(spacing: 10) {
-                ForEach(0..<((images.count + 1) / 2), id: \.self) { index in
-                    if index * 2 + 1 < images.count {
-                        AsyncImageView2(url: URL(string: images[index * 2 + 1].image_name)!) {
-                            onTap(images[index * 2 + 1].id, images[index * 2 + 1].image_name)
-                       }
-                    }
-                }
+            .alert(isPresented: $isShowAlert) {
+                let defaultButton = Alert.Button.default(Text("삭제"), action: {
+                    
+//                    albumDetailViewModel.deleteImage(selectedImageId!, savePageAlbumViewModel.albumId)
+                    VarCollectionFile.myPrint(title: "ImageEditView Alert", content: selectedImageId)
+                    viewModel.deleteImage(selectedImageId)
+                    
+                })
+                let cancelButton = Alert.Button.cancel(Text("취소"))
+                
+                return Alert(title: Text("이미지 삭제") , message: Text("삭제하시겠습니까?"), primaryButton: defaultButton, secondaryButton: cancelButton)
             }
         }
-        .padding(.horizontal, 10)
+        .padding(.top, 30)
+        .contentMargins(.bottom, 90)
+        .onAppear {
+            profilePageViewModel.getMyImages(UserDefaults.standard.string(forKey: "user_id")!)
+        }
     }
 }
 
@@ -389,6 +396,41 @@ class SettingViewModel: ObservableObject {
             
         }
     }//update_profile
+    
+    
+    func deleteImage(_ imageId:String) {
+        guard let url = URL(string: VarCollectionFile.deleteImageURL) else {
+            return
+        }
+        
+        let request = URLRequest.post(url: url, body: ["image_id" : imageId])
+        
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            URLSession.shared.dataTask(with: request) { data, res, error in
+                guard let self = self else { return }
+                if let error = error {
+                    print("Error : \(error)")
+                    return
+                }
+                if let data = data {
+                    do {
+                        if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
+                            if let result = json["message"] as? String {
+                                VarCollectionFile.myPrint(title: "deleteImage - response", content: result)
+                            }
+                        }
+                    } catch {
+                        print("Error decoding JSON:", error)
+                    }
+                }
+                
+                
+            }.resume()
+        }
+        
+        
+    }
+    
     
     
 }

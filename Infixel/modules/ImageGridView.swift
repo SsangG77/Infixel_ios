@@ -49,10 +49,10 @@ struct AsyncImageView2: View {
             }
         }
         .onAppear {
-                    if case .empty = viewModel.phase {
-                        viewModel.loadImage()
-                    }
-                }
+            if case .empty = viewModel.phase {
+                viewModel.loadImage()
+            }
+        }
     }
 }
 
@@ -101,35 +101,35 @@ enum AsyncImagePhase {
 
 
 
-struct ImageGridItemView: View {
-    var imageURL: String
-    let onTap: () -> Void
-    
-    var body: some View {
-        AsyncImage(url: URL(string: imageURL)) { phase in
-            switch phase {
-            case .empty:
-                ProgressView()
-                    .frame(height: 150)
-            case .success(let image):
-                image
-                    .resizable()
-                    .scaledToFit()
-                    .clipShape(RoundedRectangle(cornerRadius: 15))
-                    .onTapGesture {
-                        onTap()
-                    }
-            case .failure(let error):
-                Image(systemName: "photo")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 150)
-            @unknown default:
-                EmptyView()
-            }
-        }
-    }
-}
+//struct ImageGridItemView: View {
+//    var imageURL: String
+//    let onTap: () -> Void
+//    
+//    var body: some View {
+//        AsyncImage(url: URL(string: imageURL)) { phase in
+//            switch phase {
+//            case .empty:
+//                ProgressView()
+//                    .frame(height: 150)
+//            case .success(let image):
+//                image
+//                    .resizable()
+//                    .scaledToFit()
+//                    .clipShape(RoundedRectangle(cornerRadius: 15))
+//                    .onTapGesture {
+//                        onTap()
+//                    }
+//            case .failure(let error):
+//                Image(systemName: "photo")
+//                    .resizable()
+//                    .scaledToFit()
+//                    .frame(height: 150)
+//            @unknown default:
+//                EmptyView()
+//            }
+//        }
+//    }
+//}
 
 
 
@@ -146,6 +146,12 @@ struct ImageGridView: View {
                 LazyVStack(spacing: 10) {
                     ForEach(0..<((images.count + 1) / 2), id: \.self) { index in
                         if index * 2 < images.count {
+//                            ImageGridItemView(
+//                                imageURL: images[index * 2].image_name,
+//                                onTap: {
+//                                    onTap(images[index * 2].id, images[index * 2].image_name)
+//                                }
+//                            )
                             AsyncImageView2(url: URL(string: images[index * 2].image_name)!) {
                                 onTap(images[index * 2].id, images[index * 2].image_name)
                            }

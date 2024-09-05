@@ -181,18 +181,12 @@ class SavePageViewModel: ObservableObject {
         }
     } //getAlbumInfo
     
+    
+    
     struct albumInfoResponse: Decodable {
         let image: String
         let album_name: String
-    }
-    
-    
-    
-    
-    
-    
-    
-    
+    } //albumInfoResponse
     
     
     
