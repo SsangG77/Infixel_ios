@@ -7,7 +7,7 @@
 
 import Foundation
 
-class SearchSingleImage: Identifiable, Decodable, Hashable {
+struct SearchSingleImage: Identifiable, Decodable, Hashable {
     var id: String
     var image_name: String
     

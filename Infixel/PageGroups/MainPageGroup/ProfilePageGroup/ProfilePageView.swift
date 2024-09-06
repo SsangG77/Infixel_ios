@@ -50,6 +50,8 @@ class ProfilePageViewModel: ObservableObject {
                     if let decodedResponse = try? JSONDecoder().decode([SearchSingleImage].self, from: data) {
                         DispatchQueue.main.async {
                             self.images = decodedResponse
+                            
+                            VarCollectionFile.myPrint(title: "getMyImages()", content: "이미지 가져오기 완료")
                         }
                     }
                 } else if let error = error {
@@ -186,6 +188,18 @@ class ProfilePageViewModel: ObservableObject {
             }.resume()
         }
     }
+    
+    func deleteImage(withId id: String) {
+        DispatchQueue.main.async {
+                // 배열에서 해당 이미지를 삭제
+                self.images.removeAll { $0.id == id }
+                // 배열을 다시 할당하여 상태 변경을 확실히 함
+                self.images = Array(self.images)
+        }
+    }
+
+    
+    
 }
 
 //--@-------------------------------------------------------------------------------------------------------------------------------------------------
@@ -219,7 +233,7 @@ struct ProfilePageView: View {
                         VStack {
                             HStack {
                                 Spacer()
-                                NavigationLink(destination: SettingPageView(isLoggedIn: $isLoggedIn)) {
+                                NavigationLink(destination: SettingPageView(isLoggedIn: $isLoggedIn).environmentObject(viewModel)) {
                                     Image("three dots")
                                         .foregroundColor(.white)
                                         .padding()

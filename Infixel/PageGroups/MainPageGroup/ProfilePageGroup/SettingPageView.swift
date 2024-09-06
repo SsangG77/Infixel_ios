@@ -14,7 +14,8 @@ struct SettingPageView: View {
     @EnvironmentObject var notificationService: NotificationService
     
     @StateObject var viewModel = SettingViewModel()
-    @StateObject var profilePageViewModel = ProfilePageViewModel()
+    @EnvironmentObject var profilePageViewModel: ProfilePageViewModel
+    
     
     var body: some View {
         
@@ -34,7 +35,9 @@ struct SettingPageView: View {
 //                    }
                 }
                 
-                NavigationLink(destination: ImageEditView(images: profilePageViewModel.images)) {
+                NavigationLink(
+                    destination: ImageEditView().environmentObject(profilePageViewModel)
+                ) {
                     Text("이미지 관리")
                 }
             }
@@ -164,18 +167,11 @@ struct ProfileEditView:View {
                 
                 
             
-                
                 Button(action: {
                     
                     if viewModel.selectedImage != nil &&
                         profilePageViewModel.profileUser.user_id != "" &&
                         profilePageViewModel.profileUser.user_at != "" {
-                        
-                        
-                        VarCollectionFile.myPrint(title: "Setting page view", content:
-                                                    "\(profilePageViewModel.profileUser.user_id) \(profilePageViewModel.profileUser.user_at) \(profilePageViewModel.profileUser.description)"
-                        )
-                        
                         
                         viewModel.update_profile()
                     }
@@ -213,8 +209,7 @@ struct ProfileEditView:View {
 }
 
 struct ImageEditView: View {
-    @State var images: [SearchSingleImage]
-    @StateObject var profilePageViewModel = ProfilePageViewModel()
+    @EnvironmentObject var profilePageViewModel: ProfilePageViewModel
     @StateObject var viewModel = SettingViewModel()
     
     @State var selectedImageId:String = ""
@@ -222,7 +217,7 @@ struct ImageEditView: View {
     
     var body: some View {
         ScrollView {
-            ImageGridView(images: $images) { imageId, imageName in
+            ImageGridView(images: $profilePageViewModel.images) { imageId, imageName in
                 VarCollectionFile.myPrint(title: "ImageEditView", content: imageName)
                 
                 selectedImageId = imageId
@@ -230,10 +225,13 @@ struct ImageEditView: View {
             }
             .alert(isPresented: $isShowAlert) {
                 let defaultButton = Alert.Button.default(Text("삭제"), action: {
+//                    viewModel.deleteImage(selectedImageId)
                     
-//                    albumDetailViewModel.deleteImage(selectedImageId!, savePageAlbumViewModel.albumId)
-                    VarCollectionFile.myPrint(title: "ImageEditView Alert", content: selectedImageId)
-                    viewModel.deleteImage(selectedImageId)
+                    VarCollectionFile.myPrint(title: "ImageEditView 삭제된 이미지 아이디", content: selectedImageId)
+                    print("Before delete:", profilePageViewModel.images.count)
+                        profilePageViewModel.images.removeAll { $0.id == selectedImageId }
+                    print("After delete:", profilePageViewModel.images.count)
+
                     
                 })
                 let cancelButton = Alert.Button.cancel(Text("취소"))
