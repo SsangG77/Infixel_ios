@@ -56,6 +56,90 @@ struct AsyncImageView2: View {
     }
 }
 
+
+
+
+
+
+enum AsyncImagePhase {
+    case empty
+    case success(Image)
+    case failure(Error?)
+}
+
+
+
+
+
+
+
+
+
+struct ImageGridView: View {
+    @Binding var images: [SearchSingleImage]
+    var onTap: (String, String) -> Void = { _, _ in }
+    
+    
+    var body: some View {
+            HStack(alignment: .top, spacing: 10) {
+                LazyVStack(spacing: 10) {
+                    ForEach(0..<((images.count + 1) / 2), id: \.self) { index in
+                        if index * 2 < images.count {
+                            AsyncImageView2(url: URL(string: images[index * 2].image_name)!) {
+                                onTap(images[index * 2].id, images[index * 2].image_name)
+                           }
+                        }
+                    }
+                }
+                
+                LazyVStack(spacing: 10) {
+                    ForEach(0..<((images.count + 1) / 2), id: \.self) { index in
+                        if index * 2 + 1 < images.count {
+                            AsyncImageView2(url: URL(string: images[index * 2 + 1].image_name)!) {
+                                onTap(images[index * 2 + 1].id, images[index * 2 + 1].image_name)
+                           }
+                        }
+                    }
+                }
+            }
+            .padding(.horizontal, 10)
+        }
+}
+
+
+
+
+
+struct ImageVGridView: View {
+    @Binding var images: [SearchSingleImage]
+    var onTap: (String, String) -> Void = { _, _ in }
+
+    let columns = [GridItem(.flexible()), GridItem(.flexible())]
+
+    var body: some View {
+        LazyVGrid(columns: columns, spacing: 10) {
+            ForEach(images, id: \.id) { image in
+                
+                
+                AsyncImageView2(url: URL(string: image.image_name)!) {
+                    onTap(image.id, image.image_name)
+                }
+                .frame(height: 230)
+                
+                
+            }
+        }
+        .padding(.horizontal, 10)
+    }
+}
+
+
+
+
+
+
+
+
 class ImageLoaderViewModel: ObservableObject {
     @Published var phase: AsyncImagePhase = .empty
     private let url: URL
@@ -90,88 +174,20 @@ class ImageLoaderViewModel: ObservableObject {
     }
 }
 
-enum AsyncImagePhase {
-    case empty
-    case success(Image)
-    case failure(Error?)
-}
 
 
 
 
 
 
-//struct ImageGridItemView: View {
-//    var imageURL: String
-//    let onTap: () -> Void
-//    
-//    var body: some View {
-//        AsyncImage(url: URL(string: imageURL)) { phase in
-//            switch phase {
-//            case .empty:
-//                ProgressView()
-//                    .frame(height: 150)
-//            case .success(let image):
-//                image
-//                    .resizable()
-//                    .scaledToFit()
-//                    .clipShape(RoundedRectangle(cornerRadius: 15))
-//                    .onTapGesture {
-//                        onTap()
-//                    }
-//            case .failure(let error):
-//                Image(systemName: "photo")
-//                    .resizable()
-//                    .scaledToFit()
-//                    .frame(height: 150)
-//            @unknown default:
-//                EmptyView()
-//            }
-//        }
-//    }
-//}
 
 
 
 
 
 
-struct ImageGridView: View {
-    @Binding var images: [SearchSingleImage]
-    var onTap: (String, String) -> Void = { _, _ in }
-    
-    
-    var body: some View {
-            HStack(alignment: .top, spacing: 10) {
-                LazyVStack(spacing: 10) {
-                    ForEach(0..<((images.count + 1) / 2), id: \.self) { index in
-                        if index * 2 < images.count {
-//                            ImageGridItemView(
-//                                imageURL: images[index * 2].image_name,
-//                                onTap: {
-//                                    onTap(images[index * 2].id, images[index * 2].image_name)
-//                                }
-//                            )
-                            AsyncImageView2(url: URL(string: images[index * 2].image_name)!) {
-                                onTap(images[index * 2].id, images[index * 2].image_name)
-                           }
-                        }
-                    }
-                }
-                
-                LazyVStack(spacing: 10) {
-                    ForEach(0..<((images.count + 1) / 2), id: \.self) { index in
-                        if index * 2 + 1 < images.count {
-                            AsyncImageView2(url: URL(string: images[index * 2 + 1].image_name)!) {
-                                onTap(images[index * 2 + 1].id, images[index * 2 + 1].image_name)
-                           }
-                        }
-                    }
-                }
-            }
-            .padding(.horizontal, 10)
-        }
-}
+
+
 
 #Preview {
     ImageGridView(images: .constant([

@@ -190,13 +190,10 @@ class ProfilePageViewModel: ObservableObject {
     }
     
     func deleteImage(withId id: String) {
-        DispatchQueue.main.async {
-                // 배열에서 해당 이미지를 삭제
-                self.images.removeAll { $0.id == id }
-                // 배열을 다시 할당하여 상태 변경을 확실히 함
-                self.images = Array(self.images)
+            DispatchQueue.main.async {
+                self.images = self.images.filter { $0.id != id }
+            }
         }
-    }
 
     
     

@@ -410,7 +410,7 @@ struct SavePageAddAlbumView: View {
             .padding(30)
             
             VStack {
-                /// 이미지 선택하는 부분
+                // 이미지 선택하는 부분
                 if let selectedImage = viewModel.selectedImage {
                     ZStack {
                         Image(uiImage: selectedImage)

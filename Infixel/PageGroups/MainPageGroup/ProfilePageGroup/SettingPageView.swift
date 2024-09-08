@@ -212,26 +212,32 @@ struct ImageEditView: View {
     @EnvironmentObject var profilePageViewModel: ProfilePageViewModel
     @StateObject var viewModel = SettingViewModel()
     
+    @State var images:[SearchSingleImage] = [
+        SearchSingleImage(id: "imageid-0af2a042-ffb3-4af1-85ee-f0055cea3463", image_name: VarCollectionFile.resjpgURL+"1720457439591-723102026.jpg"),
+        SearchSingleImage(id: "imageid-1468df05-2afd-43dd-ad0b-874051c6aa52", image_name: VarCollectionFile.resjpgURL+"1721224289969-143531506.jpg"),
+        SearchSingleImage(id: "imageid-156fbb93-e780-409b-82a7-a24c20b81507", image_name: VarCollectionFile.resjpgURL+"1721743781019-5213728.jpg")
+    ]
+    
     @State var selectedImageId:String = ""
     @State var isShowAlert: Bool = false
     
     var body: some View {
         ScrollView {
-            ImageGridView(images: $profilePageViewModel.images) { imageId, imageName in
-                VarCollectionFile.myPrint(title: "ImageEditView", content: imageName)
+            ImageVGridView(images: $images) { imageId, imageName in
                 
-                selectedImageId = imageId
-                isShowAlert = true
+                DispatchQueue.main.async {
+                    selectedImageId = imageId
+                    VarCollectionFile.myPrint(title: "선택된 이미지", content: selectedImageId)
+                    isShowAlert = true
+                }
             }
             .alert(isPresented: $isShowAlert) {
                 let defaultButton = Alert.Button.default(Text("삭제"), action: {
 //                    viewModel.deleteImage(selectedImageId)
                     
-                    VarCollectionFile.myPrint(title: "ImageEditView 삭제된 이미지 아이디", content: selectedImageId)
-                    print("Before delete:", profilePageViewModel.images.count)
-                        profilePageViewModel.images.removeAll { $0.id == selectedImageId }
-                    print("After delete:", profilePageViewModel.images.count)
-
+                    print("선택된 이미지 ID: \(selectedImageId)")
+                    self.images.removeAll { $0.id == selectedImageId }
+                    print("After delete:", images.map { $0.id })
                     
                 })
                 let cancelButton = Alert.Button.cancel(Text("취소"))
@@ -243,9 +249,13 @@ struct ImageEditView: View {
         .contentMargins(.bottom, 90)
         .onAppear {
             profilePageViewModel.getMyImages(UserDefaults.standard.string(forKey: "user_id")!)
+            
+//            self.images = profilePageViewModel.images
+            
         }
     }
 }
+
 
 
 
