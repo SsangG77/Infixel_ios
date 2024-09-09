@@ -212,10 +212,11 @@ struct ImageEditView: View {
     @EnvironmentObject var profilePageViewModel: ProfilePageViewModel
     @StateObject var viewModel = SettingViewModel()
     
+    
     @State var images:[SearchSingleImage] = [
-        SearchSingleImage(id: "imageid-0af2a042-ffb3-4af1-85ee-f0055cea3463", image_name: VarCollectionFile.resjpgURL+"1720457439591-723102026.jpg"),
-        SearchSingleImage(id: "imageid-1468df05-2afd-43dd-ad0b-874051c6aa52", image_name: VarCollectionFile.resjpgURL+"1721224289969-143531506.jpg"),
-        SearchSingleImage(id: "imageid-156fbb93-e780-409b-82a7-a24c20b81507", image_name: VarCollectionFile.resjpgURL+"1721743781019-5213728.jpg")
+//        SearchSingleImage(id: "imageid-0af2a042-ffb3-4af1-85ee-f0055cea3463", image_name: VarCollectionFile.resjpgURL+"1720457439591-723102026.jpg"),
+//        SearchSingleImage(id: "imageid-1468df05-2afd-43dd-ad0b-874051c6aa52", image_name: VarCollectionFile.resjpgURL+"1721224289969-143531506.jpg"),
+//        SearchSingleImage(id: "imageid-156fbb93-e780-409b-82a7-a24c20b81507", image_name: VarCollectionFile.resjpgURL+"1721743781019-5213728.jpg")
     ]
     
     @State var selectedImageId:String = ""
@@ -223,36 +224,84 @@ struct ImageEditView: View {
     
     var body: some View {
         ScrollView {
-            ImageVGridView(images: $images) { imageId, imageName in
-                
-                DispatchQueue.main.async {
-                    selectedImageId = imageId
-                    VarCollectionFile.myPrint(title: "선택된 이미지", content: selectedImageId)
-                    isShowAlert = true
+            
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+                ForEach(images, id: \.id) { image_ in
+                    GeometryReader { geo in
+                    
+                        Group {
+                            AsyncImage(url: URL(string : image_.image_name)) { phase in
+                                switch phase {
+                                case .empty:
+                                    Spacer()
+                                    ProgressView() // 이미지를 로드 중일 때 표시할 로딩 화면
+                                    Spacer()
+                                case .success(let image):
+                                    
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                    
+                                        .onTapGesture {
+                                            DispatchQueue.main.async {
+                                                selectedImageId = image_.id
+                                                VarCollectionFile.myPrint(title: "선택된 이미지", content: image_.id)
+                                                isShowAlert = true
+                                            }
+                                        }
+                                    
+                                    
+                                    
+                                    
+                                case .failure:
+                                    ProgressView()
+                                @unknown default:
+                                    Text("Unknown state") // 알 수 없는 상태 처리
+                                }
+                            }
+                            .frame(width: geo.size.width, height: 300)
+                            .cornerRadius(10)
+                            .clipped()
+                        }
+                        //                    .onAppear {
+//                        if case .empty = phase {
+//                            viewModel.loadImage()
+//                        }
+//                    }
+                    }
+                    .frame(height: 300)
+                    
+                    
                 }
-            }
+            }//LazyVGrid
+            .padding(.horizontal, 10)
             .alert(isPresented: $isShowAlert) {
                 let defaultButton = Alert.Button.default(Text("삭제"), action: {
-//                    viewModel.deleteImage(selectedImageId)
+                    viewModel.deleteImage(selectedImageId)
                     
                     print("선택된 이미지 ID: \(selectedImageId)")
-                    self.images.removeAll { $0.id == selectedImageId }
+                    withAnimation {
+                        self.images.removeAll { $0.id == selectedImageId }
+                    }
                     print("After delete:", images.map { $0.id })
                     
                 })
                 let cancelButton = Alert.Button.cancel(Text("취소"))
                 
                 return Alert(title: Text("이미지 삭제") , message: Text("삭제하시겠습니까?"), primaryButton: defaultButton, secondaryButton: cancelButton)
-            }
-        }
-        .padding(.top, 30)
+            }//alert
+        }//ScrollView
+//        .padding(.top, 30)
         .contentMargins(.bottom, 90)
+        .contentMargins(.top, 30)
         .onAppear {
             profilePageViewModel.getMyImages(UserDefaults.standard.string(forKey: "user_id")!)
             
-//            self.images = profilePageViewModel.images
+            self.images = profilePageViewModel.images
             
         }
+        
+        
     }
 }
 
