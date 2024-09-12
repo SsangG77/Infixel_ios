@@ -7,6 +7,22 @@
 		<string>example2.com</string>
 		<string>example.com</string>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>kakaob3f5235e57a8ccfa4f0380e3487b7175</string>
+			</array>
+		</dict>
+	</array>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>kakaolink</string>
+		<string>kakaokompassauth</string>
+	</array>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Bungee-Regular.ttf</string>

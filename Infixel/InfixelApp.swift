@@ -11,6 +11,9 @@ import UserNotifications
 import Foundation
 import Combine
 
+import KakaoSDKCommon
+import KakaoSDKAuth
+
 @available(iOS 17.0, *)
 @main
 struct InfixelApp: App {
@@ -51,16 +54,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     func application( _ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-//        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
-//            print("Permission granted: \(granted)")
-//        }
-        
         UNUserNotificationCenter.current().delegate = self
         application.registerForRemoteNotifications()
        
-        
-        
-        
+        KakaoSDK.initSDK(appKey: "b3f5235e57a8ccfa4f0380e3487b7175")
         
         return true
     }
@@ -71,40 +68,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         let token = tokenParts.joined()
         deviceTokenString = token
         UserDefaults.standard.set(token, forKey: "device_token")
-        
-        // 토큰을 서버로 전송하는 함수 호출
-//        sendDeviceTokenToServer(token)
     }
     
-    
-    func sendDeviceTokenToServer(_ token: String) {
-        // 서버로 디바이스 토큰을 전송하는 로직
-        guard let url = URL(string: "http://192.168.31.200:3000/user/device-token") else { return }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
-        let parameters: [String: Any] = ["device_token": token, "user_id": UserDefaults.standard.string(forKey: "user_id")]
-        
-        request.httpBody = try? JSONSerialization.data(withJSONObject: parameters, options: [])
-        
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("Error sending token: \(error)")
-                return
+    func application(_ app: UIApplication, open url: URL,
+                         options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
+            // 카카오 로그인 처리를 위한 콜백
+            if (AuthApi.isKakaoTalkLoginUrl(url)) {
+                return AuthController.handleOpenUrl(url: url)
             }
-            
-            guard let response = response as? HTTPURLResponse, response.statusCode == 200 else {
-                print("Invalid response")
-                return
-            }
-            
-            print("Device token sent successfully")
+            return false
         }
-        
-        task.resume()
-    }
     
     
     // 푸시 알림 수신 (앱이 포그라운드에 있을 때)
@@ -149,10 +122,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     }
     
 
-    
-    
-    
-
         // 푸시 알림 데이터 처리
         private func handleNotification(_ notification: UNNotification) {
             
@@ -179,7 +148,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             }
             
         }
-}
+} //AppDelegate
 
 extension Notification.Name {
     static let didReceiveDeviceToken = Notification.Name("didReceiveDeviceToken")
