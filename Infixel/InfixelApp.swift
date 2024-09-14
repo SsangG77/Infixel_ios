@@ -50,6 +50,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     var notificationService: NotificationService?
     
     private var processedNotifications = Set<String>()
+    
+    //카카오 api 네이티브 앱 키
+    let kakaoAppKey = Bundle.main.infoDictionary?["KAKAO_NATIVE_APP_KEY"] ?? ""
 
     
     func application( _ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -57,7 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         UNUserNotificationCenter.current().delegate = self
         application.registerForRemoteNotifications()
        
-        KakaoSDK.initSDK(appKey: "b3f5235e57a8ccfa4f0380e3487b7175")
+        KakaoSDK.initSDK(appKey: kakaoAppKey as! String)
         
         return true
     }
@@ -78,6 +81,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
             }
             return false
         }
+    
+    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+        
+        let sceneConfig = UISceneConfiguration(name: nil, sessionRole: connectingSceneSession.role)
+        
+        sceneConfig.delegateClass = SceneDelegate.self
+        
+        return sceneConfig
+        
+    }
+    
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        handleNotification(userInfo)
+        completionHandler(.newData)
+    }
+    
     
     
     // 푸시 알림 수신 (앱이 포그라운드에 있을 때)
@@ -102,14 +122,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     
     
     
-    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        // Handle the notification payload here
-        handleNotification(userInfo)
-        completionHandler(.newData)
-    }
     
     private func handleNotification(_ userInfo: [AnyHashable: Any]) {
-        // Your notification handling logic here
         UserDefaults.standard.set(true, forKey: "new_notification")
         notificationService?.notification_flag = true
         

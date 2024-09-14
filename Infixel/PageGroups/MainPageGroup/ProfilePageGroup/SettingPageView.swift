@@ -7,14 +7,16 @@
 
 import SwiftUI
 
+
 struct SettingPageView: View {
     @Binding var isLoggedIn: Bool
     @State var isActive = false
     
     @EnvironmentObject var notificationService: NotificationService
+    @EnvironmentObject var profilePageViewModel: ProfilePageViewModel
     
     @StateObject var viewModel = SettingViewModel()
-    @EnvironmentObject var profilePageViewModel: ProfilePageViewModel
+    @StateObject var snsLoginViewModel = SNSLoginViewModel()
     
     
     var body: some View {
@@ -46,6 +48,9 @@ struct SettingPageView: View {
                 Button("로그아웃") {
                     UserDefaults.standard.removeObject(forKey: "notifications")
                     notificationService.notifications = []
+                    
+                    snsLoginViewModel.kakaoLogout()
+                    
                     isLoggedIn = false
                 }
                 .foregroundColor(.red)

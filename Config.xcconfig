@@ -1,0 +1,12 @@
+//
+//  Config.xcconfig
+//  Infixel
+//
+//  Created by 차상진 on 9/14/24.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+
+KAKAO_NATIVE_APP_KEY = b3f5235e57a8ccfa4f0380e3487b7175

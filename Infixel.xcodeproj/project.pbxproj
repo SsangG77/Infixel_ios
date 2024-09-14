@@ -57,6 +57,7 @@
 		914EB7FE2C32DB19002D1B96 /* SearchAlbumSingleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914EB7FD2C32DB19002D1B96 /* SearchAlbumSingleView.swift */; };
 		915C5BE92C5E8F0F0002357B /* SettingPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915C5BE82C5E8F0F0002357B /* SettingPageView.swift */; };
 		915C5BEB2C5EA0480002357B /* NavigationChildView_test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 915C5BEA2C5EA0480002357B /* NavigationChildView_test.swift */; };
+		9164CAF22C95D0AF0022BF09 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9164CAF12C95D0AF0022BF09 /* SceneDelegate.swift */; };
 		917B43642AC3EB010029609B /* TabViewForSlideImageView_test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 917B43632AC3EB010029609B /* TabViewForSlideImageView_test.swift */; };
 		917B43692AC5397A0029609B /* SlideImage_class.swift in Sources */ = {isa = PBXBuildFile; fileRef = 917B43682AC5397A0029609B /* SlideImage_class.swift */; };
 		917B436B2AC541180029609B /* User_class.swift in Sources */ = {isa = PBXBuildFile; fileRef = 917B436A2AC541180029609B /* User_class.swift */; };
@@ -121,6 +122,8 @@
 		914EB7FD2C32DB19002D1B96 /* SearchAlbumSingleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAlbumSingleView.swift; sourceTree = "<group>"; };
 		915C5BE82C5E8F0F0002357B /* SettingPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingPageView.swift; sourceTree = "<group>"; };
 		915C5BEA2C5EA0480002357B /* NavigationChildView_test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationChildView_test.swift; sourceTree = "<group>"; };
+		9164CAF02C95CC6B0022BF09 /* Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		9164CAF12C95D0AF0022BF09 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		917B43632AC3EB010029609B /* TabViewForSlideImageView_test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewForSlideImageView_test.swift; sourceTree = "<group>"; };
 		917B43682AC5397A0029609B /* SlideImage_class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideImage_class.swift; sourceTree = "<group>"; };
 		917B436A2AC541180029609B /* User_class.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User_class.swift; sourceTree = "<group>"; };
@@ -167,6 +170,7 @@
 		912B687A2AB088BF00505677 = {
 			isa = PBXGroup;
 			children = (
+				9164CAF02C95CC6B0022BF09 /* Config.xcconfig */,
 				9141C49F2C93464E004B1B89 /* KakaoSDKFriendResources.bundle */,
 				912B68852AB088BF00505677 /* Infixel */,
 				912B68842AB088BF00505677 /* Products */,
@@ -320,6 +324,7 @@
 				914EB7F92C31A2AF002D1B96 /* SearchSingleImage.swift */,
 				914EB7FB2C31A86A002D1B96 /* SearchSingleUser.swift */,
 				9125C4792C419F6900431998 /* PageOffsetObserver.swift */,
+				9164CAF12C95D0AF0022BF09 /* SceneDelegate.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -479,6 +484,7 @@
 				9125C47C2C41A17A00431998 /* RankingUserView.swift in Sources */,
 				912B68B72AB81B8100505677 /* HomePageView.swift in Sources */,
 				9192B10E2ABC065B007F7ED9 /* InputView.swift in Sources */,
+				9164CAF22C95D0AF0022BF09 /* SceneDelegate.swift in Sources */,
 				911B48AA2C456E280075F784 /* ThreeDotsView.swift in Sources */,
 				912B689A2AB0A13100505677 /* AsyncImageView.swift in Sources */,
 				91DA58862C26E870007609F5 /* ImageViewModel.swift in Sources */,
@@ -501,6 +507,7 @@
 /* Begin XCBuildConfiguration section */
 		912B688F2AB088C100505677 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9164CAF02C95CC6B0022BF09 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -561,6 +568,7 @@
 		};
 		912B68902AB088C100505677 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9164CAF02C95CC6B0022BF09 /* Config.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -615,6 +623,7 @@
 		};
 		912B68922AB088C100505677 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9164CAF02C95CC6B0022BF09 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -648,6 +657,7 @@
 		};
 		912B68932AB088C100505677 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9164CAF02C95CC6B0022BF09 /* Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

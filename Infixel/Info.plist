@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>KAKAO_NATIVE_APP_KEY</key>
+	<string>${KAKAO_NATIVE_APP_KEY}</string>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
 		<string>example2.com</string>
@@ -14,7 +16,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kakaob3f5235e57a8ccfa4f0380e3487b7175</string>
+				<string>kakao${KAKAO_NATIVE_APP_KEY}</string>
 			</array>
 		</dict>
 	</array>
