@@ -26,6 +26,7 @@ struct VarCollectionFile {
     static let deleteImageURL           = host + "/image/delete"
     
     static let loginURL                 = host + "/user/login"
+    static let kakaoLoginURL            = host + "/user/kakaologin"
     static let signupURL                = host + "/user/signup"
     static let userSearchURL            = host + "/user/search"
     static let userProfileURL           = host + "/user/profile"

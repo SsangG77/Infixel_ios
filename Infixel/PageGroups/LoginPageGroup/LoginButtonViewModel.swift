@@ -34,7 +34,7 @@ class LoginButtonViewModel: ObservableObject {
         let userDict: [String: Any] = [
             "userId": userId,
             "userPW": userPW,
-            "deviceToken": UserDefaults.standard.string(forKey: "device_token")
+            "deviceToken": UserDefaults.standard.string(forKey: "device_token")!
         ]
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: userDict, options: [])
@@ -66,8 +66,6 @@ class LoginButtonViewModel: ObservableObject {
                                    let profile_image = json["profile_image"] as? String,
                                    let description   = json["description"]   as? String,
                                    let isLogin       = json["isLogin"]       as? Bool {
-                                    print("id : \(id)")
-                                    print("is login : \(isLogin)")
                                     DispatchQueue.main.async {
                                         isLoggedIn.wrappedValue = isLogin
                                         if isLoggedIn.wrappedValue { // 로그인 성공

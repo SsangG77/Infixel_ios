@@ -84,7 +84,7 @@ struct LoginPage: View {
                     
                   
                     //SNS Login
-                    SNSLoginView()
+                    SNSLoginView(isLoggedIn: $isLoggedIn)
                         .padding(.top, 30)
                     
                     
