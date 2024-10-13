@@ -41,13 +41,11 @@
 		91309F222AF0A8FB006E852F /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91309F212AF0A8FB006E852F /* ColorExtension.swift */; };
 		91309F242AF0DF7E006E852F /* IconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91309F232AF0DF7E006E852F /* IconView.swift */; };
 		91309F262AF0F3F3006E852F /* horizentalScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91309F252AF0F3F3006E852F /* horizentalScrollView.swift */; };
-		9141C4962C90A488004B1B89 /* KakaoSDK in Frameworks */ = {isa = PBXBuildFile; productRef = 9141C4952C90A488004B1B89 /* KakaoSDK */; };
 		9141C4982C90A488004B1B89 /* KakaoSDKAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 9141C4972C90A488004B1B89 /* KakaoSDKAuth */; };
-		9141C49A2C90A488004B1B89 /* KakaoSDKCert in Frameworks */ = {isa = PBXBuildFile; productRef = 9141C4992C90A488004B1B89 /* KakaoSDKCert */; };
-		9141C49C2C90A488004B1B89 /* KakaoSDKCertCore in Frameworks */ = {isa = PBXBuildFile; productRef = 9141C49B2C90A488004B1B89 /* KakaoSDKCertCore */; };
 		9141C49E2C90A488004B1B89 /* KakaoSDKCommon in Frameworks */ = {isa = PBXBuildFile; productRef = 9141C49D2C90A488004B1B89 /* KakaoSDKCommon */; };
 		9141C4A02C93464E004B1B89 /* KakaoSDKFriendResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9141C49F2C93464E004B1B89 /* KakaoSDKFriendResources.bundle */; };
 		914B4F182AB99E6200643262 /* TabViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914B4F172AB99E6200643262 /* TabViewModel.swift */; };
+		914B57902CB3EA4E0006FE1C /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 914B578F2CB3EA4E0006FE1C /* KakaoSDKUser */; };
 		914EB7EE2C2EF4EC002D1B96 /* SearchPageView_tag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914EB7ED2C2EF4EC002D1B96 /* SearchPageView_tag.swift */; };
 		914EB7F02C2EF7C9002D1B96 /* SearchPageView_user.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914EB7EF2C2EF7C9002D1B96 /* SearchPageView_user.swift */; };
 		914EB7F22C2F1244002D1B96 /* SearchPageVIew_album.swift in Sources */ = {isa = PBXBuildFile; fileRef = 914EB7F12C2F1244002D1B96 /* SearchPageVIew_album.swift */; };
@@ -145,11 +143,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9141C49C2C90A488004B1B89 /* KakaoSDKCertCore in Frameworks */,
-				9141C49A2C90A488004B1B89 /* KakaoSDKCert in Frameworks */,
-				9141C4962C90A488004B1B89 /* KakaoSDK in Frameworks */,
 				9141C49E2C90A488004B1B89 /* KakaoSDKCommon in Frameworks */,
 				9141C4982C90A488004B1B89 /* KakaoSDKAuth in Frameworks */,
+				914B57902CB3EA4E0006FE1C /* KakaoSDKUser in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,6 +169,7 @@
 				9164CAF02C95CC6B0022BF09 /* Config.xcconfig */,
 				9141C49F2C93464E004B1B89 /* KakaoSDKFriendResources.bundle */,
 				912B68852AB088BF00505677 /* Infixel */,
+				914B578E2CB3EA4E0006FE1C /* Frameworks */,
 				912B68842AB088BF00505677 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -313,6 +310,13 @@
 			path = ProfilePageGroup;
 			sourceTree = "<group>";
 		};
+		914B578E2CB3EA4E0006FE1C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		917B43672AC539470029609B /* Classes */ = {
 			isa = PBXGroup;
 			children = (
@@ -379,11 +383,9 @@
 			);
 			name = Infixel;
 			packageProductDependencies = (
-				9141C4952C90A488004B1B89 /* KakaoSDK */,
 				9141C4972C90A488004B1B89 /* KakaoSDKAuth */,
-				9141C4992C90A488004B1B89 /* KakaoSDKCert */,
-				9141C49B2C90A488004B1B89 /* KakaoSDKCertCore */,
 				9141C49D2C90A488004B1B89 /* KakaoSDKCommon */,
+				914B578F2CB3EA4E0006FE1C /* KakaoSDKUser */,
 			);
 			productName = Infixel;
 			productReference = 912B68832AB088BF00505677 /* Infixel.app */;
@@ -628,6 +630,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Infixel/InfixelDebug.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Infixel/Preview Content\"";
@@ -635,23 +638,26 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Infixel/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Infixel;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_NSCameraUsageDescription = "새로운 이미지를 업로드하기 위해 카메라를 사용합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "업로드/다운로드하기 위한 앨범이 사용됩니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sangjin.Infixel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -662,6 +668,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Infixel/InfixelRelease.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Infixel/Preview Content\"";
@@ -669,23 +676,26 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Infixel/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Infixel;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				INFOPLIST_KEY_NSCameraUsageDescription = "새로운 이미지를 업로드하기 위해 카메라를 사용합니다.";
 				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "업로드/다운로드하기 위한 앨범이 사용됩니다.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIRequiresFullScreen = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.sangjin.Infixel;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
@@ -724,30 +734,20 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		9141C4952C90A488004B1B89 /* KakaoSDK */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9141C4942C90A488004B1B89 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
-			productName = KakaoSDK;
-		};
 		9141C4972C90A488004B1B89 /* KakaoSDKAuth */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9141C4942C90A488004B1B89 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
 			productName = KakaoSDKAuth;
 		};
-		9141C4992C90A488004B1B89 /* KakaoSDKCert */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9141C4942C90A488004B1B89 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
-			productName = KakaoSDKCert;
-		};
-		9141C49B2C90A488004B1B89 /* KakaoSDKCertCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9141C4942C90A488004B1B89 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
-			productName = KakaoSDKCertCore;
-		};
 		9141C49D2C90A488004B1B89 /* KakaoSDKCommon */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 9141C4942C90A488004B1B89 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
 			productName = KakaoSDKCommon;
+		};
+		914B578F2CB3EA4E0006FE1C /* KakaoSDKUser */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9141C4942C90A488004B1B89 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
+			productName = KakaoSDKUser;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

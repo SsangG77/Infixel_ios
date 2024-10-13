@@ -19,6 +19,9 @@ struct SettingPageView: View {
     @StateObject var snsLoginViewModel = SNSLoginViewModel()
     
     
+    
+    
+    
     var body: some View {
         
         List {
@@ -53,6 +56,14 @@ struct SettingPageView: View {
                     
                     isLoggedIn = false
                 }
+                
+                Button("계정 비활성화") {
+                    UserDefaults.standard.removeObject(forKey: "notifications")
+                    notificationService.notifications = []
+                    
+                    isLoggedIn = false
+                    snsLoginViewModel.disableUser()
+                }
                 .foregroundColor(.red)
             }
         }
@@ -70,6 +81,10 @@ struct ProfileEditView:View {
     @StateObject var profilePageViewModel = ProfilePageViewModel()
     
     @State private var isPickerPresented = false
+    
+    @State var nick_name: String = ""
+    @State var user_id: String = ""
+    @State var description: String = ""
     
     var body: some View {
         ScrollView {
@@ -136,7 +151,7 @@ struct ProfileEditView:View {
                     Spacer()
                 }
                 
-                TextField(profilePageViewModel.profileUser.user_id, text: $profilePageViewModel.profileUser.user_id)
+                TextField(profilePageViewModel.profileUser.user_id, text: $nick_name)
                     .textFieldStyle(PlainTextFieldStyle())
                     .padding(.bottom, 10)
                 
@@ -149,7 +164,7 @@ struct ProfileEditView:View {
                 }
                 .padding(.top, 30)
                 
-                TextField(profilePageViewModel.profileUser.user_at, text: $profilePageViewModel.profileUser.user_at)
+                TextField(profilePageViewModel.profileUser.user_at, text: $user_id)
                     .textFieldStyle(PlainTextFieldStyle())
                     .padding(.bottom, 10)
                 
@@ -162,7 +177,7 @@ struct ProfileEditView:View {
                 }
                 .padding(.top, 30)
                 
-                TextField(profilePageViewModel.profileUser.description, text: $profilePageViewModel.profileUser.description)
+                TextField(profilePageViewModel.profileUser.description, text: $description)
                     .textFieldStyle(PlainTextFieldStyle())
                     .padding(.bottom, 10)
                 
@@ -176,9 +191,10 @@ struct ProfileEditView:View {
                     
                     if viewModel.selectedImage != nil &&
                         profilePageViewModel.profileUser.user_id != "" &&
-                        profilePageViewModel.profileUser.user_at != "" {
+                        profilePageViewModel.profileUser.user_at != "" &&
+                        profilePageViewModel.profileUser.description != "" {
                         
-                        viewModel.update_profile()
+                        viewModel.update_profile(nick_name: nick_name == "" ? profilePageViewModel.profileUser.user_id : nick_name, user_id: user_id == "" ? profilePageViewModel.profileUser.user_at : user_id, description: description == "" ? profilePageViewModel.profileUser.description : description)
                     }
                     
                 }, label: {
@@ -362,7 +378,12 @@ class SettingViewModel: ObservableObject {
         }
     }// getProfileImage()
     
-    func updateProfile(completion: @escaping (Result<UploadResponse, Error>) -> Void) {
+    func updateProfile(nick_name:String, user_id:String, description:String, completion: @escaping (Result<UploadResponse, Error>) -> Void) {
+        VarCollectionFile.myPrint(title: "updateProfile", content: nick_name + " " + user_id + " " + description)
+        
+        let id = UserDefaults.standard.string(forKey: "user_id")!
+        
+        
         guard let selectedImage = selectedImage else {
             uploadStatus = "No image selected"
             return
@@ -383,26 +404,33 @@ class SettingViewModel: ObservableObject {
         
         var data = Data()
         data.append("--\(boundary)\r\n".data(using: .utf8)!)
-        data.append("Content-Disposition: form-data; name=\"file\"; filename=\"image.jpg\"\r\n".data(using: .utf8)!)
-        data.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
-        data.append(selectedImage.jpegData(compressionQuality: 0.8)!)
+            data.append("Content-Disposition: form-data; name=\"file\"; filename=\"image.jpg\"\r\n".data(using: .utf8)!)
+            data.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+            data.append(selectedImage.jpegData(compressionQuality: 0.8)!)
+            data.append("\r\n".data(using: .utf8)!)
+
+            // nick_name 필드 추가
+            data.append("--\(boundary)\r\n".data(using: .utf8)!)
+            data.append("Content-Disposition: form-data; name=\"nick_name\"\r\n\r\n".data(using: .utf8)!)
+            data.append("\(nick_name)\r\n".data(using: .utf8)!)
         
-        data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
-        
-        data.append("Content-Disposition: form-data; name=\"nick_name\"\r\n\r\n".data(using: .utf8)!)
-        data.append("\(nickName)\r\n".data(using: .utf8)!)
-        
-        data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
-        
-        data.append("Content-Disposition: form-data; name=\"user_id\"\r\n\r\n".data(using: .utf8)!)
-        data.append("\(userId)\r\n".data(using: .utf8)!)
-        
-        data.append("\r\n--\(boundary)\r\n".data(using: .utf8)!)
-        
-        data.append("Content-Disposition: form-data; name=\"description\"\r\n\r\n".data(using: .utf8)!)
-        data.append("\(description)\r\n".data(using: .utf8)!)
-        
-        data.append("--\(boundary)--\r\n".data(using: .utf8)!)
+            // id 필드 추가
+            data.append("--\(boundary)\r\n".data(using: .utf8)!)
+            data.append("Content-Disposition: form-data; name=\"id\"\r\n\r\n".data(using: .utf8)!)
+            data.append("\(id)\r\n".data(using: .utf8)!)
+
+            // user_id 필드 추가
+            data.append("--\(boundary)\r\n".data(using: .utf8)!)
+            data.append("Content-Disposition: form-data; name=\"user_id\"\r\n\r\n".data(using: .utf8)!)
+            data.append("\(user_id)\r\n".data(using: .utf8)!)
+
+            // description 필드 추가
+            data.append("--\(boundary)\r\n".data(using: .utf8)!)
+            data.append("Content-Disposition: form-data; name=\"description\"\r\n\r\n".data(using: .utf8)!)
+            data.append("\(description)\r\n".data(using: .utf8)!)
+
+            // 마지막 boundary
+            data.append("--\(boundary)--\r\n".data(using: .utf8)!)
         
         let task = URLSession.shared.uploadTask(with: request, from: data) { responseData, response, error in
             if let error = error {
@@ -427,7 +455,7 @@ class SettingViewModel: ObservableObject {
         
     }//updateProfile
     
-    func update_profile() {
+    func update_profile(nick_name:String, user_id:String, description:String) {
         
         print("update_profile 1 \(self.viewDissmiss)")
         
@@ -438,7 +466,7 @@ class SettingViewModel: ObservableObject {
         
         uploadStatus = "Uploading..."
         
-        self.updateProfile() { [weak self] result in
+        self.updateProfile(nick_name: nick_name, user_id: user_id, description: description) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                     case.success(let response):

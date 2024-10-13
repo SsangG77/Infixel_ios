@@ -29,12 +29,21 @@ class LoginButtonViewModel: ObservableObject {
 //            print("token 할당되지 않음", deviceToken)
 //            return
 //        }
-       
+       var device_Token = ""
+        if let deviceToken = UserDefaults.standard.string(forKey: "device_token") {
+            print("Device token: \(deviceToken)")
+            device_Token = deviceToken
+            // deviceToken을 사용하여 작업 수행
+        } else {
+            print("Error: device_token이 UserDefaults에 저장되어 있지 않습니다.")
+            // 기본값 설정 또는 오류 처리
+        }
+
         
         let userDict: [String: Any] = [
             "userId": userId,
             "userPW": userPW,
-            "deviceToken": UserDefaults.standard.string(forKey: "device_token")!
+            "deviceToken": device_Token
         ]
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: userDict, options: [])

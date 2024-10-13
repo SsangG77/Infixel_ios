@@ -2,38 +2,56 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>KAKAO_NATIVE_APP_KEY</key>
-	<string>${KAKAO_NATIVE_APP_KEY}</string>
-	<key>BGTaskSchedulerPermittedIdentifiers</key>
-	<array>
-		<string>example2.com</string>
-		<string>example.com</string>
-	</array>
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>kakao${KAKAO_NATIVE_APP_KEY}</string>
-			</array>
-		</dict>
-	</array>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>kakaolink</string>
-		<string>kakaokompassauth</string>
-	</array>
-	<key>UIAppFonts</key>
-	<array>
-		<string>Bungee-Regular.ttf</string>
-	</array>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>processing</string>
-		<string>remote-notification</string>
-	</array>
+    <key>BGTaskSchedulerPermittedIdentifiers</key>
+    <array>
+        <string>example2.com</string>
+        <string>example.com</string>
+    </array>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>kakao${KAKAO_NATIVE_APP_KEY}</string>
+            </array>
+        </dict>
+    </array>
+    <key>KAKAO_NATIVE_APP_KEY</key>
+    <string>${KAKAO_NATIVE_APP_KEY}</string>
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <string>kakaolink</string>
+        <string>kakaokompassauth</string>
+    </array>
+    <key>UIAppFonts</key>
+    <array>
+        <string>Bungee-Regular.ttf</string>
+    </array>
+    <key>UIBackgroundModes</key>
+    <array>
+        <string>fetch</string>
+        <string>processing</string>
+        <string>remote-notification</string>
+    </array>
+
+  
+
+    <!-- iPad에서 인터페이스 미지원 설정 -->
+    <key>UISupportedInterfaceOrientations~ipad</key>
+    <array>
+        <string>UIInterfaceOrientationPortrait</string>
+    </array>
+    
+    <key>UIDeviceFamily</key>
+    <array>
+        <integer>1</integer>
+    </array>
+
+    
+    
+    
 </dict>
 </plist>
+

@@ -184,7 +184,7 @@ class NotificationService: ObservableObject {
     }
 
     func saveNotification(_ notification: NotificationItem) {
-            notifications.append(notification)
+            notifications.insert(notification, at: 0)
             saveNotifications()
         }
 

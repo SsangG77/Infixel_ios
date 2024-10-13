@@ -34,7 +34,7 @@ struct SNSLoginView: View {
                         snsLoginViewModel.kakaoLogin($isLoggedIn)
                     }
                 
-                AppleSigninButton()
+                AppleSigninButton(isLoggedIn: $isLoggedIn)
             }
             
             
@@ -87,7 +87,12 @@ struct SNSLoginView: View {
 //--@-------------------------------------------------------------------------------------------------------------------------
 
 
-struct AppleSigninButton : View{
+struct AppleSigninButton : View {
+    
+    @Binding var isLoggedIn: Bool
+    
+    let viewModel = SNSLoginViewModel()
+    
     var body: some View{
         SignInWithAppleButton(
             onRequest: { request in
@@ -111,11 +116,13 @@ struct AppleSigninButton : View{
                         VarCollectionFile.myPrint(title: "로그인된 애플 아이디", content:
                               "* - user identifier : \(UserIdentifier)\n"
                               + "* - full name : \(String(describing: fullName))\n"
-                              + "* - name : \(name)\n"
+                              + "* - name : \(String(name))\n"
                               + "* - email : \(String(describing: email))\n"
                               + "* - Identify token : \(IdentityToken ?? "IdentifyToken 없음")\n"
                               + "* - Authorization code \(AuthorizationCode ?? "Authorization code 없음")"
                         )
+                        
+                        viewModel.sendInfo(type: "apple", nickName: name, id: UserIdentifier, $isLoggedIn)
                         
                         
                         
@@ -181,7 +188,7 @@ class SNSLoginViewModel: ObservableObject {
                             if let nickname = user?.kakaoAccount?.profile?.nickname, let id = user?.id {
                                 VarCollectionFile.myPrint(title: "카카오 로그인 성공 유저 정보", content: "닉네임 : \(nickname) \nid : \(id)")
                                 
-                                self.sendKakaoInfo(nickName: nickname, id: String(id), isLoggedIn)
+                                self.sendInfo(type: "kakao", nickName: nickname, id: String(id), isLoggedIn)
                                 
                                 
                             } else {
@@ -195,26 +202,37 @@ class SNSLoginViewModel: ObservableObject {
         }
     } //kakaoLogin
     
-    func sendKakaoInfo(nickName: String, id: String, _ isLoggedIn: Binding<Bool>) {
+    func sendInfo(type: String, nickName: String, id: String, _ isLoggedIn: Binding<Bool>) {
         
-        let type = "kakao"
+//        let type = "kakao"
         
         
         let deviceToken = UserDefaults.standard.string(forKey: "device_token") ?? ""
         
         var url = ""
+        var userDict: [String: String] = [:]
         
         if type == "kakao" {
             url = VarCollectionFile.kakaoLoginURL
-        } else {
+            userDict = [
+                "nick_name" : nickName,
+                "kakao_id" : id,
+                "device_token" : deviceToken
+            ]
+            
+        } else if type == "apple" {
             url = VarCollectionFile.appleLoginURL
+            userDict = [
+                "nick_name" : nickName,
+                "user_id" : id,
+                "device_token" : deviceToken
+            ]
         }
         
-        let kakaoUserDict: [String: String] = [
-            "nick_name" : nickName,
-            "kakao_id" : id,
-            "device_token" : deviceToken
-        ]
+        
+        
+        
+//        let kakaoUserDict: [String: String]
         
         guard let url = URL(string: url) else {
             print("Invalid URL")
@@ -225,7 +243,7 @@ class SNSLoginViewModel: ObservableObject {
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        guard let jsonData = try? JSONSerialization.data(withJSONObject: kakaoUserDict) else {
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: userDict) else {
             print("Error encoding JSON")
             return
         }
@@ -248,7 +266,8 @@ class SNSLoginViewModel: ObservableObject {
             
             do {
                 let decodeResponse = try JSONDecoder().decode(snsResponse.self, from: data)
-                print("서버 응답: \(decodeResponse)") // 서버 응답 로그 출력
+                //print("서버 응답: \(decodeResponse)") // 서버 응답 로그 출력
+                VarCollectionFile.myPrint(title: "서버 응답 로그 출력", content: decodeResponse)
                 DispatchQueue.main.async {
                     if decodeResponse.isLogin {
                         isLoggedIn.wrappedValue = true
@@ -271,6 +290,41 @@ class SNSLoginViewModel: ObservableObject {
     }
 
 
+    func disableUser() {
+        let user_id = UserDefaults.standard.string(forKey: "user_id")!
+        
+        let json: [String:Any] = [
+            "user_id" : user_id
+        ]
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: json)
+            
+            guard let url = URL(string: VarCollectionFile.userDisableURL) else { return }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+            request.httpBody = jsonData
+            
+            URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+                guard let self = self else { return }
+                
+                if let error = error {
+                    print("Error sending data: \(error)")
+                } else if let data = data {
+                    print(data)
+                }
+            }.resume()
+            
+        } catch {
+            print("Error")
+        }
+        
+        
+        
+    }
+    
     
     
     func kakaoLogout() {
@@ -278,9 +332,7 @@ class SNSLoginViewModel: ObservableObject {
             if let error = error {
                 print(error)
             }
-            else {
-                print("logout() success.")
-            }
+            
         }
     } //kakaoLogout
     

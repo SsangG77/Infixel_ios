@@ -25,9 +25,9 @@ struct RankingUserView: View {
                     }
                 }
             }
-            .padding([.top, .bottom], 60)
+            .padding([.top, .bottom], 40)
         }
-        .contentMargins(.top, 30)
+        .contentMargins([.top, .bottom], 30)
         .onAppear {
             webSocketManager.type = false
             webSocketManager.connect()

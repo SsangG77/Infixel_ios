@@ -19,16 +19,16 @@ struct AlarmView: View {
             VStack {
                 
                 //버튼은 알림 테스트 끝나면 삭제 예정
-                Button(action: {
-                    print("버튼")
-                    UserDefaults.standard.removeObject(forKey: "notifications")
-                    notificationService.notifications = []
-                }) {
-                    Text("알림 삭제")
-                }
-                .frame(width: 100, height: 45)
-                .cornerRadius(15)
-                .background(.blue)
+//                Button(action: {
+//                    print("버튼")
+//                    UserDefaults.standard.removeObject(forKey: "notifications")
+//                    notificationService.notifications = []
+//                }) {
+//                    Text("알림 삭제")
+//                }
+//                .frame(width: 100, height: 45)
+//                .cornerRadius(15)
+//                .background(.blue)
                 
                 List(notificationService.notifications) { notification in
                     VStack(alignment: .leading) {

@@ -10,14 +10,15 @@ import Foundation
 
 struct VarCollectionFile {
     
+    static let server = "infixel-server.com" //AWS EC2 IP
+//    static let server = "192.168.31.200:3000" // <- 로컬 ip
+     
+    static let host = "https://" + server //AWS EC2
+//    static let host = "http://" + server // 로컬
     
-    static let server = "192.168.31.200:3000"
     
-    static let host = "http://" + server
-    
-    
-    static let randomImageURL           = host + "/image/randomimage" //이 요청문은 슬라이드 이미지 객체를 가져옴
-    static let resjpgURL                = host + "/image/resjpg?filename=" //jpg 파일을 가져옴
+    static let randomImageURL           = host + "/image/randomimage"
+    static let resjpgURL                = host + "/image/resjpg?filename="
     static let imageIdURL               = host + "/image/getimagefromid"
     static let randomJpgURL             = host + "/image/randomjpg"
     static let imageUploadURL           = host + "/image/upload"
@@ -36,6 +37,7 @@ struct VarCollectionFile {
     static let followOrNotURL           = host + "/user/followornot"
     static let getProfileImageURL       = host + "/user/profile-image"
     static let updateProfileURL         = host + "/user/update"
+    static let userDisableURL           = host + "/user/disable"
     
     static let picOrNotURL              = host + "/pic/ornot"
     static let picUpURL                 = host + "/pic/up"
@@ -60,7 +62,8 @@ struct VarCollectionFile {
     
     
     //WebSocket
-    static let ws = "ws://" + server
+    static let ws = "wss://" + server // AWS EC2
+//    static let ws = "ws://" + server // 로컬
     
     static let rankingImageURL   = ws + "/imagerank"
     static let rankingUserURL    = ws + "/userrank"
