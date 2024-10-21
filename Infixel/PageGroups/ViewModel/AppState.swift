@@ -6,15 +6,11 @@
 //
 
 import Foundation
-import Combine
+//import Combine
 
 class AppState : ObservableObject {
     @Published var selectedTab: Tab = Tab.house 
-//    {
-//        didSet {
-//            ensureMainThread(error_value: "selectedTab")
-//        }
-//    }
+
     
     
     enum Tab {
@@ -88,10 +84,4 @@ class AppState : ObservableObject {
     @Published var profileUserId = ""
   
     
-//    private func ensureMainThread(error_value:String) {
-//        if !Thread.isMainThread {
-//            VarCollectionFile.myPrint(title: "enviroment error", content: error_value)
-//            fatalError("Publishing changes from background threads is not allowed.")
-//        }
-//    }
 }

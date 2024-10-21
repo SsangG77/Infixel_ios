@@ -5,7 +5,7 @@
 //  Created by 차상진 on 2023/09/18.
 //
 import SwiftUI
-import Combine
+//import Combine
 
 
 @available(iOS 17.0, *)
@@ -15,8 +15,11 @@ struct HomePageView: View {
     @State private var isActive: Bool = false
     
     
-    //@StateObject private var viewModel: HomePageViewModel
-    @State var slideImages: [SlideImage] = []
+    //@State var slideImages: [SlideImage] = []
+    @Binding var slideImages: [SlideImage]
+    
+    
+    
     @State var reloadTriggers: [UUID] = []
     @State var isInitialLoad = true
     @State var isLoadingMore = false
@@ -25,8 +28,13 @@ struct HomePageView: View {
     @State var isLoggedIn = true
     
 
-    init(slideImage: Binding<SlideImage>) {
+    init(slideImage: Binding<SlideImage>, slideImages: Binding<[SlideImage]>) {
         self._slideImage = slideImage
+        
+        self._slideImages = slideImages
+        
+        
+        
         let appearance = UINavigationBarAppearance()
         appearance.configureWithOpaqueBackground()
         appearance.backgroundColor = .black
@@ -41,7 +49,7 @@ struct HomePageView: View {
         NavigationView {
             ZStack {
                 NavigationLink(
-                    destination: ProfilePageView(isLoggedIn: $isLoggedIn, userId: $slideImage.user_id, profile: $profile),
+                    destination: ProfilePageView(isLoggedIn: $isLoggedIn, userId: $slideImage.user_id, profile: $profile, slideImages: $slideImages),
                     isActive: $isActive,
                     label: {
                         EmptyView() // Label을 빈 뷰로 설정하여 숨김
@@ -76,7 +84,6 @@ struct HomePageView: View {
                                             VStack {
                                                 Image(systemName: "photo")
                                                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                                
                                             }
                                             .onAppear {
                                                 reloadImage(photo: slideImages[index])
@@ -100,7 +107,6 @@ struct HomePageView: View {
                 .scrollTargetBehavior(.paging)
                 .edgesIgnoringSafeArea(.all)
                 .onAppear {
-                    
                     if isInitialLoad {
                         loadInitialPhotos()
                     }
@@ -114,12 +120,8 @@ struct HomePageView: View {
                         }
                         .buttonStyle(PlainButtonStyle())
                         
-//                        bellButtonView()
-//                            .padding(.trailing, 5)
-                        
                         UploadImagePlusView()
                             .contentTransition(.symbolEffect)
-//                            .shadow(color: Color.black.opacity(0.5), radius: 5, x: 0, y: 5)
                             .environmentObject(appState)
                             .onTapGesture {
                                 withAnimation {
@@ -238,7 +240,7 @@ struct HomePageView: View {
     func reqImage() {
         let serverURL = URL(string: VarCollectionFile.randomImageURL)!
         
-        let task = URLSession.shared.dataTask(with: serverURL) { (data, response, error) in
+        URLSession.shared.dataTask(with: serverURL) { (data, response, error) in
             if let error = error {
                 print("요청 중 오류 발생: \(error)")
             } else if let data = data, let responseString = String(data: data, encoding: .utf8) {
@@ -273,8 +275,7 @@ struct HomePageView: View {
                     }
                 }
             }
-        }
-        task.resume()
+        }.resume()
     }
 }
 

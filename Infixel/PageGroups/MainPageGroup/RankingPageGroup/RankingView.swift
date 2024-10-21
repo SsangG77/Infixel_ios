@@ -13,6 +13,8 @@ struct RankingView: View {
     @EnvironmentObject var appState:AppState
     @State private var showImageViewer: Bool = false
     
+    @Binding var slideImages: [SlideImage]
+    
     
     
     var body: some View {
@@ -95,16 +97,11 @@ struct RankingView: View {
         .padding(.top, 20)
         .sheet(isPresented: $showImageViewer) {
             if let selectedImage = appState.selectedImage, let selectedImageId = appState.selectedImageId {
-                ImageViewer(imageUrl: .constant(selectedImage), imageId: .constant(selectedImageId))
+                ImageViewer(imageUrl: .constant(selectedImage), imageId: .constant(selectedImageId), slideImages: $slideImages)
             } else {
                 Text("Loading...")
             }
         }
-//        .onReceive(appState.$selectedImage) { _ in
-//            if appState.selectedImage != nil {
-//                showImageViewer = true
-//            }
-//        }
         .onDisappear {
             showImageViewer = false
         }
@@ -155,6 +152,4 @@ struct RankingView: View {
     }
 }
 
-#Preview {
-    RankingView()
-}
+

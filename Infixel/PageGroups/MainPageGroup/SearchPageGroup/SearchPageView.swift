@@ -12,6 +12,9 @@ import SwiftUI
 @available(iOS 17.0, *)
 struct SearchPageView: View {
     
+    
+    
+    
     //검색창 변수
     @State var searchValue = ""
     @State var placeHolder = "Search"
@@ -54,6 +57,8 @@ struct SearchPageView: View {
             }
         }
     }
+    
+    @Binding var slideImages: [SlideImage]
     
     
     
@@ -193,16 +198,11 @@ struct SearchPageView: View {
             .frame(width: UIScreen.main.bounds.width)
             .sheet(isPresented: $showImageViewer) {
                 if let selectedImage = appState.selectedImage, let selectedImageId = appState.selectedImageId {
-                    ImageViewer(imageUrl: .constant(selectedImage), imageId: .constant(selectedImageId))
+                    ImageViewer(imageUrl: .constant(selectedImage), imageId: .constant(selectedImageId), slideImages: $slideImages)
                 } else {
                     Text("Loading...")
                 }
             }
-//            .onReceive(appState.$selectedImage) { _ in
-//                if appState.selectedImage != nil {
-//                    showImageViewer = true
-//                }
-//            }
             .onDisappear {
                 appState.searchBtnClicked = false
                 showImageViewer = false

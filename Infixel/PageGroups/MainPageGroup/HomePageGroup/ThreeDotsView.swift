@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Combine
+//import Combine
 import Photos
 
 
@@ -17,12 +17,19 @@ struct ThreeDotsView: View {
        
     @EnvironmentObject var appState: AppState
     
+    //Binding
     @Binding var slideImage:SlideImage
+    @Binding var slideImages: [SlideImage]
+    
+    
+    
     @State var isDownloadTapped = false ///버튼 눌렀을때 효과용 변수
     @State var isReportTapped = false
     
-    init(slideImage: Binding<SlideImage>) {
+    init(slideImage: Binding<SlideImage>, slideImages: Binding<[SlideImage]>) {
         self._slideImage = slideImage
+        self._slideImages = slideImages
+        
         self._viewModel = StateObject(wrappedValue: ThreeDotsViewModel(slideImage: slideImage))
     }
     
@@ -93,13 +100,15 @@ struct ThreeDotsView: View {
                                 viewModel.imageDownload(from: slideImage.link) {
                                         appState.threeDotsOpen = false
                                         appState.threeDotsOffset = 1000
+                                    
+                                    appState.threedotsOpen_imageViewer = false
+                                    appState.threedotsOffset_imageViewer = 1000
                                 }
                             }
                         }
                     }
                     
                     HStack {
-                        
                         Text("이미지 신고")
                             .fontWeight(.bold)
                             .font(.system(size: 24))
@@ -112,14 +121,21 @@ struct ThreeDotsView: View {
                     .onTapGesture {
                         withAnimation {
                             isReportTapped = true
+                            slideImages.removeAll { $0.id == slideImage.id}
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                             withAnimation {
                                 isReportTapped = false
                                 viewModel.reportImage(imageId: slideImage.id)
+                                appState.threeDotsOpen = false
+                                appState.threeDotsOffset = 1000
+                                
+                                appState.threedotsOpen_imageViewer = false
+                                appState.threedotsOffset_imageViewer = 1000
                             }
                         }
                     }
+                    
                     
                     Spacer()
                 }
@@ -240,11 +256,11 @@ class ThreeDotsViewModel: ObservableObject {
 
 
 
-
-#Preview {
-    ZStack {
-        Color(.black).edgesIgnoringSafeArea(.all)
-        ThreeDotsView(slideImage: .constant(SlideImage()))
-    }
-    
-}
+//
+//#Preview {
+//    ZStack {
+//        Color(.black).edgesIgnoringSafeArea(.all)
+//        ThreeDotsView(slideImage: .constant(SlideImage()))
+//    }
+//    
+//}

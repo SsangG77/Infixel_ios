@@ -36,7 +36,9 @@
         <string>remote-notification</string>
     </array>
 
-  
+    <key>LSMinimumSystemVersion</key>
+    <string>15.0</string>
+
 
     <!-- iPad에서 인터페이스 미지원 설정 -->
     <key>UISupportedInterfaceOrientations~ipad</key>

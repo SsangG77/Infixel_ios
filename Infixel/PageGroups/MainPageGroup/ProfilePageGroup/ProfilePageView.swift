@@ -207,6 +207,7 @@ struct ProfilePageView: View {
     @Binding var isLoggedIn: Bool
     @Binding var userId:String
     @Binding var profile:Bool
+    @Binding var slideImages: [SlideImage]
     
     @Environment(\.colorScheme) var colorScheme
     
@@ -246,7 +247,7 @@ struct ProfilePageView: View {
                 }
                 .sheet(isPresented: $viewModel.showImageViewer) {
                     if let selectedImage = appState.selectedImage, let selectedImageId = appState.selectedImageId {
-                        ImageViewer(imageUrl: .constant(selectedImage), imageId: .constant(selectedImageId))
+                        ImageViewer(imageUrl: .constant(selectedImage), imageId: .constant(selectedImageId), slideImages: $slideImages)
                     } else {
                         Text("Loading...")
                     }

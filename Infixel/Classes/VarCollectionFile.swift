@@ -16,6 +16,10 @@ struct VarCollectionFile {
     static let host = "https://" + server //AWS EC2
 //    static let host = "http://" + server // 로컬
     
+    //WebSocket
+    static let ws = "wss://" + server // AWS EC2
+//    static let ws = "ws://" + server // 로컬
+    
     
     static let randomImageURL           = host + "/image/randomimage"
     static let resjpgURL                = host + "/image/resjpg?filename="
@@ -61,9 +65,7 @@ struct VarCollectionFile {
     static let tagsSearchURL            = host + "/tags/search"
     
     
-    //WebSocket
-    static let ws = "wss://" + server // AWS EC2
-//    static let ws = "ws://" + server // 로컬
+ 
     
     static let rankingImageURL   = ws + "/imagerank"
     static let rankingUserURL    = ws + "/userrank"

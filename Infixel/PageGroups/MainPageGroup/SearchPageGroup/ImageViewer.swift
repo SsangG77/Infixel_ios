@@ -13,6 +13,8 @@ struct ImageViewer: View {
     @Binding var imageUrl: String
     @Binding var imageId: String
     
+    @Binding var slideImages: [SlideImage]
+    
     
     @State var slideImage: SlideImage = SlideImage()
     
@@ -26,7 +28,7 @@ struct ImageViewer: View {
         NavigationView {
             ZStack {
                 NavigationLink(
-                    destination:ProfilePageView(isLoggedIn: $isLoggedIn, userId: $slideImage.user_id, profile: $profile),
+                    destination:ProfilePageView(isLoggedIn: $isLoggedIn, userId: $slideImage.user_id, profile: $profile, slideImages: $slideImages),
                     isActive: $isActive,
                     label: {
                         EmptyView() // Label을 빈 뷰로 설정하여 숨김
@@ -100,7 +102,7 @@ struct ImageViewer: View {
                     .offset(y : appState.commentOffset_imageViewer)
                     .animation(.easeInOut)
                 
-                ThreeDotsView(slideImage: $slideImage)
+                ThreeDotsView(slideImage: $slideImage, slideImages: $slideImages)
                     .environmentObject(appState)
                     .offset(y: appState.threedotsOffset_imageViewer)
                     .animation(.easeInOut)

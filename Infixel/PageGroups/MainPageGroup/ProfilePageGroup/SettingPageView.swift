@@ -12,6 +12,9 @@ struct SettingPageView: View {
     @Binding var isLoggedIn: Bool
     @State var isActive = false
     
+    
+    @State var disableUserPressed = false
+    
     @EnvironmentObject var notificationService: NotificationService
     @EnvironmentObject var profilePageViewModel: ProfilePageViewModel
     
@@ -57,14 +60,23 @@ struct SettingPageView: View {
                     isLoggedIn = false
                 }
                 
-                Button("계정 비활성화") {
-                    UserDefaults.standard.removeObject(forKey: "notifications")
-                    notificationService.notifications = []
-                    
-                    isLoggedIn = false
-                    snsLoginViewModel.disableUser()
+                Button("계정 삭제") {
+                    disableUserPressed = true
                 }
                 .foregroundColor(.red)
+                .alert(isPresented: $disableUserPressed) {
+                    let defaultButton = Alert.Button.default(Text("삭제"), action: {
+                        UserDefaults.standard.removeObject(forKey: "notifications")
+                        notificationService.notifications = []
+                        
+                        isLoggedIn = false
+                        snsLoginViewModel.disableUser()
+                        
+                    })
+                    let cancelButton = Alert.Button.cancel(Text("취소"))
+                    
+                    return Alert(title: Text("계정 삭제") , message: Text("업로드한 이미지, 작성한 댓글, 생성한 앨범 모두 삭제됩니다. 계정을 삭제하시겠습니까?"), primaryButton: defaultButton, secondaryButton: cancelButton)
+                }
             }
         }
         .onAppear {

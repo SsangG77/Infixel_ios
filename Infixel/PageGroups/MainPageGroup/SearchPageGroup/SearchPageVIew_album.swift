@@ -129,7 +129,10 @@ class AlbumDetailViewModel: ObservableObject {
 struct AlbumDetailView: View {
     
     //원래 변수
-        @Binding var album:Album!
+    @Binding var album:Album!
+    @Binding var slideImages:[SlideImage]
+    
+    
         var animationNamespace: Namespace.ID
         var onClose: () -> Void
 
@@ -148,6 +151,7 @@ struct AlbumDetailView: View {
     
     @StateObject private var viewModel = AlbumDetailViewModel()
 
+    
     
     
     //=============================================================
@@ -279,7 +283,7 @@ struct AlbumDetailView: View {
             }
             .sheet(isPresented: $showImageViewer) {
                 if let selectedImage = appState.album_selectedImage, let selectedImageId = appState.album_selectedImageId {
-                    ImageViewer(imageUrl: .constant(selectedImage), imageId: .constant(selectedImageId))
+                    ImageViewer(imageUrl: .constant(selectedImage), imageId: .constant(selectedImageId), slideImages: $slideImages)
                 } else {
                     Text("Loading...")
                 }

@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import Combine
+//import Combine
 import KakaoSDKAuth
 import KakaoSDKUser
 import AuthenticationServices
@@ -38,47 +38,6 @@ struct SNSLoginView: View {
             }
             
             
-//            Image("kakao_icon")
-//                .resizable()
-//                .frame(width: size, height: size)
-//                .cornerRadius(35)
-//                .overlay(
-//                    RoundedRectangle(cornerRadius: 35)
-//                        .stroke(.black, lineWidth: 2)
-//                )
-//                .onTapGesture {
-//                    print("카카오 로그인")
-//                    snsLoginViewModel.kakaoLogin()
-//                }
-            
-            
-//            Image("google_icon")
-//                .resizable()
-//                .frame(width: size, height: size)
-//                .cornerRadius(35)
-//                .overlay(
-//                       RoundedRectangle(cornerRadius: 35)
-//                           .stroke(.black, lineWidth: 2)
-//                   )
-//                .onTapGesture {
-//                    print("구글 로그인")
-//                }
-//                .padding(.leading, 10)
-//                .padding(.trailing, 10)
-            
-            
-            //insta
-//            Image("Instagram_Glyph_Icon")
-//                .resizable()
-//                .frame(width: size, height: size)
-//                .cornerRadius(35)
-//                .overlay(
-//                       RoundedRectangle(cornerRadius: 35)
-//                           .stroke(.black, lineWidth: 2)
-//                   )
-//                .onTapGesture {
-//                    print("인스타 로그인")
-//                }
             
         }
     }

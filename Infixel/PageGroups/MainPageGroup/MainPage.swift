@@ -14,6 +14,7 @@ struct MainView: View {
     
     @EnvironmentObject var appState: AppState
     @State var slideImage: SlideImage = SlideImage()
+    @State var slideImages: [SlideImage] = []
     
     @State var userId = UserDefaults.standard.string(forKey: "user_id")!
     @State var profile = true
@@ -30,23 +31,23 @@ struct MainView: View {
         ZStack {
             switch appState.selectedTab {
             case .house:
-                HomePageView(slideImage: $slideImage)
+                HomePageView(slideImage: $slideImage, slideImages: $slideImages)
                     .environmentObject(appState)
                 
             case .search:
-                SearchPageView(animationNamespace: animationNamespace)
+                SearchPageView(animationNamespace: animationNamespace, slideImages: $slideImages)
                     .environmentObject(appState)
                 
             case .chart:
-                RankingView()
+                RankingView(slideImages: $slideImages)
                     .ignoresSafeArea()
                 
                 
             case .save:
-                SavePageView()
+                SavePageView(slideImages: $slideImages)
                 
             case .profile:
-                ProfilePageView(isLoggedIn: $isLoggedIn, userId: $userId, profile: $profile)
+                ProfilePageView(isLoggedIn: $isLoggedIn, userId: $userId, profile: $profile, slideImages: $slideImages)
             
             }//switch
 
@@ -67,7 +68,7 @@ struct MainView: View {
                 .animation(.easeInOut)
             
             
-            ThreeDotsView(slideImage: $slideImage)
+            ThreeDotsView(slideImage: $slideImage, slideImages: $slideImages)
                 .environmentObject(appState)
                 .offset(y: appState.threeDotsOffset)
                 .animation(.easeInOut)
@@ -78,7 +79,7 @@ struct MainView: View {
         .overlay(
             Group {
                 if let selectedAlbum = appState.selectedAlbum {
-                    AlbumDetailView(album: $appState.selectedAlbum, animationNamespace: animationNamespace) {
+                    AlbumDetailView(album: $appState.selectedAlbum, slideImages: $slideImages, animationNamespace: animationNamespace) {
                         withAnimation(.spring()) {
                             appState.selectedAlbum = nil
                         }

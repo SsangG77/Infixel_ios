@@ -203,6 +203,8 @@ struct SavePageView: View {
     @State var isActive = false
     @State var albumId = ""
     
+    @Binding var slideImages: [SlideImage]
+    
     var body: some View {
         
         NavigationView {
@@ -227,7 +229,7 @@ struct SavePageView: View {
                     
                     ScrollView {
                         ForEach($addAlbumViewModel.albumList) { album in
-                            SavePageAlbumView(isActive : $isActive, albumId: $albumId)
+                            SavePageAlbumView(isActive : $isActive, albumId: $albumId, slideImages: $slideImages)
                                 .environmentObject(viewModel)
                                 .environmentObject(SavePageAlbumViewModel(albumId: album.id, albumName: album.album_name.wrappedValue, createdAt: album.created_at.wrappedValue))
                         }
@@ -570,6 +572,8 @@ struct SavePageAlbumView: View {
     @Binding var isActive: Bool
     @Binding var albumId:String
     
+    @Binding var slideImages:[SlideImage]
+    
     var body: some View {
         VStack(spacing:0) {
             HStack {
@@ -680,7 +684,7 @@ struct SavePageAlbumView: View {
         .sheet(isPresented: $viewModel.imageClicked) {
 //            Text("이미지")
             if let selectedImage = viewModel.imageURL, let selectedImageId = viewModel.imageId {
-                ImageViewer(imageUrl: .constant(selectedImage), imageId: .constant(selectedImageId))
+                ImageViewer(imageUrl: .constant(selectedImage), imageId: .constant(selectedImageId), slideImages: $slideImages)
             } else {
                 Text("Loading...")
             }

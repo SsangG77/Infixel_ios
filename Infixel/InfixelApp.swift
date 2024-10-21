@@ -9,7 +9,6 @@ import SwiftUI
 import UIKit
 import UserNotifications
 import Foundation
-import Combine
 
 import KakaoSDKCommon
 import KakaoSDKAuth
