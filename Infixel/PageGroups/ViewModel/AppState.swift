@@ -11,6 +11,10 @@ import Foundation
 class AppState : ObservableObject {
     @Published var selectedTab: Tab = Tab.house 
 
+    @Published var slideImages: [SlideImage] = []
+    @Published var reloadTriggers: [UUID] = []
+    @Published var currentIndex: Int = 0
+    
     
     
     enum Tab {
@@ -82,6 +86,10 @@ class AppState : ObservableObject {
     
     
     @Published var profileUserId = ""
+    
+    
+    
+    @Published var blockFlag = false
   
     
 }

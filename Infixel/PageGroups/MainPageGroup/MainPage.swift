@@ -14,7 +14,7 @@ struct MainView: View {
     
     @EnvironmentObject var appState: AppState
     @State var slideImage: SlideImage = SlideImage()
-    @State var slideImages: [SlideImage] = []
+//    @State var slideImages: [SlideImage] = []
     
     @State var userId = UserDefaults.standard.string(forKey: "user_id")!
     @State var profile = true
@@ -31,23 +31,23 @@ struct MainView: View {
         ZStack {
             switch appState.selectedTab {
             case .house:
-                HomePageView(slideImage: $slideImage, slideImages: $slideImages)
+                HomePageView(slideImage: $slideImage, slideImages: $appState.slideImages)
                     .environmentObject(appState)
                 
             case .search:
-                SearchPageView(animationNamespace: animationNamespace, slideImages: $slideImages)
+                SearchPageView(animationNamespace: animationNamespace, slideImages: $appState.slideImages)
                     .environmentObject(appState)
                 
             case .chart:
-                RankingView(slideImages: $slideImages)
+                RankingView(slideImages: $appState.slideImages)
                     .ignoresSafeArea()
                 
                 
             case .save:
-                SavePageView(slideImages: $slideImages)
+                SavePageView(slideImages: $appState.slideImages)
                 
             case .profile:
-                ProfilePageView(isLoggedIn: $isLoggedIn, userId: $userId, profile: $profile, slideImages: $slideImages)
+                ProfilePageView(isLoggedIn: $isLoggedIn, userId: $userId, profile: $profile, slideImages: $appState.slideImages)
             
             }//switch
 
@@ -68,7 +68,7 @@ struct MainView: View {
                 .animation(.easeInOut)
             
             
-            ThreeDotsView(slideImage: $slideImage, slideImages: $slideImages)
+            ThreeDotsView(slideImage: $slideImage, slideImages: $appState.slideImages)
                 .environmentObject(appState)
                 .offset(y: appState.threeDotsOffset)
                 .animation(.easeInOut)
@@ -79,7 +79,7 @@ struct MainView: View {
         .overlay(
             Group {
                 if let selectedAlbum = appState.selectedAlbum {
-                    AlbumDetailView(album: $appState.selectedAlbum, slideImages: $slideImages, animationNamespace: animationNamespace) {
+                    AlbumDetailView(album: $appState.selectedAlbum, slideImages: $appState.slideImages, animationNamespace: animationNamespace) {
                         withAnimation(.spring()) {
                             appState.selectedAlbum = nil
                         }

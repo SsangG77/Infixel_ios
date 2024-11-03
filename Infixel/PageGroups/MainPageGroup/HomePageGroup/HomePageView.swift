@@ -3,9 +3,8 @@
 //  Infixel
 //
 //  Created by 차상진 on 2023/09/18.
-//
+
 import SwiftUI
-//import Combine
 
 
 @available(iOS 17.0, *)
@@ -14,13 +13,11 @@ struct HomePageView: View {
     @Binding var slideImage: SlideImage
     @State private var isActive: Bool = false
     
+    @State var currentIndex: Int = 0
     
-    //@State var slideImages: [SlideImage] = []
     @Binding var slideImages: [SlideImage]
     
     
-    
-    @State var reloadTriggers: [UUID] = []
     @State var isInitialLoad = true
     @State var isLoadingMore = false
     
@@ -58,8 +55,8 @@ struct HomePageView: View {
             
                 ScrollView(.vertical, showsIndicators: false) {
                     LazyVStack(spacing: 0) {
-                        ForEach(slideImages.indices, id: \.self) { index in
-                            if let url = URL(string: slideImages[index].link) {
+                        ForEach($slideImages.indices, id: \.self) { index in
+                            if let url = URL(string: $slideImages[index].link.wrappedValue) {
                                 GeometryReader { geo in
                                     AsyncImage(url: url, transaction: Transaction(animation: .default)) { phase in
                                         switch phase {
@@ -78,6 +75,7 @@ struct HomePageView: View {
                                                     if slideImages[index].id == slideImages.last?.id {
                                                         loadMorePhotosIfNeeded(currentPhoto: slideImages[index])
                                                     }
+                                                  
                                                 }
                                             
                                         case .failure:
@@ -92,21 +90,25 @@ struct HomePageView: View {
                                             EmptyView()
                                         }//--@switch
                                     }//--@AsyncImage
-                                    .id(reloadTriggers[index])
+                                    .id(appState.reloadTriggers[index])
+                                    
                                 }
                                 .frame(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height)
                             }//--@if_let_url
                         }//--@ForEach
                         .onChange(of: slideImage) { _ in
+                            
                             withAnimation {
                                 appState.infoBoxReset = false
                             }
                         }
+                      
                     }//--@LazyVStack
                 }//--@Scrollview
                 .scrollTargetBehavior(.paging)
                 .edgesIgnoringSafeArea(.all)
                 .onAppear {
+                    
                     if isInitialLoad {
                         loadInitialPhotos()
                     }
@@ -169,16 +171,29 @@ struct HomePageView: View {
                     }
                 }
             }//ZStack
+            .onChange(of: isActive) { active in
+                if !active {
+                    loadInitialPhotos()
+                }
+            }
+            .onAppear {
+                if appState.slideImages.count > 0 {
+                    appState.slideImages.shuffle()
+                }
+            }
         }
         .accentColor(.white)
     }//body
+    
+   
     
     func loadMorePhotosIfNeeded(currentPhoto: SlideImage) {
         guard !isLoadingMore else { return }
         isLoadingMore = true
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.reloadTriggers.append(contentsOf: [UUID(), UUID(), UUID()])
+            //self.reloadTriggers.append(contentsOf: [UUID(), UUID(), UUID()])
+            appState.reloadTriggers.append(contentsOf: [UUID(),UUID(),UUID()])
             self.reqImage()
             self.reqImage()
             self.reqImage()
@@ -189,10 +204,21 @@ struct HomePageView: View {
     func reloadImage(photo: SlideImage) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             if let index = self.slideImages.firstIndex(where: { $0.id == photo.id }) {
-                self.reloadTriggers[index] = UUID()
-                let serverURL = URL(string: VarCollectionFile.randomImageURL)!
+                //self.reloadTriggers[index] = UUID()
+                appState.reloadTriggers[index] = UUID()
                 
-                let task = URLSession.shared.dataTask(with: serverURL) { (data, response, error) in
+//                let serverURL = URL(string: VarCollectionFile.randomImageURL)!
+                guard let url = URL(string: VarCollectionFile.randomImageURL) else { return }
+                
+                
+                var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+                urlComponents.queryItems = [
+                    URLQueryItem(name: "user_id", value: UserDefaults.standard.string(forKey: "user_id")!)
+                ]
+                var request = URLRequest(url: urlComponents.url!)
+                request.httpMethod = "GET"
+                
+                let task = URLSession.shared.dataTask(with: request) { (data, response, error) in
                     if let error = error {
                         print("요청 중 오류 발생: \(error)")
                     } else if let data = data, let responseString = String(data: data, encoding: .utf8) {
@@ -209,9 +235,14 @@ struct HomePageView: View {
                                        let newSlideImage = SlideImage(id: id, link: imageFileName, pic: pic, description: description, user_nick: userNick, user_id: userId, profile_image: userProfileImage)
                                        DispatchQueue.main.async {
                                            if self.slideImages.isEmpty {
+                                               //self.reloadTriggers.append(UUID())
+                                               appState.reloadTriggers.append(UUID())
+                                               
                                                self.slideImages[index] = newSlideImage
                                            } else {
                                                withAnimation {
+                                                   //self.reloadTriggers.append(UUID())
+                                                   appState.reloadTriggers.append(UUID())
                                                    self.slideImages[index] = newSlideImage
                                                }
                                            }
@@ -238,9 +269,18 @@ struct HomePageView: View {
     }
     
     func reqImage() {
-        let serverURL = URL(string: VarCollectionFile.randomImageURL)!
+        guard let url = URL(string: VarCollectionFile.randomImageURL) else { return }
         
-        URLSession.shared.dataTask(with: serverURL) { (data, response, error) in
+        
+        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)!
+        urlComponents.queryItems = [
+            URLQueryItem(name: "user_id", value: UserDefaults.standard.string(forKey: "user_id")!)
+        ]
+        var request = URLRequest(url: urlComponents.url!)
+        request.httpMethod = "GET"
+        
+        
+        URLSession.shared.dataTask(with: request) { (data, response, error) in
             if let error = error {
                 print("요청 중 오류 발생: \(error)")
             } else if let data = data, let responseString = String(data: data, encoding: .utf8) {
@@ -259,11 +299,15 @@ struct HomePageView: View {
                                    if self.slideImages.isEmpty {
                                        slideImage = newSlideImage
                                        
-                                       self.reloadTriggers.append(UUID())
+                                       //self.reloadTriggers.append(UUID())
+                                       appState.reloadTriggers.append(UUID())
+                                       
                                        self.slideImages.append(newSlideImage)
                                    } else {
                                        withAnimation {
-                                           self.reloadTriggers.append(UUID())
+                                           //self.reloadTriggers.append(UUID())
+                                           appState.reloadTriggers.append(UUID())
+                                           
                                            self.slideImages.append(newSlideImage)
                                        }
                                    }
@@ -281,8 +325,3 @@ struct HomePageView: View {
 
 
 
-
-
-//#Preview {
-//    HomePageView(slideImage: .constant(SlideImage()))
-//}

@@ -25,6 +25,7 @@ struct ThreeDotsView: View {
     
     @State var isDownloadTapped = false ///버튼 눌렀을때 효과용 변수
     @State var isReportTapped = false
+    @State var showAlert = false
     
     init(slideImage: Binding<SlideImage>, slideImages: Binding<[SlideImage]>) {
         self._slideImage = slideImage
@@ -134,6 +135,9 @@ struct ThreeDotsView: View {
                                 appState.threedotsOffset_imageViewer = 1000
                             }
                         }
+                    }
+                    .alert(isPresented: $showAlert) {
+                        Alert(title: Text("신고가 접수되었습니다."), message: Text("최대 24시간이 소요됩니다."), dismissButton: .default(Text("확인")))
                     }
                     
                     

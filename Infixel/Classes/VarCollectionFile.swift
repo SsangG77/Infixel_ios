@@ -42,6 +42,8 @@ struct VarCollectionFile {
     static let getProfileImageURL       = host + "/user/profile-image"
     static let updateProfileURL         = host + "/user/update"
     static let userDisableURL           = host + "/user/disable"
+    static let userBlockURL             = host + "/user/block"
+    static let userUnblockURL           = host + "/user/unblock"
     
     static let picOrNotURL              = host + "/pic/ornot"
     static let picUpURL                 = host + "/pic/up"

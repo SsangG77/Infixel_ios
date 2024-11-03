@@ -469,9 +469,9 @@ struct Info_SubButtonView: View {
             }
         }.resume()
         
-                URLSession.shared.dataTask(with: url) { data, response, error in
-                    
-                }.resume()
+//                URLSession.shared.dataTask(with: url) { data, response, error in
+//                    
+//                }.resume()
     }
     
     

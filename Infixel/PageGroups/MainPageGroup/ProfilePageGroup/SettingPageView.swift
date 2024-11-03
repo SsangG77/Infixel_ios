@@ -53,6 +53,7 @@ struct SettingPageView: View {
             Section("로그인") {
                 Button("로그아웃") {
                     UserDefaults.standard.removeObject(forKey: "notifications")
+                    UserDefaults.standard.removeObject(forKey: "user_id")
                     notificationService.notifications = []
                     
                     snsLoginViewModel.kakaoLogout()
@@ -236,7 +237,7 @@ struct ProfileEditView:View {
         }
         .onAppear {
             viewModel.getProfileImage()
-            profilePageViewModel.getUserInfo(UserDefaults.standard.string(forKey: "user_id")!)
+            profilePageViewModel.getUserInfo(UserDefaults.standard.string(forKey: "user_id")!, UserDefaults.standard.string(forKey: "user_id")!)
         }
     }
 }

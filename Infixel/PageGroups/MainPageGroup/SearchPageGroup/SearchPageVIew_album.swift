@@ -130,7 +130,7 @@ struct AlbumDetailView: View {
     
     //원래 변수
     @Binding var album:Album!
-    @Binding var slideImages:[SlideImage]
+    @Binding var slideImages: [SlideImage]
     
     
         var animationNamespace: Namespace.ID

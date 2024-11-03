@@ -30,7 +30,6 @@ struct SNSLoginView: View {
                     .frame(width: 220, height: 35)
                     .cornerRadius(10)
                     .onTapGesture {
-                        VarCollectionFile.myPrint(title: "카카오 로그인", content: "클릭됨")
                         snsLoginViewModel.kakaoLogin($isLoggedIn)
                     }
                 
@@ -60,7 +59,6 @@ struct AppleSigninButton : View {
             onCompletion: { result in
                 switch result {
                 case .success(let authResults):
-                    print("Apple Login Successful")
                     switch authResults.credential{
                         case let appleIDCredential as ASAuthorizationAppleIDCredential:
                            // 계정 정보 가져오기
@@ -74,11 +72,7 @@ struct AppleSigninButton : View {
                         
                         VarCollectionFile.myPrint(title: "로그인된 애플 아이디", content:
                               "* - user identifier : \(UserIdentifier)\n"
-                              + "* - full name : \(String(describing: fullName))\n"
                               + "* - name : \(String(name))\n"
-                              + "* - email : \(String(describing: email))\n"
-                              + "* - Identify token : \(IdentityToken ?? "IdentifyToken 없음")\n"
-                              + "* - Authorization code \(AuthorizationCode ?? "Authorization code 없음")"
                         )
                         
                         viewModel.sendInfo(type: "apple", nickName: name, id: UserIdentifier, $isLoggedIn)
@@ -121,7 +115,6 @@ class SNSLoginViewModel: ObservableObject {
                     print(error)
                 }
                 else {
-                    print("loginWithKakaoTalk() success.")
 
                     // 성공 시 동작 구현
                     _ = oauthToken
@@ -134,7 +127,6 @@ class SNSLoginViewModel: ObservableObject {
                     print(error)
                 }
                 else {
-                    print("loginWithKakaoAccount() success.")
 
                     // 성공 시 동작 구현
                     UserApi.shared.me() {(user, error) in
@@ -142,10 +134,8 @@ class SNSLoginViewModel: ObservableObject {
                             print(error)
                         }
                         else {
-                            print("me() success.")
                             
                             if let nickname = user?.kakaoAccount?.profile?.nickname, let id = user?.id {
-                                VarCollectionFile.myPrint(title: "카카오 로그인 성공 유저 정보", content: "닉네임 : \(nickname) \nid : \(id)")
                                 
                                 self.sendInfo(type: "kakao", nickName: nickname, id: String(id), isLoggedIn)
                                 
@@ -190,9 +180,6 @@ class SNSLoginViewModel: ObservableObject {
         
         
         
-        
-//        let kakaoUserDict: [String: String]
-        
         guard let url = URL(string: url) else {
             print("Invalid URL")
             return
@@ -220,7 +207,7 @@ class SNSLoginViewModel: ObservableObject {
             }
             
             if let jsonString = String(data: data, encoding: .utf8) {
-                    print("Received raw JSON: \(jsonString)")
+//                    print("Received raw JSON: \(jsonString)")
                 }
             
             do {

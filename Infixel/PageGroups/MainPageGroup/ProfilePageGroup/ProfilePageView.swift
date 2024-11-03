@@ -18,6 +18,7 @@ struct ProfileUser: Codable, Identifiable, Hashable {
     var follower: Int = 0
     var description: String = ""
     var profile_image: String = ""
+    var is_blocked:Int = 0
 }
 //--@--------------------------------------------------------------------------------------------------------------
 
@@ -30,6 +31,8 @@ class ProfilePageViewModel: ObservableObject {
     @Published var showImageViewer = false
     @Published var followBtn:Bool = false
     @Published var myProfileOrNot = false
+    @Published var blocked = false
+
     
     func getMyImages(_ id:String) {
         guard let url = URL(string: VarCollectionFile.myImageURL) else {
@@ -50,8 +53,7 @@ class ProfilePageViewModel: ObservableObject {
                     if let decodedResponse = try? JSONDecoder().decode([SearchSingleImage].self, from: data) {
                         DispatchQueue.main.async {
                             self.images = decodedResponse
-                            
-                            VarCollectionFile.myPrint(title: "getMyImages()", content: "이미지 가져오기 완료")
+                    
                         }
                     }
                 } else if let error = error {
@@ -65,12 +67,12 @@ class ProfilePageViewModel: ObservableObject {
         
     }
     
-    func getUserInfo(_ id: String) {
+    func getUserInfo(_ id: String, _ block_user_id:String) {
         guard let url = URL(string: VarCollectionFile.userProfileURL) else {
             return
         }
        
-        let request = URLRequest.post(url: url, body: ["user_id" : id])
+        let request = URLRequest.post(url: url, body: ["user_id" : id, "block_user_id" : block_user_id])
         
         DispatchQueue.global(qos: .background).async { [weak self] in
             URLSession.shared.dataTask(with: request) { data, res, error in
@@ -82,14 +84,22 @@ class ProfilePageViewModel: ObservableObject {
                 if let data = data {
                     do {
                         if let decodeResponse = try? JSONDecoder().decode(ProfileUser.self, from: data) {
-//                            print(decodeResponse)
+                            VarCollectionFile.myPrint(title: "decodeResponse", content: decodeResponse)
                             DispatchQueue.main.async {
                                 self.profileUser = decodeResponse
+                                VarCollectionFile.myPrint(title: "getUserInfo() - profileUser", content: self.profileUser.id + ", " + UserDefaults.standard.string(forKey: "user_id")!)
+                               
+                                
+                                
                                 if let userId = UserDefaults.standard.string(forKey: "user_id"), self.profileUser.id == userId {
+                                    VarCollectionFile.myPrint(title: "아이디값 비교", content: "저장된 id : \(userId), profileUser.id : \(self.profileUser.id)")
+                                    
                                     self.myProfileOrNot = true
                                 } else {
                                     self.followOrNot(self.profileUser.id)
                                 }
+                                
+                                
                             }
                         }
                     } catch {
@@ -155,7 +165,6 @@ class ProfilePageViewModel: ObservableObject {
     }
     
     func followOrNot(_ follow_user_id:String) {
-        VarCollectionFile.myPrint(title: "followOrNot()", content: follow_user_id)
         let user_id = UserDefaults.standard.string(forKey: "user_id")!
         
         guard let url = URL(string: VarCollectionFile.followOrNotURL) else {
@@ -180,7 +189,6 @@ class ProfilePageViewModel: ObservableObject {
                    let resData = resString.data(using: .utf8),
                    let resValue = try? JSONDecoder().decode(Bool.self, from: resData)
                 {
-                    VarCollectionFile.myPrint(title: "followOrNot() - result", content: resValue)
                     DispatchQueue.main.async {
                         self.followBtn = resValue
                     }
@@ -194,13 +202,65 @@ class ProfilePageViewModel: ObservableObject {
                 self.images = self.images.filter { $0.id != id }
             }
         }
+    
+    func userBlock(user_id:String, block_user_id:String) {
+        
+        guard let url = URL(string: VarCollectionFile.userBlockURL) else { return }
+        
+        let request = URLRequest.post(url: url, body: ["user_id" : user_id, "block_user_id" : block_user_id])
+        
+        DispatchQueue.global(qos: .background).async {
+            URLSession.shared.dataTask(with: request) { data, res, error in
+                if let error = error {
+                    return
+                }
+                if let resData = data, let resString = String(data: resData, encoding: .utf8) {
+                    VarCollectionFile.myPrint(title: "userBlock()", content: resString)
+                }
+                
+            }.resume()
+        }
+    }
+    
+    func userUnblock(user_id:String, block_user_id:String) {
+        
+        guard let url = URL(string: VarCollectionFile.userUnblockURL) else { return }
+        
+        let request = URLRequest.post(url: url, body: ["user_id" : user_id, "block_user_id" : block_user_id])
+        
+        DispatchQueue.global(qos: .background).async {
+            URLSession.shared.dataTask(with: request) { data, res, error in
+                if let error = error {
+                    return
+                }
+                if let resData = data, let resString = String(data: resData, encoding: .utf8) {
+                    VarCollectionFile.myPrint(title: "userBlock()", content: resString)
+                }
+                
+            }.resume()
+        }
+    }
 
     
     
 }
 
-//--@-------------------------------------------------------------------------------------------------------------------------------------------------
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+//--@-------------------------------------------------------------------------------------------------------------------------------------------------
+//--@-----------------------------------------------------------------------------------------------------------------
 
 struct ProfilePageView: View {
     
@@ -222,12 +282,13 @@ struct ProfilePageView: View {
                         .environmentObject(appState)
                     VStack {
                         ProfilePageHeader(viewModel:viewModel)
+                            .environmentObject(appState)
                             .shadow(color: colorScheme == .dark ? Color.white.opacity(0.5) : Color.black.opacity(0.5), radius: 7, x: 0, y: 5)
                         Spacer()
                     }
                     .frame(maxWidth: .infinity)
                     
-                    if profile == true {
+                    if profile == true { //내 프로필이면 three dots가 보여야함
                         VStack {
                             HStack {
                                 Spacer()
@@ -243,7 +304,17 @@ struct ProfilePageView: View {
                 }
                 .onAppear {
                     viewModel.getMyImages(userId)
-                    viewModel.getUserInfo(userId)
+                    
+                    guard let myUserId = UserDefaults.standard.string(forKey: "user_id") else { return }
+                    VarCollectionFile.myPrint(title: "user id ", content: myUserId + ", " + userId)
+                    viewModel.getUserInfo(myUserId , userId)
+//                    if myUserId != userId { //다른 사람의 프로필일때
+//                        
+//                        viewModel.getUserInfo(myUserId , userId)
+//                    } else {
+//                        viewModel.getUserInfo(userId, userId)
+//                    }
+                    
                 }
                 .sheet(isPresented: $viewModel.showImageViewer) {
                     if let selectedImage = appState.selectedImage, let selectedImageId = appState.selectedImageId {
@@ -258,6 +329,15 @@ struct ProfilePageView: View {
 }
 
 //--@---------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
 
 
 
@@ -298,6 +378,10 @@ struct ProfilePageImageView: View {
 struct ProfilePageHeader: View {
     
     @StateObject var viewModel:ProfilePageViewModel
+    
+    @EnvironmentObject var appState: AppState
+    
+    @State var blockFlag = false
     
     
     
@@ -350,7 +434,6 @@ struct ProfilePageHeader: View {
             
             //--@유저프로필_닉네임_아이디
             
-//            Spacer()
             VStack(spacing: 20) {
                 HStack(alignment: .bottom) {
                         VStack {
@@ -389,41 +472,90 @@ struct ProfilePageHeader: View {
                         .frame(width: 60)
                 }//--@Hstack
                 .frame(width: UIScreen.main.bounds.width * 0.55, height: 40)
-
                 
-                HStack(alignment: .top) {
+
+                VStack(alignment: .center) {
                     HStack(alignment: .top) {
                         Text(viewModel.profileUser != nil ? viewModel.profileUser.description: "")
                             .foregroundColor(.white)
                             .font(.system(size: 14))
                         Spacer()
                     }
-                    .frame(width: UIScreen.main.bounds.width * 0.55/2)
+                    .padding([.top, .bottom], 10)
                     
                     if viewModel.myProfileOrNot == true { //내 프로필
                         Spacer()
-                            .frame(width: UIScreen.main.bounds.width * 0.5/2, height: 20, alignment: .center)
-                    } else { //다른 프로필
+                            .frame(width: UIScreen.main.bounds.width, height: 20, alignment: .center)
                         
-                        Button(action: {
+                        
+                    } else { //다른 프로필
+                        HStack {
+                            Button(action: {
+                                
+                                guard let my_user_id = UserDefaults.standard.string(forKey: "user_id") else { return }
+                                
+                                if blockFlag {
+                                    blockFlag = false
+                                    viewModel.userBlock(user_id: my_user_id, block_user_id: viewModel.profileUser.id)
+                                    
+                                    //slideimages 배열에 있는 값들 삭제시키기
+                                    appState.slideImages.removeAll()
+                                    
+                                } else {
+                                    blockFlag = true
+                                    viewModel.userUnblock(user_id: my_user_id, block_user_id: viewModel.profileUser.id)
+                                }
+                                
                             
-                            if viewModel.followBtn == false { //unfollow 되어있을때
-                                viewModel.followBtn = true
-                                viewModel.follow(viewModel.profileUser.id)
-                            } else { //follow 일때
-                                viewModel.followBtn = false
-                                viewModel.unfollow(viewModel.profileUser.id)
-                            }
+                            }, label: {
+                                HStack {
+                                    Text(blockFlag ? "차단" : "차단 해제")
+                                        .foregroundColor(Color(hexString: blockFlag ? "EBEBEB" : "E1503A"))
+                                }
+                                .frame(width: UIScreen.main.bounds.width * 1/4, height: 20, alignment: .center)
+                            })
+                            .buttonStyle(.borderedProminent)
+                            .tint(Color(hexString: blockFlag ? "E1503A" : "EBEBEB"))
                             
-                        }, label: {
-                            HStack {
-                                Text(viewModel.followBtn ? "Unfollow" : "Follow")
+                            Button(action: {
+                                
+                                if viewModel.followBtn == false { //unfollow 되어있을때
+                                    viewModel.followBtn = true
+                                    viewModel.follow(viewModel.profileUser.id)
+                                } else { //follow 일때
+                                    viewModel.followBtn = false
+                                    viewModel.unfollow(viewModel.profileUser.id)
+                                }
+                                
+                            }, label: {
+                                HStack {
+                                    Text(viewModel.followBtn ? "Unfollow" : "Follow")
+                                }
+                                .frame(width: UIScreen.main.bounds.width * 1/4, height: 20, alignment: .center)
+                                .contentShape(Rectangle())
+                            })
+                            .buttonStyle(.borderedProminent)
+                            .tint(Color(hexString: viewModel.followBtn ? "ABB2F2" : "4657F3"))
+                        }
+//                        .onAppear {
+//                            if viewModel.profileUser.is_blocked == 0 { //차단되지 않은 상태
+//                                VarCollectionFile.myPrint(title: "차단 유무", content: "차단하지 않음")
+//                                blockFlag = true
+//                            } else {
+//                                VarCollectionFile.myPrint(title: "차단 유무", content: "차단함")
+//                                blockFlag = false
+//                            }
+//                        }
+                        .onChange(of: viewModel.profileUser) { newProfileUser in
+                            // profileUser 값이 업데이트된 후에 실행
+                            if newProfileUser.is_blocked == 0 {
+                                VarCollectionFile.myPrint(title: "차단 유무", content: "차단하지 않음")
+                                blockFlag = true
+                            } else {
+                                VarCollectionFile.myPrint(title: "차단 유무", content: "차단함")
+                                blockFlag = false
                             }
-                            .frame(width: UIScreen.main.bounds.width * 0.5/2, height: 20, alignment: .center)
-                            .contentShape(Rectangle())
-                        })
-                        .buttonStyle(.borderedProminent)
-                        .tint(Color(hexString: viewModel.followBtn ? "ABB2F2" : "4657F3"))
+                        }
                        
                         
                     }
@@ -434,11 +566,12 @@ struct ProfilePageHeader: View {
 //                .background(.blue)
                 
             }//---@VStack
-            .frame(width: UIScreen.main.bounds.width * 0.6, height: 180)
+            .frame(width: UIScreen.main.bounds.width * 0.6, height: 170)
             .padding(.leading, 10)
             Spacer()
         }//--@HStack
-        .padding([.leading, .trailing])
+        .padding([.leading, .trailing, .bottom])
+        .padding(.top, viewModel.myProfileOrNot ? 0 : -20)
         .frame(width: UIScreen.main.bounds.width, height: 170)
         .background( Color(.black))
         .clipShape(
