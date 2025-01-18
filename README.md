@@ -27,9 +27,11 @@
 ## 3. 페이지별 기능
 
 ### 메인 페이지
-![Image](https://github.com/user-attachments/assets/7e9b012d-3b59-4716-b376-51c47d49f236)
+<div>
+  <img width="200" src="https://github.com/user-attachments/assets/7e9b012d-3b59-4716-b376-51c47d49f236" />
+  <img width="200" src="https://github.com/user-attachments/assets/858984d6-cf1e-44a8-ba19-1493285223e2" />
+</div>
 
-![Image](https://github.com/user-attachments/assets/858984d6-cf1e-44a8-ba19-1493285223e2)
 
 ### 검색 페이지
 
