@@ -130,6 +130,8 @@
   <img width="270" src="https://github.com/user-attachments/assets/cbfa67e1-e348-4bea-b89c-0d96857394f5" />
 </div>
 
+
+---
 </br>
 
 ### 회원가입 페이지
