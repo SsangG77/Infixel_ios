@@ -1,5 +1,5 @@
 # 이미지 공유 서비스앱 Infixel
-![Image](https://github.com/user-attachments/assets/565fcf19-2145-4ff9-bc68-d9e55580a12e)
+![Image](https://github.com/user-attachments/assets/19343a1c-47dd-4651-81f0-8880724dfa19)
 - 배포 URL : [Infixel AppStore](https://apps.apple.com/kr/app/infixel/id6711351058)
 
 
@@ -25,16 +25,22 @@
 
 
 ## 3. 페이지별 기능
-### 로그인 페이지
-
-### 회원가입 페이지
 
 ### 메인 페이지
+![Image](https://github.com/user-attachments/assets/7e9b012d-3b59-4716-b376-51c47d49f236)
+
+![Image](https://github.com/user-attachments/assets/858984d6-cf1e-44a8-ba19-1493285223e2)
 
 ### 검색 페이지
 
 ### 랭킹 페이지
+![Image](https://github.com/user-attachments/assets/90c7b030-117a-498d-a298-c5cce511b684)
 
 ### 앨범 페이지
+![Image](https://github.com/user-attachments/assets/8f10cbd1-e2a7-4338-9399-9d71870021a6)
 
 ### 프로필 페이지
+![Image](https://github.com/user-attachments/assets/ef400928-52e1-4ccc-bf98-c93ab780cb23)
+### 로그인 페이지
+
+### 회원가입 페이지
