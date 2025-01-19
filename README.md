@@ -40,10 +40,10 @@
 - 업로드 유저 박스 오른쪽 ">"버튼으로 이미지 설명문을 읽을 수 있습니다.
 
 <div>
-  <img width="270" src="https://github.com/user-attachments/assets/7e9b012d-3b59-4716-b376-51c47d49f236" />
-  <img width="270" src="https://github.com/user-attachments/assets/858984d6-cf1e-44a8-ba19-1493285223e2" />
-  <img width="270" src="https://github.com/user-attachments/assets/5b18d30c-c639-4156-95d9-4712d4514010" />
-  <img width="270" src="https://github.com/user-attachments/assets/7f19b639-f604-4b8a-9548-adefd2b5242c" />
+  <img width="230" src="https://github.com/user-attachments/assets/7e9b012d-3b59-4716-b376-51c47d49f236" />
+  <img width="230" src="https://github.com/user-attachments/assets/858984d6-cf1e-44a8-ba19-1493285223e2" />
+  <img width="230" src="https://github.com/user-attachments/assets/5b18d30c-c639-4156-95d9-4712d4514010" />
+  <img width="230" src="https://github.com/user-attachments/assets/7f19b639-f604-4b8a-9548-adefd2b5242c" />
 </div> 
 
 
