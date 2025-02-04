@@ -5,13 +5,14 @@
 ![Image](https://github.com/user-attachments/assets/19343a1c-47dd-4651-81f0-8880724dfa19)
 - 배포 URL : [Infixel AppStore](https://apps.apple.com/kr/app/infixel/id6711351058)
 
+</br>
 
 ## 프로젝트 소개
 - 숏폼 컨텐츠 UI를 사용하여 사용자들이 원하는 사진을 업로드하고 이미지에 Pic!을 할 수 있습니다.
 - Pic!을 가장 많이 받은 이미지와 유저들의 실시간 순위를 확인할 수 있습니다.
 - 앱 내부에 있는 앨범에 이미지를 보관할 수 있습니다.
 
-
+</br>
 
 ##  기술 스택
 
@@ -21,10 +22,14 @@
 - **인증:** Kakao 로그인 API, Apple 로그인 API
 - **동시성 처리:** Swift Concurrency (async/await) 활용한 멀티스레딩
 
+</br>
+
 ##  아키텍처
 
 - MVVM (Model-View-ViewModel) 패턴으로 확장성과 유지보수 용이성 확보
 - 비동기 네트워킹으로 부드러운 데이터 처리
+
+</br>
 
 ##  사용된 API
 
@@ -32,18 +37,20 @@
 - **Apple 로그인 API:** 보안이 강화된 로그인 방식 지원
 - **WebSocket:** 실시간 데이터 동기화 (순위 업데이트, 라이브 반응 등)
 
+</br>
+
 ##  라이브러리 및 의존성
 
 - **Alamofire :** 네트워킹 작업 간소화 (사용한 경우)
 - **Combine (선택사항):** 데이터 바인딩을 위한 리액티브 프로그래밍 (사용한 경우)
 
-
+</br>
 
 ## 2. 디자인
 [Figma link](https://www.figma.com/file/ZobwDJ6BYIl2ZuRray1YxR/Infixel-Swift?type=design&node-id=0-1&mode=design&t=56yeUw7CF0F9t6A5-0)
 ![Image](https://github.com/user-attachments/assets/dce2ca1d-f1bc-4539-867a-379625cc9bcd)
 
-
+</br>
 
 ## 3. 페이지별 기능
 
