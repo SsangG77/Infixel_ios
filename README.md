@@ -37,28 +37,6 @@
 - **Alamofire :** 네트워킹 작업 간소화 (사용한 경우)
 - **Combine (선택사항):** 데이터 바인딩을 위한 리액티브 프로그래밍 (사용한 경우)
 
-## 📝 설치 방법
-
-1. 레포지토리 클론:
-   ```bash
-   git clone https://github.com/your-repo/shortform-image-sharing-app.git
-   ```
-
-2. Xcode에서 프로젝트 열기:
-   ```bash
-   open ShortFormImageSharingApp.xcodeproj
-   ```
-
-3. 의존성 설치 (Swift Package Manager 사용 시):
-   - Xcode > File > Swift Packages > Add Package Dependency로 이동하여 추가
-
-4. Kakao 및 Apple 로그인 자격 증명을 프로젝트 설정에서 구성
-
-5. 앱 빌드 및 실행:
-   ```bash
-   Cmd + R
-   ```
-
 
 
 ## 2. 디자인
